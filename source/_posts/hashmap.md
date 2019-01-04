@@ -181,6 +181,8 @@ final Node<K,V>[] resize() {
 ```
 
 并发情况下使用HashMap，发生扩容时，可能会产生循环链表，在执行get的时候，会触发死循环，引起CPU%问题。
+JDK8虽然修复了死循环的BUG，但是HashMap 还是非线程安全类，仍然会产生数据丢失等问题。
 
-
-参考 [疫苗：JAVA HASHMAP的死循环](https://coolshell.cn/articles/9606.html)
+参考 
+- [疫苗：JAVA HASHMAP的死循环](https://coolshell.cn/articles/9606.html)
+- [HashMap 多线程下死循环分析及JDK8修复](https://my.oschina.net/alexqdjay/blog/1377268)
