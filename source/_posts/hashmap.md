@@ -142,7 +142,7 @@ final Node<K,V>[] resize() {
                     newTab[e.hash & (newCap - 1)] = e;
                 else if (e instanceof TreeNode)
                     ((TreeNode<K,V>)e).split(this, newTab, j, oldCap);
-                else { // preserve order
+                else { // preserve order 维持顺序
                     Node<K,V> loHead = null, loTail = null;
                     Node<K,V> hiHead = null, hiTail = null;
                     Node<K,V> next;
@@ -180,8 +180,8 @@ final Node<K,V>[] resize() {
 
 ```
 
-并发情况下使用HashMap，发生扩容时，可能会产生循环链表，在执行get的时候，会触发死循环，引起CPU%问题。
-JDK8虽然修复了死循环的BUG，但是HashMap 还是非线程安全类，仍然会产生数据丢失等问题。
+使用HashMap的put操作，当容量大小超过阈值则发生扩容（调用resize()），在并发情况下可能会产生循环链表，在执行get的时候，可能会触发死循环，引起CPU%问题。
+JDK8虽然修复了死循环的BUG，将原来的链表部分改为数据量少时用链表，当超过一定数量后变为红黑树（treeifyBin()）。但是HashMap 还是非线程安全类，仍然会产生数据丢失等问题。
 
 参考 
 - [疫苗：JAVA HASHMAP的死循环](https://coolshell.cn/articles/9606.html)
