@@ -102,6 +102,14 @@ discovery.zen.ping.unicast.hosts: ["node01"]
 ```
 
 不能使用root用户启动！！！这里使用新创建的geekymv用户启动。
+添加用户组
+groupadd geekymv
+添加用户
+useradd geekymv
+修改用户所属组
+usermod -g geekymv geekymv
+设置密码
+passwd geekymv
 
 [geekymv@node01 elasticsearch-6.5.4]$ bin/elasticsearch
 [2019-01-16T21:43:43,227][WARN ][o.e.b.JNANatives         ] [node01] unable to install syscall filter: 
@@ -173,9 +181,10 @@ kernel.shmall = 4294967296
 vm.max_map_count = 262144
 
 解决方法如下：
-modprobe bridge
-lsmod|grep bridge
+sudo modprobe bridge
+sudo lsmod|grep bridge
 
+再次启动，还会报错
 [1]: max number of threads [3648] for user [geekymv] is too low, increase to at least [4096]
 问题同上，最大线程个数太低。修改配置文件/etc/security/limits.conf，增加配置
 ```text
@@ -230,3 +239,4 @@ bin/elasticsearch -d
 
 ES文章：https://blog.csdn.net/laoyang360/article/details/79293493
 elasticsearch启动常见错误：https://www.cnblogs.com/zhi-leaf/p/8484337.html
+集群部署：https://www.jianshu.com/p/2e3e4334b036
