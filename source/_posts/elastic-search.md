@@ -3,10 +3,26 @@ title: elastic-search
 date: 2019-01-16 19:41:13
 tags:
 ---
-
+全文检索
+Apache Lucene 提供一个全文检索的功能库。
+文档(document)：索引和搜索时使用的主要数据载体，包含一个或对个存有数据的字段(field)。
+字段(field)：文档的一部分，包含名称和值两部分。
+词(term)：一个搜索单元，表示文本中的一个词。
+标记(token)：表示在字段文本中出现的词，由这个词的文本、开始和结束偏移量以及类型组成。
+Apache Lucene 将所有信息写到一个称为倒排索引(inverted index)的结构中，倒排索引建立索引中词和文档之间的映射。
 
 
 [elasticsearch官网](https://www.elastic.co/downloads/elasticsearch)
+主要概念：
+- 索引(index)
+索引(index)是ElasticSearch对逻辑数据的逻辑存储，可以把索引看成关系型数据库的数据库。ElasticSearch 可以把索引放在一台机器或者分散在多台机器上，每个索引有一个或多个分片(shard)，每个分片可以有多个副本(replica)。
+-文档类型(type)
+在ElasticSearch中，一个索引对象可以存储很多不同用途的对象。文档类型(type)可以让我们轻易区分单个索引中的不同对象。
+每个文档可以有不同的结构，
+-文档(document)
+
+
+
 
 下载最新版本 wget https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-6.5.4.tar.gz
 解压修改config下的elasticsearch.yml配置文件，内容如下：
@@ -236,7 +252,61 @@ bin/elasticsearch -d
 2992 Elasticsearch
 3100 Jps
 
+新建文档
+指定标识符，使用PUT
+```text
+curl -XPUT -H"content-type:application/json"  http://node03:9200/blog/article/1 -d '{"title":"ElasticSearch", "content":"Hello,ES", "tags":["es", "release", "today"]}'
+```
+自动创建标识符，使用POST
+```text
+ curl -XPOST -H"content-type:application/json"  http://node03:9200/blog/article/ -d '{"title":"lasticSearch", "content":"Hello,ES", "tags":["es", "release", "today"]}'
+```
+检索文档
+```text
+curl -XGET http://node03:9200/blog/article/1?pretty
+```
+更新文档
+```text
+ curl -XPOST -H"content-type:application/json" http://node03:9200/blog/article/1/_update -d '{"script":"ctx._source.content=\"new content\""}
+```
+删除文档
+curl -XDELETE http://node03:9200/blog/article/1?pretty
+
+ElasticSearch 版本控制
+使用乐观锁
+
+搜索，指定查询结果窗口
+from 指定结果从哪个记录开始返回，默认值0。
+size 指定返回结果的最大数量，默认值10。
+curl -XGET 'http://node03:9200/_search?pretty&size=2'
+
+分词器
+```text
+curl -XPOST -H"content-type:application/json" http://node02:9200/blog/_analyze?pretty -d '{"text":"Elasticsearch Server"}'
+
+{
+  "tokens" : [
+    {
+      "token" : "elasticsearch",
+      "start_offset" : 0,
+      "end_offset" : 13,
+      "type" : "<ALPHANUM>",
+      "position" : 0
+    },
+    {
+      "token" : "server",
+      "start_offset" : 14,
+      "end_offset" : 20,
+      "type" : "<ALPHANUM>",
+      "position" : 1
+    }
+  ]
+}
+```
+
+
 
 ES文章：https://blog.csdn.net/laoyang360/article/details/79293493
 elasticsearch启动常见错误：https://www.cnblogs.com/zhi-leaf/p/8484337.html
 集群部署：https://www.jianshu.com/p/2e3e4334b036
+ES专栏：https://blog.csdn.net/chengyuqiang/column/info/18392/3
