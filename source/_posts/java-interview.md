@@ -123,6 +123,7 @@ Dead
         join(0);
     }
 ```
+[Thread.interrupt()方法理解](https://blog.csdn.net/tianyuxingxuan/article/details/76222935)
 
 3.volatile 如何实现指令重排序
 
