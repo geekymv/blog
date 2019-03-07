@@ -50,7 +50,10 @@ smembers 返回集合包含的所有元素，慎用！
 sismember 检查给定元素是否存在于集合中
 srem 如果给定的元素存在于集合中，那么删除这个元素
 
-hash
+hash 散列
+hmget key-name key [key ...] 从散列里面获取一个或多个键的值
+hmset key-name key value [key value ...] 为散列里面的一个或多个键设置值
+
 
 
 zset 有序集合
@@ -64,6 +67,51 @@ zcard 返回有序集合包含的成员数量
 
 
 
+阿里云Redis开发规范 https://yq.aliyun.com/articles/531067
+
+
+maxmemory policy 最大内存淘汰策略
+根据自身业务类型，选好maxmemory-policy，设置好过期时间。
+默认策略是noeviction，不会剔除任何数据，拒绝所有写入操作并返回客户端错误信息"(error) OOM command not allowed when used memory"，
+此时Redis只响应读操作。
+
+# maxmemory <bytes>
+
+# MAXMEMORY POLICY: how Redis will select what to remove when maxmemory
+# is reached. You can select among five behaviors:
+#
+# volatile-lru -> Evict using approximated LRU among the keys with an expire set.
+# allkeys-lru -> Evict any key using approximated LRU.
+# volatile-lfu -> Evict using approximated LFU among the keys with an expire set.
+# allkeys-lfu -> Evict any key using approximated LFU.
+# volatile-random -> Remove a random key among the ones with an expire set.
+# allkeys-random -> Remove a random key, any key.
+# volatile-ttl -> Remove the key with the nearest expire time (minor TTL)
+# noeviction -> Don't evict anything, just return an error on write operations.
+#
+# LRU means Least Recently Used 最近最少使用
+# LFU means Least Frequently Used 最不经常使用
+#
+# Both LRU, LFU and volatile-ttl are implemented using approximated
+# randomized algorithms.
+#
+# Note: with any of the above policies, Redis will return an error on write
+#       operations, when there are no suitable keys for eviction.
+#
+#       At the date of writing these commands are: set setnx setex append
+#       incr decr rpush lpush rpushx lpushx linsert lset rpoplpush sadd
+#       sinter sinterstore sunion sunionstore sdiff sdiffstore zadd zincrby
+#       zunionstore zinterstore hset hsetnx hmset hincrby incrby decrby
+#       getset mset msetnx exec sort
+#
+# The default is:
+#
+# maxmemory-policy noeviction
+
+缓存淘汰算法
+- LRU
+- LFU
+- FIFO
 
 
 
