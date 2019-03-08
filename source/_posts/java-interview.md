@@ -129,9 +129,10 @@ Dead
 
 4.线程池中阻塞队列如果满了怎么办（拒绝策略）
 
+
+
+
 5.synchronized 和 AQS异同，AQS公平非公平如何实现
-
-
 AQS(AbstractQueuedSynchronizer的简称) ，它是一个Java提供的底层同步工具类，用一个int类型的变量表示同步状态，
 并提供了一系列CAS操作来管理这个同步状态。
 AQS是一个用来构建锁和同步器的矿建，使用AQS能简单且高效地构建出应用广泛的大量同步器。

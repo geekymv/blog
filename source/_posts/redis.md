@@ -66,10 +66,17 @@ zscore  zscore key-name member 返回成员member的分值
 zcard 返回有序集合包含的成员数量
 
 
+#### Redis 过期策略
+[Redis数据过期策略详解](https://www.cnblogs.com/xuliangxing/p/7151812.html)
+定时删除
+惰性删除
+定期删除
+
+
 
 阿里云Redis开发规范 https://yq.aliyun.com/articles/531067
 
-
+#### Redis 淘汰策略
 maxmemory policy 最大内存淘汰策略
 根据自身业务类型，选好maxmemory-policy，设置好过期时间。
 默认策略是noeviction，不会剔除任何数据，拒绝所有写入操作并返回客户端错误信息"(error) OOM command not allowed when used memory"，
@@ -112,6 +119,15 @@ maxmemory policy 最大内存淘汰策略
 - LRU
 - LFU
 - FIFO
+
+
+Redis 的持久化存储
+Redis支持两种数据持久化方式：RDB方式和AOF方式
+RDB 方式会根据配置的规则定时将内存中的数据持久化的硬盘上，
+AOF 方式则是在每次执行写命令之后将命令记录下来，两种持久化方式可以单独使用，但是通常会将两者结合使用。
+
+
+
 
 
 
