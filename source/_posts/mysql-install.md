@@ -53,8 +53,8 @@ show variables like 'character%';
 
 [mysql事务隔离级别](https://mp.weixin.qq.com/s/XhhAepgPcVFUBROKB6EN8Q)
 - 读未提交： 一个事务可以读到另一个事务未提交的数据；
-- 读已提交：一个事务可以读到另一个事务已提交的数据；
-- 可重复读：
+- 读已提交(READ-COMMITTED)：一个事务可以读到另一个事务已提交的数据；
+- 可重复读(REPEATABLE-READ)：
 - 串行化：每次读操作都会加锁。
 
 
@@ -75,6 +75,40 @@ show variables like 'character%';
 
 
 [互联网项目中mysql应该选择什么事务隔离级别](https://mp.weixin.qq.com/s/643UXL4gNEQT4qLqUxgOIw)
+
+查询当前会话事务隔离级别
+```text
+mysql> select @@tx_isolation;
++-----------------+
+| @@tx_isolation  |
++-----------------+
+| REPEATABLE-READ |
++-----------------+
+1 row in set, 1 warning (0.00 sec)
+```
+
+设置当前会话隔离级别
+```text
+set tx_isolation='read-committed';
+```
+
+查看系统当前会话级别
+```text
+select @@global.tx_isolation;
+```
+设置系统当前隔离级别 
+```text
+set global transaction isolation level read committed;
+```
+
+
+
+
+
+
+
+
+
 
 
 
