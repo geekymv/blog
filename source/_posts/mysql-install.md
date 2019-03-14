@@ -101,7 +101,7 @@ select @@global.tx_isolation;
 set global transaction isolation level read committed;
 ```
 
-
+[Innodb中的事务隔离级别和锁的关系](https://tech.meituan.com/2014/08/20/innodb-lock.html)
 
 
 
