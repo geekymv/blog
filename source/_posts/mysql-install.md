@@ -52,10 +52,10 @@ show variables like 'character%';
 
 
 [mysql事务隔离级别](https://mp.weixin.qq.com/s/XhhAepgPcVFUBROKB6EN8Q)
-- 读未提交： 一个事务可以读到另一个事务未提交的数据；
+- 读未提交(READ UNCOMMITTED)： 一个事务可以读到另一个事务未提交的数据；
 - 读已提交(READ-COMMITTED)：一个事务可以读到另一个事务已提交的数据；
 - 可重复读(REPEATABLE-READ)：
-- 串行化：每次读操作都会加锁。
+- 串行化(SERIALIZABLE)：每次读操作都会加锁。
 
 
 不同隔离级别存在的问题（存在的现象）
@@ -75,6 +75,12 @@ show variables like 'character%';
 
 
 [互联网项目中mysql应该选择什么事务隔离级别](https://mp.weixin.qq.com/s/643UXL4gNEQT4qLqUxgOIw)
+
+设置binlog模式
+```text
+SET SESSION binlog_format = 'ROW';（或者是MIXED）
+```
+
 
 查询当前会话事务隔离级别
 ```text
