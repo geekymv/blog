@@ -133,3 +133,6 @@ clientPort=2181
 删除节点：delete /workers
 退出客户端连接：quit
 {% asset_img 02-zookeeper.png %}
+
+
+[分布式锁的几种实现方式](http://www.cnblogs.com/austinspark-jessylu/p/8043726.html)
