@@ -28,7 +28,10 @@ $ mysql
 mysql>exit
 
 按照安装Sever中的提示，修改登录密码，设置密码为123456
+```text
 sudo /usr/bin/mysqladmin -u root password '123456'
+```
+
 
 自启动mysql服务
 sudo chkconfig mysql on
