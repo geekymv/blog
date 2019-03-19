@@ -43,6 +43,14 @@ cd /usr/share/mysql
 sudo cp my-huge.cnf /etc/my.cnf
 
 设置mysql字符集
+[client]
+default-character-set=utf8
+
+[mysqld]
+character_set_server=utf8
+character_set_client=utf8
+collation-server=utf8_general_ci
+
 查看字符集
 show variables like 'character%';
 或show variables like '%char%';
