@@ -134,5 +134,6 @@ clientPort=2181
 退出客户端连接：quit
 {% asset_img 02-zookeeper.png %}
 
-
+[七张图彻底讲清楚ZooKeeper分布式锁的实现原理【石杉的架构笔记】](https://juejin.im/post/5c01532ef265da61362232ed)
 [分布式锁的几种实现方式](http://www.cnblogs.com/austinspark-jessylu/p/8043726.html)
+[基于 Redis 的分布式锁](https://crossoverjie.top/2018/03/29/distributed-lock/distributed-lock-redis/)

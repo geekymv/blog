@@ -122,8 +122,24 @@ set global transaction isolation level read committed;
 
 
 
+mysql主从复制
 
 
+启动复制
+```text
+mysql> change master to master_host='node01',
+    -> master_user='repl',
+    -> master_password='p4ssword',
+    -> master_log_file='mysql-bin.000039',
+    -> master_log_pos=0;
+
+```
+
+```text
+mysql> show slave status\G;
+
+mysql> start slave;
+```
 
 
 
