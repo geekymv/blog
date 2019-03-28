@@ -184,9 +184,9 @@ final Node<K,V>[] resize() {
 JDK8虽然修复了死循环的BUG，将原来的链表部分改为数据量少时用链表，当超过一定数量后变为红黑树（treeifyBin()）。但是HashMap 还是非线程安全类，仍然会产生数据丢失等问题。
 
 [https://blog.csdn.net/mgl934973491/article/details/57405247](hash表处理冲突)
-不同的key用同样的hash算法，可能会得到相同的hash值。Ab BB的hash值一样。
-1.线性探测法
-2.拉链法（HashMap中使用这种方法进行冲突处理的）
+不同的key用同样的hash算法，可能会得到相同的hash值，比如Ab BB的hash值一样。
+- 线性探测法
+- 拉链法（HashMap中使用这种方法进行冲突处理的）
 
 [http://www.cnblogs.com/binyue/p/3726403.html](HashMap在并发下可能出现的问题分析)
 
