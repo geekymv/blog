@@ -72,11 +72,10 @@ zcard 返回有序集合包含的成员数量
 惰性删除
 定期删除
 
-
-
 阿里云Redis开发规范 https://yq.aliyun.com/articles/531067
 
 #### Redis 淘汰策略
+maxmemory 最大可用内存
 maxmemory policy 最大内存淘汰策略
 根据自身业务类型，选好maxmemory-policy，设置好过期时间。
 默认策略是noeviction，不会剔除任何数据，拒绝所有写入操作并返回客户端错误信息"(error) OOM command not allowed when used memory"，
@@ -87,14 +86,14 @@ maxmemory policy 最大内存淘汰策略
 # MAXMEMORY POLICY: how Redis will select what to remove when maxmemory
 # is reached. You can select among five behaviors:
 #
-# volatile-lru -> Evict using approximated LRU among the keys with an expire set.
-# allkeys-lru -> Evict any key using approximated LRU.
-# volatile-lfu -> Evict using approximated LFU among the keys with an expire set.
-# allkeys-lfu -> Evict any key using approximated LFU.
-# volatile-random -> Remove a random key among the ones with an expire set.
-# allkeys-random -> Remove a random key, any key.
-# volatile-ttl -> Remove the key with the nearest expire time (minor TTL)
-# noeviction -> Don't evict anything, just return an error on write operations.
+# volatile-lru -> Evict using approximated LRU among the keys with an expire set. 用lru算法删除过期的键值
+# allkeys-lru -> Evict any key using approximated LRU. 用lru算法删除所有的键值
+# volatile-lfu -> Evict using approximated LFU among the keys with an expire set. 用lfu算法删除过期的键值
+# allkeys-lfu -> Evict any key using approximated LFU. 用lfu算法删除所有的键值
+# volatile-random -> Remove a random key among the ones with an expire set. 随机删除过期的键值
+# allkeys-random -> Remove a random key, any key. 随机删除任何键值
+# volatile-ttl -> Remove the key with the nearest expire time (minor TTL) 删除最近要到期的键值
+# noeviction -> Don't evict anything, just return an error on write operations. 不删除键，对于写操作只返回一个错误
 #
 # LRU means Least Recently Used 最近最少使用
 # LFU means Least Frequently Used 最不经常使用
@@ -119,16 +118,24 @@ maxmemory policy 最大内存淘汰策略
 - LRU
 - LFU
 - FIFO
+通常用于缓存使用量超过了预设的最大值时候（缓存空间不够），如何对现有的数据进行清理。
 
 
-Redis 的持久化存储
+#### 缓存穿透
+https://mp.weixin.qq.com/s/nBS9sLSZEN28ZSd8QMZDjQ
+我们在项目中使用缓存，通常都是先检查缓存是否存在，如果存在直接返回缓存内容，如果不存在则查询数据库然后缓存查询结果并返回。
+如果我们查询的某一个数据
+
+#### 缓存雪崩
+
+
+#### Redis 的持久化存储
 Redis支持两种数据持久化方式：RDB方式和AOF方式
 RDB 方式会根据配置的规则定时将内存中的数据持久化的硬盘上，
 AOF 方式则是在每次执行写命令之后将命令记录下来，两种持久化方式可以单独使用，但是通常会将两者结合使用。
 
 
-
-
+[库存系统难破题？京东到家来分享](https://www.infoq.cn/article/jingdongdaojia-inventory-system)
 
 
 
