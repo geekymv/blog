@@ -3,7 +3,10 @@ title: java-interview
 date: 2019-01-15 18:30:48
 tags:
 ---
-博客
+大神博客
+[Hollis](https://www.hollischuang.com/list)
+
+
 https://www.w3cschool.cn/u/56375
 
 线程池用过哪些，线程池有哪些参数，线程池的用法和实际应用场景

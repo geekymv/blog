@@ -1,8 +1,14 @@
 ---
-title: redis基础数据类型
+title: redis
 ---
 https://www.jianshu.com/p/bc84b2b71c1c
 https://juejin.im/post/5c3b4c4b518825253806335e
+
+### Redis 可以用来做什么
+Redis 是 Remote Dictionary Service 的首字母缩写，也就是远程字典服务。
+- 记录帖子的点赞数、评论数、点击数；
+- 
+
 
 tar -zxvf redis-4.0.12.tar.gz -C /usr/local/
 进入 Redis 的解压文件

@@ -122,7 +122,7 @@ set global transaction isolation level read committed;
 
 
 
-mysql主从复制
+#### mysql主从复制
 
 
 启动复制
@@ -141,10 +141,17 @@ mysql> show slave status\G;
 mysql> start slave;
 ```
 
+#### [索引](https://mp.weixin.qq.com/s/9GKu1yv7D5BbuPvYmg6srA)
+索引是存储引擎快速找到记录的一种数据结构，
 
+索引类型
+- 主键索引
+- 唯一索引
+- 普通索引
+- 组合索引：即一个索引包含多个列，多用于避免回表查询。
+- 全文索引
 
-
-
+索引需要额外的磁盘空间，并降低写操作的性能。
 
 
 
