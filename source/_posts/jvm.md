@@ -31,9 +31,9 @@ Java虚拟机与程序的生命周期，在如下几种情况下，Java虚拟机
 #### Java程序对类对使用方式可分为两种
 - 主动使用：
     - 创建类的实例；
-    - 访问某个类或接口的静态变量，或者对该静态变量赋值；
+    - 访问某个类或接口的静态变量，或者对该静态变量赋值（被final修饰、已在编译期把结果放入常量池的静态字段除外）；
     - 调用类的静态方法；
-    - 反射（如：Class.forNameO("com.geekymv.MyTest")）；
+    - 反射（如：Class.forName("com.geekymv.MyTest")）；
     - 初始化一个类的子类；
     - Java虚拟机启动时被标明为启动类的类（包含main方法的类）；
     - jdk1.7开始提供的动态语言支持，java.lang.invoke.methodHandle实例的解析结果REF_getStatic, REF_putStatic, REF_invokeStatic句柄对应的类没有初始化则初始化。
