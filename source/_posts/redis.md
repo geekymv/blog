@@ -9,6 +9,7 @@ Redis 是 Remote Dictionary Service 的首字母缩写，也就是远程字典�
 - 记录帖子的点赞数、评论数、点击数；
 - 
 
+redis 生产环境启动方案
 
 tar -zxvf redis-4.0.12.tar.gz -C /usr/local/
 进入 Redis 的解压文件
@@ -44,7 +45,7 @@ cp /usr/local/redis-4.0.12/redis.conf /etc/redis/
 cd /etc/redis/
 mv redis.conf 6379.conf
 
-创建存放数据的目录
+创建持久化文件的存储位置
 mkidr -p /var/redis/6379
 
 
