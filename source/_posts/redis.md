@@ -19,12 +19,48 @@ make
 在 Redis 的 README.md 文件中，可以找到解决方法，手动设置 MALLOC 环境。
 使用 make MALLOC=libc 命令代替 make 命令。
 
-测试完成，就可以安装 Redis 了，
+如果make的时候提示如下错误：
+cc: error: ../deps/hiredis/libhiredis.a: No such file or directory
+cc: error: ../deps/lua/src/liblua.a: No such file or directory
+cc: error: ../deps/jemalloc/lib/libjemalloc.a: No such file or directory
+make: *** [redis-server] Error 1
+则进入redis下的deps下的运行如下命令，就OK了。
+make lua hiredis linenoise
+
+make完成，就可以安装 Redis 了，
 先 cd 到 Redis 解压文件的 src 目录，使用 make PREFIX=/usr/local/redis install 安装，可以设置 Redis 的安装位置。
 make install PREFIX=/usr/local/redis
 
+配置启动脚本
+cp /usr/local/redis-4.0.12/utils/redis_init_script /etc/init.d/
+cd /etc/init.d/
+mv redis_init_script redis_6379
+编辑启动脚本redis_6379，修改启动命令路径，我们在上面将redis 安装到/usr/local/redis 目录下了
+EXEC=/usr/local/redis/bin/redis-server
+CLIEXEC=/usr/local/redis/bin/redis-cli
+
+根据启动脚本修改配置文件位置
+cp /usr/local/redis-4.0.12/redis.conf /etc/redis/
+cd /etc/redis/
+mv redis.conf 6379.conf
+
+创建存放数据的目录
+mkidr -p /var/redis/6379
+
+
+修改配置文件
+vim /etc/redis/6379.conf
 
 daemonize yes
+bind 192.168.159.102
+requirepass *******
+dir /var/redis/6379
+
+启动redis
+/etc/init.d/redis_6379 start
+
+设置开启自启动
+chkconfig redis_6379 on
 
 
 - string（字符串）可以存储字符串、整数或浮点数；

@@ -5,7 +5,7 @@ tags:
 ---
 大神博客
 [Hollis](https://www.hollischuang.com/list)
-
+[吾爱破解](https://www.52pojie.cn/)
 
 https://www.w3cschool.cn/u/56375
 
