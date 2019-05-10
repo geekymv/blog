@@ -108,6 +108,36 @@ zscore  zscore key-name member 返回成员member的分值
 zcard 返回有序集合包含的成员数量
 
 
+#### 数据持久化
+RDB、AOF
+RDB 非常适合做冷备，每次生成之后就不会再修改了。
+
+数据备份方案：
+- 写crontab定时调度脚本去做备份；
+- 每小时都拷贝一份rdb的备份，到一个目录中去，仅仅保留最近48小时的备份；
+- 每天都保留当天rdb的备份，到一个目录中去，仅仅保留最近一个月的备份；
+- 每次copy备份的时候都把太旧的备份删除；
+- 每天晚上将当前服务器上的所有备份，发送一份到远程云服务器上；
+
+获取当前的年月日时
+date +%Y%m%d%k
+减48小时
+date -d -48hour +%Y%m%d%k
+
+
+#### redis数据恢复
+- 如果是redis进程挂掉，那么重启redis进程即可，直接基于AOF日志文件恢复数据；
+- 如果是redis进程所在机器挂掉，那么重启机器后，尝试重启redis进程，尝试直接基于AOF日志文件恢复数据，
+如果appendonly.aof文件破损，那么可以使用redis-check-aof fix appendonly.aof 进行文件修复；
+- 如果redis 当前最新的AOF和RDB文件出现了丢失或损坏，那么可以尝试基于该机器上当前的某个最新的RDB数据副本进行数据恢复。
+appendonly.aof 和 dump.rdb 都存在，redids会优先用appendonly.aof 恢复数据
+热修改配置文件，磁盘文件上的配置并没有修改，需要自己手动去修改配置文件。
+config get appendonly
+config set appendonly yes
+- 如果当前机器上所有RDB文件全部损坏，那么从远程的云服务器上拉取最新的快照来恢复数据；
+- 如果发现有重大数据错误，可以选择更早的时间点，对数据进行恢复。
+
+
 #### Redis 过期策略
 [Redis数据过期策略详解](https://www.cnblogs.com/xuliangxing/p/7151812.html)
 定时删除
@@ -123,6 +153,7 @@ maxmemory policy 最大内存淘汰策略
 默认策略是noeviction，不会剔除任何数据，拒绝所有写入操作并返回客户端错误信息"(error) OOM command not allowed when used memory"，
 此时Redis只响应读操作。
 
+```text
 # maxmemory <bytes>
 
 # MAXMEMORY POLICY: how Redis will select what to remove when maxmemory
@@ -155,6 +186,7 @@ maxmemory policy 最大内存淘汰策略
 # The default is:
 #
 # maxmemory-policy noeviction
+```
 
 缓存淘汰算法
 - LRU
