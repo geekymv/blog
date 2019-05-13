@@ -41,12 +41,13 @@ EXEC=/usr/local/redis/bin/redis-server
 CLIEXEC=/usr/local/redis/bin/redis-cli
 
 根据启动脚本修改配置文件位置
+mkdir -p /etc/redis
 cp /usr/local/redis-4.0.12/redis.conf /etc/redis/
 cd /etc/redis/
 mv redis.conf 6379.conf
 
 创建持久化文件的存储位置
-mkidr -p /var/redis/6379
+mkdir -p /var/redis/6379
 
 
 修改配置文件
