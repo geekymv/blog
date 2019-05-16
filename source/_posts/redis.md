@@ -186,8 +186,22 @@ slave-read-only yes # 默认启用slave 只读
 - master 后续持续将写命令异步复制给slave。
 
 
+#### 哨兵
+mkdir -p /var/redis/sentinel
+cp /usr/local/redis-4.0.12/sentinel.conf /etc/redis/
+vim /etc/redis/sentinel.conf
 
+bind node01
+dir /var/redis/sentinel
+sentinel monitor mymaster node01 6379 2 # 指向master的ip 和 port
+sentinel auth-pass mymaster geekymv
+```text
+#如果redis有访问密码，则必须配置sentinel auth-pass这个属性，如果不配置，sentinel启动时不会有任何报错，但监控不到Redis
+#而且很重要一点，这个属性必须在 sentinel monitor 之后，不然报错：“No such master with specified name.”
+```
 
+启动
+/usr/local/redis/bin/redis-sentinel /etc/redis/sentinel.conf
 
 
 #### Redis 过期策略
