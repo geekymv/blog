@@ -70,24 +70,72 @@ hence simplifying the instruction set. Yet another nice thing is that all instru
 Before learning about the bytecode instruction set though, let's get familiar with a few things about the JVM that are needed as a prerequisite.
 学习字节码指令集之前， 让我们先熟悉一下JVM的基础，作为学习指令集的前提条件。
 
-#### JVM Data Types JVM数据类型
-Java is statically typed, which affects the design of the bytecode instructions such that an instruction expects itself to operate on values of specific types. 
+JVM Data Types
+#### JVM数据类型
+
+Java is statically typed, which affects the design of the bytecode instructions such that an instruction expects itself to operate on values of specific types.
+Java是静态类型的，这影响了指令字节码的设计，使得一个指令期望自己去操作指定类型的值。
+ 
 For example, there are several add instructions to add two numbers: iadd, ladd, fadd, dadd. 
+例如，有几个两个数的相加指令：iadd, ladd, fadd, dadd。
 They expect operands of type, respectively, int, long, float, and double. 
+它们期望操作的类型分别是int, long, float, 和 double。
+
 The majority of bytecode has this characteristic of having different forms of the same functionality depending on the operand types.
+根据操作类型不同，相同的功能有不同的形式，大多数字节码具有的特征。
 
 The data types defined by the JVM are:
+JVM定义的数据类型：
 
 Primitive types:
+原生类型：
+
 Numeric types: byte (8-bit 2's complement), short (16-bit 2's complement), int (32-bit 2's complement), long (64-bit 2's complement), char (16-bit unsigned Unicode), float (32-bit IEEE 754 single precision FP), double (64-bit IEEE 754 double precision FP)
+数字类型：byte(8bit), short(16bit), int(32bit), long(64bit), char(16bit), float(32bit), double(64bit)
+
 boolean type
+布尔类型
+
 returnAddress: pointer to instruction
+返回地址：指向指令
+
 Reference types:
+引用类型
+
 Class types
+类类型
+
 Array types
+数组类型
+
 Interface types
+接口类型
+
 The boolean type has limited support in bytecode. 
-For example, there are no instructions that directly operate on boolean values. 
+字节码对布尔类型的支持有限制。
+For example, there are no instructions that directly operate on boolean values.
+例如，没有指令直接操作布尔类型。
+ 
 Boolean values are instead converted to int by the compiler and the corresponding int instruction is used.
+编译器将boolean值转换为int，并使用相应的int指令。
 
 Java developers should be familiar with all of the above types, except returnAddress, which has no equivalent programming language type. 
+Java开发人员应该熟悉上述所有类型，除了returnAddress类型，它没有等价的编程语言类型。
+
+Stack-Based Architecture
+#### 基于栈的架构
+
+The simplicity of the bytecode instruction set is largely due to Sun having designed a stack-based VM architecture, as opposed to a register-based one. 
+字节码指令集的简单性很大程度上归功于Sun设计了基于栈的VM 架构，而不是基于寄存器的架构。
+
+There are various memory components used by a JVM process, but only the JVM stacks need to be examined in detail to essentially be able to follow bytecode instructions:
+JVM 进程使用了各种内存组件，但是只需要详细检查JVM 栈，以便能够遵循字节码指令：
+
+PC register: for each thread running in a Java program, a PC register stores the address of the current instruction.
+PC 寄存器：对于每个运行在Java进程中的线程，PC 寄存器存储当前指令的地址。
+
+JVM stack: for each thread, a stack is allocated where local variables, method arguments, 
+and return values are stored. Here is an illustration showing stacks for 3 threads.
+JVM 栈：对于每个线程，被申请的栈用于存储本地变量，方法参数，返回值。下面是显示3个线程的堆栈图。
+
+{% asset_img jvm_stacks.png jvm stack %}
