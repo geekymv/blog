@@ -139,3 +139,19 @@ and return values are stored. Here is an illustration showing stacks for 3 threa
 JVM 栈：对于每个线程，被申请的栈用于存储本地变量，方法参数，返回值。下面是显示3个线程的堆栈图。
 
 {% asset_img jvm_stacks.png jvm stack %}
+
+Heap: memory shared by all threads and storing objects (class instances and arrays). Object deallocation is managed by a garbage collector.
+堆：
+{% asset_img heap.png heap %}
+
+Method area: for each loaded class, it stores the code of methods and a table of symbols (e.g. references to fields or methods) and constants known as the constant pool.
+方法区：
+{% asset_img method_area.png method area %}
+
+A JVM stack is composed of frames, each pushed onto the stack when a method is invoked and popped from the stack when the method completes (either by returning normally or by throwing an exception). Each frame further consists of:
+
+An array of local variables, indexed from 0 to its length minus 1. The length is computed by the compiler. A local variable can hold a value of any type, except long and double values, which occupy two local variables.
+An operand stack used to store intermediate values that would act as operands for instructions, or to push arguments to method invocations.
+{% asset_img stack_frame_zoom.png stack frame %}
+
+
