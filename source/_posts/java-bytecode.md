@@ -132,7 +132,7 @@ There are various memory components used by a JVM process, but only the JVM stac
 JVM 进程使用了各种内存组件，但是只需要详细检查JVM 栈，以便能够遵循字节码指令：
 
 PC register: for each thread running in a Java program, a PC register stores the address of the current instruction.
-PC 寄存器：对于每个运行在Java进程中的线程，PC 寄存器存储当前指令的地址。
+程序计数器：对于每个运行在Java进程中的线程，PC 寄存器存储当前指令的地址。
 
 JVM stack: for each thread, a stack is allocated where local variables, method arguments, 
 and return values are stored. Here is an illustration showing stacks for 3 threads.
@@ -140,18 +140,159 @@ JVM 栈：对于每个线程，被申请的栈用于存储本地变量，方法�
 
 {% asset_img jvm_stacks.png jvm stack %}
 
-Heap: memory shared by all threads and storing objects (class instances and arrays). Object deallocation is managed by a garbage collector.
-堆：
+Heap: memory shared by all threads and storing objects (class instances and arrays). 
+堆：堆内存被所有线程共享，用来存储对象（类实例和数组）。
+Object deallocation is managed by a garbage collector.
+对象的释放由垃圾收集器管理。
+
 {% asset_img heap.png heap %}
 
-Method area: for each loaded class, it stores the code of methods and a table of symbols (e.g. references to fields or methods) and constants known as the constant pool.
-方法区：
+Method area: for each loaded class, it stores the code of methods and a table of symbols 
+(e.g. references to fields or methods) and constants known as the constant pool.
+方法区：对于每个加载的类，它存储了方法代码和符号表（例如，对字段或方法的引用）。和称为常量池的常量。
 {% asset_img method_area.png method area %}
 
-A JVM stack is composed of frames, each pushed onto the stack when a method is invoked and popped from the stack when the method completes (either by returning normally or by throwing an exception). Each frame further consists of:
+A JVM stack is composed of frames, each pushed onto the stack when a method is invoked and 
+popped from the stack when the method completes (either by returning normally or by throwing an exception).
+JVM 栈由栈帧组成，每个栈帧在方法调用时被压入栈，方法完成时从栈顶弹出（通过正常返回或抛出异常）。
 
-An array of local variables, indexed from 0 to its length minus 1. The length is computed by the compiler. A local variable can hold a value of any type, except long and double values, which occupy two local variables.
-An operand stack used to store intermediate values that would act as operands for instructions, or to push arguments to method invocations.
+Each frame further consists of:
+每个栈帧还包括：
+1.An array of local variables, indexed from 0 to its length minus 1. 
+The length is computed by the compiler. 
+A local variable can hold a value of any type, except long and double values, which occupy two local variables.
+局部变量的数组，索引从0 到长度减1，长度是由编译器计算。
+局部变量可以保存任意类型的值，long 和 double 类型的值除外，它们占用两个局部变量。
+
+2.An operand stack used to store intermediate values that would act as operands for instructions, 
+or to push arguments to method invocations.
+一个操作数栈用于存储中间值，该中间值将充当指令的操作数，或者压入参数到方法调用。
 {% asset_img stack_frame_zoom.png stack frame %}
+
+
+#### Bytecode Explored
+#### 探索字节码
+With an idea about the internals of a JVM, we can look at some basic bytecode example generated from sample code. 
+Each method in a Java class file has a code segment that consists of a sequence of instructions, 
+each having the following format:
+了解 JVM 的内部结构，我们可以看一下从示例代码生成的一些基本字节码示例。
+Java class文件中的每个方法都有一个由一系列指令组成的代码片段，每个都有以下格式：
+```text
+opcode (1 byte)      operand1 (optional)      operand2 (optional)      ...
+```
+That is an instruction that consists of one-byte opcode and zero or more operands that contain the data to operate.
+这是由一个字节的操作码和零个或多个操作数组成的一个指令，
+
+Within the stack frame of the currently executing method, an instruction can push or pop values onto the operand stack, 
+and it can potentially load or store values in the array local variables. Let's look at a simple example:
+在当前正在执行的方法的栈帧内部，一个指令可以压入或弹出值到一个操作数栈，并且它可以在数组局部变量中加载或存储值。
+让我们看一个简单示例：
+
+```text
+public static void main(String[] args) {
+    int a = 1;
+    int b = 2;
+    int c = a + b;
+}
+```
+In order to print the resulting bytecode in the compiled class (assuming it is in a file Test.class), 
+we can run the `javap` tool:
+为了在编译的类中打印生成的字节码（假设它在一个Test.class文件中），我们可以运行javap 工具：
+```text
+javap -v Test.class
+```
+And we get:
+然后我们得到：
+```text
+public static void main(java.lang.String[]);
+descriptor: ([Ljava/lang/String;)V
+flags: (0x0009) ACC_PUBLIC, ACC_STATIC
+Code:
+stack=2, locals=4, args_size=1
+0: iconst_1
+1: istore_1
+2: iconst_2
+3: istore_2
+4: iload_1
+5: iload_2
+6: iadd
+7: istore_3
+8: return
+...
+```
+We can see the method signature for the main method, 
+a descriptor that indicates that the method takes an array of Strings ([Ljava/lang/String; ),
+ and has a void return type (V ). 
+ A set of flags follow that describe the method as public (ACC_PUBLIC) and static (ACC_STATIC).
+我们可以看到主方法的方法签名，一个描述符表示该方法使用字符串数组([Ljava/lang/String; )，并且具有空返回值类型（V）。
+下面的一组flags描述了方法是公开的(ACC_PUBLIC) 并且是静态的 (ACC_STATIC)。
+
+The most important part is the Code attribute,
+最重要的部分是代码属性，
+which contains the instructions for the method along with information 
+such as the maximum depth of the operand stack (2 in this case), 
+and the number of local variables allocated in the frame for this method (4 in this case). 
+其中包含方法说明和信息，例如操作数栈的最大深度（在本例中为2），以及此方法在栈帧中分配的局部变量数（在本例中为4）。
+
+All local variables are referenced in the above instructions except the first one (at index 0), 
+which holds the reference to the args argument. 
+The other 3 local variables correspond to variables a, b and c in the source code.
+除了第一个（索引0）之外，上述指令中引用了所有的局部变量，它保存了对args参数的引用。
+其他3个局部变量对应源码中的变量 a, b 和c。
+
+The instructions from address 0 to 8 will do the following:
+从地址0到8的指令将执行以下操作：
+
+iconst_1: Push the integer constant 1 onto the operand stack.
+iconst_1：将整型常量1压入到操作数栈。
+{% asset_img iconst_12.png iconst_1 %}
+
+istore_1: Pop the top operand (an int value) and store it in local variable at index 1, which corresponds to variable a.
+istore_1：弹出顶部操作数（一个整型值）并将其存储在索引1的局部变量中，该变量对应于变量a。
+{% asset_img istore_11.png istore_1 %}
+
+iconst_2: Push the integer constant 2 onto the operand stack.
+iconst_2: 将整型常量2压入到操作数栈。
+{% asset_img iconst_2.png iconst_2 %}
+
+istore_2: Pop the top operand int value and store it in local variable at index 2, which corresponds to variable b.
+istore_2：弹出顶部操作数整型值，并将其存储在索引2的局部变量中，该变量对应于变量b。
+{% asset_img istore_2.png istore_2 %}
+
+iload_1: Load the int value from local variable at index 1 and push it onto the operand stack.
+iload_1: 从索引1的局部变量加载整型值，并且将它压入操作数栈。
+{% asset_img iload_1.png iload_1 %}
+
+iload_2: Load the int value from the local variable at index 2 and push it onto the operand stack.
+iload_2: 从索引2的局部变量加载整型值，并且将它压入操作数栈。
+{% asset_img iload_2.png iload_2 %}
+
+iadd: Pop the top two int values from the operand stack, add them, and push the result back onto the operand stack.
+iadd: 从操作数栈顶部弹出两个整型值，将它们相加，并且将结果压回到操作数栈。
+{% asset_img iadd.png iadd %}
+
+istore_3: Pop the top operand int value and store it in local variable at index 3, which corresponds to variable c.
+istore_3: 弹出操作数顶部的整型值，并将其存储在索引3的局部变量中，该变量对应于变量c。
+{% asset_img istore_3.png istore_3 %}
+
+return: Return from the void method.
+return: 从void 方法返回。
+
+Each of the above instructions consists of only an opcode, which dictates exactly the operation to be executed by the JVM.
+上面的每个指令仅由一个操作码组成，它精确地指示JVM要执行的操作。
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
