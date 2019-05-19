@@ -353,18 +353,254 @@ invokestatic includes two additional bytes to construct the reference to the met
 The reference is shown by javap as #2, which is a symbolic reference to the calc method, 
 which is resolved from the constant pool described earlier.
 我们也注意到通过查看地址 invokestatic 命令占用3个字节，地址从6跳到9。
-这是因为不像目前看到的所有指令，invokestatic 指令包含两个
+这是因为不像目前看到的所有指令，invokestatic 指令包含两个附加的字节来构造调用方法的引用（除了操作码）。
+该引用由javap 显示为2，它是clac方法的符号引用，这是从前面描述的常量池中解析出来的。
 
+The other new information is obviously the code for the calc method itself. 
+It first loads the first integer argument onto the operand stack (iload_0). 
+The next instruction, i2d, converts it to a double by applying widening conversion. 
+The resulting double replaces the top of the operand stack.
+其他新信息显然是clac方法本身的代码。
+它首先加载第一个整型参数到操作数栈（iload_0）。
+下一个指令i2d，通过应用扩展转换将其转换为double。
+结果double 替换操作数栈顶。
 
+The next instruction pushes a double constant 2.0d  (taken from the constant pool) onto the operand stack. 
+Then the static Math.pow method is invoked with the two operand values prepared so far 
+(the first argument to calc and the constant 2.0d). 
+When the Math.pow method returns, its result will be stored on the operand stack of its invoker. 
+This can be illustrated below.
+下一个指令压入一个double类型的常量2.0d（取自常量池）到操作数栈。
+然后使用到目前为止准备的两个操作数值调用静态方法Math.pow（calc方法的第一个参数和常量2.0d)。
+当Math.pow 方法返回时，其结果存储在其调用者的操作数栈。这可以在下面说明。
+{% asset_img math_pow2.png math pow %}
 
+The same procedure is applied to compute Math.pow(b, 2):
+计算Math.pow(b, 2)是相似的过程：
+{% asset_img math_pow21.png math pow %}
 
+The next instruction, dadd, pops the top two intermediate results, adds them, and pushes the sum back to the top. 
+Finally, invokestatic invokes Math.sqrt on the resulting sum, 
+and the result is cast from double to int using narrowing conversion (d2i). 
+The resulting int is returned to the main method, which stores it back to c (istore_3).
+下一个指令dadd 弹出栈顶的两个中间结果，相加，将相加结果压回栈顶。
+最后，invokestatic 调用Math.sqrt
+并且使用强制转换（d2i）将结果从double 转换成int。
+int类型的结果被返回到main方法，存储到变量c（istore_3）。
 
+#### Instance Creations
+创建实例
+Let's modify the example and introduce a class Point to encapsulate XY coordinates.
+让我们修改示例并引入Point类来封装XY坐标。
+```text
+public class Test {
+    public static void main(String[] args) {
+        Point a = new Point(1, 1);
+        Point b = new Point(5, 3);
+        int c = a.area(b);
+    }
+}
+class Point {
+    int x, y;
+    Point(int x, int y) {
+        this.x = x;
+        this.y = y;
+    }
+    public int area(Point b) {
+        int length = Math.abs(b.y - this.y);
+        int width = Math.abs(b.x - this.x);
+        return length * width;
+    }
+}
+```
+The compiled bytecode for the main method is shown below:
+main方法的编译字节码如下所示：
+```text
+public static void main(java.lang.String[]);
+  descriptor: ([Ljava/lang/String;)V
+  flags: (0x0009) ACC_PUBLIC, ACC_STATIC
+  Code:
+    stack=4, locals=4, args_size=1
+       0: new           #2       // class test/Point
+       3: dup
+       4: iconst_1
+       5: iconst_1
+       6: invokespecial #3       // Method test/Point."<init>":(II)V
+       9: astore_1
+      10: new           #2       // class test/Point
+      13: dup
+      14: iconst_5
+      15: iconst_3
+      16: invokespecial #3       // Method test/Point."<init>":(II)V
+      19: astore_2
+      20: aload_1
+      21: aload_2
+      22: invokevirtual #4       // Method test/Point.area:(Ltest/Point;)I
+      25: istore_3
+      26: return
+```
+The new instructions encountereted here are new , dup, and invokespecial. 
+这里遇到的新指令是new, dup 和 invokespecial。
 
+Similar to the new operator in the programming language, 
+the new instruction creates an object of the type specified in the operand passed to it
+ (which is a symbolic reference to the class Point). 
+Memory for the object is allocated on the heap, and a reference to the object is pushed on the operand stack.
+与编程语言中的new 运算符类似，new 指令创建一个传递给它的操作数中指定类型的对象（这是Point类的符号引用）。
+对象的内存在堆上分配，对象的引用是被压入操作数栈。
 
+The dup instruction duplicates the top operand stack value, 
+which means that now we have two references the Point object on the top of the stack. 
+dup 指令复制操作数栈顶值，这意味着现在我们在栈顶有两个引用Point对象。
 
+The next three instructions push the arguments of the constructor 
+(used to initialize the object) onto the operand stack, 
+and then invoke a special initialization method, which corresponds with the constructor. 
+接下来三个指令将构造方法（用于初始化对象）的参数压入到操作数栈上，然后调用一个特殊的初始化方法，该方法与构造方法对应。
 
+The next method is where the fields x and y will get initialized. 
+After the method is finished, the top three operand stack values are consumed, 
+and what remains is the original reference to the created object (which is, by now, successfully initialized).
+下一个方法是属性x 和 y 将得到初始化，方法完成后，顶部三个操作数值被消费，
+剩下来的是对创建对象的原始引用（这时初始化成功）。
+{% asset_img init.png init %}
 
+Next, astore_1 pops that Point reference and assigns it to the local variable at index 1 
+(the a in astore_1 indicates this is a reference value).
+接下来，astore_1 弹出Point引用并将其分配给索引为1的局部变量（astore_1中的a表示这是引用值）。
+{% asset_img init_store.png init_store %}
 
+The same procedure is repeated for creating and initializing the second Point instance,
+ which is assigned to variable b.
+重复相似的过程来创建和初始化第二个Point实例，分配给变量b。
+{% asset_img init2.png init %}
+{% asset_img init_store2.png init_store %}
+
+The last step loads the references to the two Point objects from local variables at indexes 1 and 2 
+(using aload_1 and aload_2 respectively), and invokes the area method using invokevirtual,
+which handles dispatching the call to the appropriate method based on the actual type of the object. 
+最后一步从局部变量的索引1和2中加载对两个Point对象的引用（分别使用aload_1 和 aload_2指令），
+并且使用invokevirtual 指令调用area方法，它处理根据对象的实际类型将调用到适当的方法。
+ 
+For example, if the variable a contained an instance of type SpecialPoint that extends Point, 
+and the subtype overrides the area method, then the overriden method is invoked. 
+In this case, there is no subclass, and hence only one area method is available.
+例如，如果变量a 包含一个继承了Point的SpecialPoint类型的实例，并且子类型重写了area方法，然后重写的方法被调用。
+在这个例子中，没有子类，因此自由一个area方法是可用的。
+{% asset_img area2.png %}
+
+Note that even though the area method accepts one argument,
+there are two Point references on the top of the stack.
+注意，即使area方法接收一个参数，在栈顶有两个Point引用。
+
+The first one (pointA, which comes from variable a) is actually the instance 
+on which the method is invoked (otherwise referred to as this in the programming language),
+and it will be passed in the first local variable of the new frame for the area method. 
+The other operand value (pointB) is the argument to the area method.
+第一个（PointA 来自变量a）是调用方法的实际实例（在编程语言中称为this），
+它将在area方法的新帧的第一个局部变量中传递。另一个操作数值（pointB）是area方法的参数。
+
+#### The Other Way Around
+#### 其他方式
+You don't need to master the understanding of each instruction 
+and the exact flow of execution to gain an idea about what the program does based on the bytecode at hand. 
+For example, in my case, I wanted to check if the code employed a Java stream to read a file, 
+and whether the stream was properly closed. Now given the following bytecode, 
+it is relatively easy to determine that indeed a stream is used and most likely i
+t is being closed as part of a try-with-resources statement.
+
+```text
+public static void main(java.lang.String[]) throws java.lang.Exception;
+ descriptor: ([Ljava/lang/String;)V
+ flags: (0x0009) ACC_PUBLIC, ACC_STATIC
+ Code:
+   stack=2, locals=8, args_size=1
+      0: ldc           #2                  // class test/Test
+      2: ldc           #3                  // String input.txt
+      4: invokevirtual #4                  // Method java/lang/Class.getResource:(Ljava/lang/String;)Ljava/net/URL;
+      7: invokevirtual #5                  // Method java/net/URL.toURI:()Ljava/net/URI;
+     10: invokestatic  #6                  // Method java/nio/file/Paths.get:(Ljava/net/URI;)Ljava/nio/file/Path;
+     13: astore_1
+     14: new           #7                  // class java/lang/StringBuilder
+     17: dup
+     18: invokespecial #8                  // Method java/lang/StringBuilder."<init>":()V
+     21: astore_2
+     22: aload_1
+     23: invokestatic  #9                  // Method java/nio/file/Files.lines:(Ljava/nio/file/Path;)Ljava/util/stream/Stream;
+     26: astore_3
+     27: aconst_null
+     28: astore        4
+     30: aload_3
+     31: aload_2
+     32: invokedynamic #10,  0             // InvokeDynamic #0:accept:(Ljava/lang/StringBuilder;)Ljava/util/function/Consumer;
+     37: invokeinterface #11,  2           // InterfaceMethod java/util/stream/Stream.forEach:(Ljava/util/function/Consumer;)V
+     42: aload_3
+     43: ifnull        131
+     46: aload         4
+     48: ifnull        72
+     51: aload_3
+     52: invokeinterface #12,  1           // InterfaceMethod java/util/stream/Stream.close:()V
+     57: goto          131
+     60: astore        5
+     62: aload         4
+     64: aload         5
+     66: invokevirtual #14                 // Method java/lang/Throwable.addSuppressed:(Ljava/lang/Throwable;)V
+     69: goto          131
+     72: aload_3
+     73: invokeinterface #12,  1           // InterfaceMethod java/util/stream/Stream.close:()V
+     78: goto          131
+     81: astore        5
+     83: aload         5
+     85: astore        4
+     87: aload         5
+     89: athrow
+     90: astore        6
+     92: aload_3
+     93: ifnull        128
+     96: aload         4
+     98: ifnull        122
+    101: aload_3
+    102: invokeinterface #12,  1           // InterfaceMethod java/util/stream/Stream.close:()V
+    107: goto          128
+    110: astore        7
+    112: aload         4
+    114: aload         7
+    116: invokevirtual #14                 // Method java/lang/Throwable.addSuppressed:(Ljava/lang/Throwable;)V
+    119: goto          128
+    122: aload_3
+    123: invokeinterface #12,  1           // InterfaceMethod java/util/stream/Stream.close:()V
+    128: aload         6
+    130: athrow
+    131: getstatic     #15                 // Field java/lang/System.out:Ljava/io/PrintStream;
+    134: aload_2
+    135: invokevirtual #16                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+    138: invokevirtual #17                 // Method java/io/PrintStream.println:(Ljava/lang/String;)V
+    141: return
+   ...
+```
+We see occurrences of java/util/stream/Stream where forEach is called, 
+preceded by a call to InvokeDynamic with a reference to a Consumer. 
+And then we see a chunk of bytecode that calls Stream.close along with branches that call Throwable.addSuppressed. 
+This is the basic code that gets generated by the compiler for a try-with-resources statement.
+
+Here's the original source for completeness:
+
+```text
+public static void main(String[] args) throws Exception {
+    Path path = Paths.get(Test.class.getResource("input.txt").toURI());
+    StringBuilder data = new StringBuilder();
+    try(Stream lines = Files.lines(path)) {
+        lines.forEach(line -> data.append(line).append("\n"));
+    }
+    System.out.println(data.toString());
+}
+```
+
+#### Conclusion
+Thanks to the simplicity of the bytecode instruction set 
+and the near absence of compiler optimizations when generating its instructions, 
+disassembling class files could be one way to examine changes into 
+your application code without having the source, if that ever becomes a need.
 
 
 
