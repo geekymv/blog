@@ -56,7 +56,7 @@ reading bytecode helped me pinpoint the exact changes and construct them back in
 阅读字节码帮助我精确的定位实际改变的地方，并且使用源码的形式构造它们（我一定要从我的错误中吸取教训，这次一定要记住！）。
 
 The nice thing about bytecode is that you learn its syntax once, then it applies on all Java supported platforms — 
- 字节码的好处是你一旦学习它的语法，它可以应用于所欲Java支持的平台 - 
+字节码的好处是你一旦学习它的语法，它可以应用于所有Java支持的平台 - 
  
 because it is an intermediate representation of the code, and not the actual executable code for the underlying CPU. 
 因为它表示一个中间代码，不是实际在CPU上执行的代码。
@@ -280,6 +280,98 @@ return: 从void 方法返回。
 
 Each of the above instructions consists of only an opcode, which dictates exactly the operation to be executed by the JVM.
 上面的每个指令仅由一个操作码组成，它精确地指示JVM要执行的操作。
+
+#### Method Invocations
+#### 方法调用
+In the above example, there is only one method, the main method. 
+Let's assume that we need to a more elaborate computation for the value of variable c, 
+and we decide to place that in a new method called calc:
+在上面示例中只有一个方法，主方法。
+让我们假设我们需要对变量c的值进行一个更复杂的计算，我们决定将其放在一个名为calc的新方法中：
+```text
+public static void main(String[] args) {
+    int a = 1;
+    int b = 2;
+    int c = calc(a, b);
+}
+static int calc(int a, int b) {
+    return (int) Math.sqrt(Math.pow(a, 2) + Math.pow(b, 2));
+}
+```
+Let's see the resulting bytecode:
+让我们看看生成的字节码：
+
+```text
+public static void main(java.lang.String[]);
+  descriptor: ([Ljava/lang/String;)V
+  flags: (0x0009) ACC_PUBLIC, ACC_STATIC
+  Code:
+    stack=2, locals=4, args_size=1
+       0: iconst_1
+       1: istore_1
+       2: iconst_2
+       3: istore_2
+       4: iload_1
+       5: iload_2
+       6: invokestatic  #2         // Method calc:(II)I
+       9: istore_3
+      10: return
+static int calc(int, int);
+  descriptor: (II)I
+  flags: (0x0008) ACC_STATIC
+  Code:
+    stack=6, locals=2, args_size=2
+       0: iload_0
+       1: i2d
+       2: ldc2_w        #3         // double 2.0d
+       5: invokestatic  #5         // Method java/lang/Math.pow:(DD)D
+       8: iload_1
+       9: i2d
+      10: ldc2_w        #3         // double 2.0d
+      13: invokestatic  #5         // Method java/lang/Math.pow:(DD)D
+      16: dadd
+      17: invokestatic  #6         // Method java/lang/Math.sqrt:(D)D
+      20: d2i
+      21: ireturn
+```
+The only difference in the main method code is that instead of having the iadd instruction, 
+we now an invokestatic instruction, which simply invokes the static method calc. 
+The key thing to note is that the operand stack contained the two arguments that are passed to the method calc. 
+In other words, the calling method prepares all arguments of the to-be-called method by pushing them 
+onto the operand stack in the correct order. 
+invokestatic (or a similar invoke instruction, as will be seen later) will subsequently pop these arguments, 
+and a new frame is created for the invoked method where the arguments are placed in its local variable array.
+在主方法代码中唯一不同的是，不是使用iadd 命令，我们现在是一个 invokestatic 命令，它只是调用静态方法calc。
+关键需要注意的是，操作数栈包含传递给方法clac的两个参数。
+换句话说，调用方法准备被调用方法的所有参数，通过以正确的顺序压入它们到操作数栈。
+invokestatic（或者类似的调用命令，稍后将会看到）将随后弹出这些参数，
+并为调用的方法创建一个新的栈帧，其中参数放在其局部变量数组中。
+
+We also notice that the invokestatic instruction occupies 3 bytes by looking at the address, which jumped from 6 to 9. 
+This is because, unlike all instructions seen so far, 
+invokestatic includes two additional bytes to construct the reference to the method to be invoked (in addition to the opcode). 
+The reference is shown by javap as #2, which is a symbolic reference to the calc method, 
+which is resolved from the constant pool described earlier.
+我们也注意到通过查看地址 invokestatic 命令占用3个字节，地址从6跳到9。
+这是因为不像目前看到的所有指令，invokestatic 指令包含两个
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
