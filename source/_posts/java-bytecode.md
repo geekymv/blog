@@ -20,7 +20,7 @@ and deployed it on a server to test a potential fix for a performance issue.
 并且部署在一台服务器上以测试性能问题的潜在修复。
 
 Unfortunately, the code was never checked into a version control system, 
-不幸的是，代码没有加入版本控制系统，
+不幸的是，这些代码从没有被检入版本控制系统，
 
 and for whatever reason, the local changes were deleted without a trace. 
 并且由于一些原因，本地的修改被删除的毫无踪迹。
@@ -37,7 +37,7 @@ So with a sigh of relief, I fetched the JAR again and opened it using a decompil
 于是松了一口气，我再一次获取到JAR包并且使用反编译编辑器打开它...
 
 Only one problem: The decompiler GUI is not a flawless tool, and out of the many classes in that JAR, 
-唯一问题：反编译器GUI不是一个完美的工具，而且在这个JAR中有很多类，
+唯一的问题：反编译器GUI不是一个完美的工具，而且在这个JAR中有很多类，
 
 for some reason, only the specific class I was looking to decompile caused a bug in the UI whenever I opened it, and the decompiler to crash!
 由于某种原因，无论什么时候，我用反编译工具打开要查看的特定类就会引起一个UI bug，反编译器会崩溃！
@@ -87,29 +87,29 @@ The majority of bytecode has this characteristic of having different forms of th
 The data types defined by the JVM are:
 JVM定义的数据类型：
 
-Primitive types:
+- Primitive types:
 原生类型：
 
-Numeric types: byte (8-bit 2's complement), short (16-bit 2's complement), int (32-bit 2's complement), long (64-bit 2's complement), char (16-bit unsigned Unicode), float (32-bit IEEE 754 single precision FP), double (64-bit IEEE 754 double precision FP)
-数字类型：byte(8bit), short(16bit), int(32bit), long(64bit), char(16bit), float(32bit), double(64bit)
+    - Numeric types: byte (8-bit 2's complement), short (16-bit 2's complement), int (32-bit 2's complement), long (64-bit 2's complement), char (16-bit unsigned Unicode), float (32-bit IEEE 754 single precision FP), double (64-bit IEEE 754 double precision FP)
+    数字类型：byte(8bit), short(16bit), int(32bit), long(64bit), char(16bit), float(32bit), double(64bit)
+    
+    - boolean type
+    布尔类型
+    
+    - returnAddress: pointer to instruction
+    返回地址：指向指令
 
-boolean type
-布尔类型
-
-returnAddress: pointer to instruction
-返回地址：指向指令
-
-Reference types:
+- Reference types:
 引用类型
 
-Class types
-类类型
-
-Array types
-数组类型
-
-Interface types
-接口类型
+    - Class types
+    类类型
+    
+    - Array types
+    数组类型
+    
+    - Interface types
+    接口类型
 
 The boolean type has limited support in bytecode. 
 字节码对布尔类型的支持有限制。
@@ -158,13 +158,13 @@ JVM 栈由栈帧组成，每个栈帧在方法调用时被压入栈，方法完�
 
 Each frame further consists of:
 每个栈帧还包括：
-1.An array of local variables, indexed from 0 to its length minus 1. 
+- An array of local variables, indexed from 0 to its length minus 1. 
 The length is computed by the compiler. 
 A local variable can hold a value of any type, except long and double values, which occupy two local variables.
 局部变量的数组，索引从0 到长度减1，长度是由编译器计算。
 局部变量可以保存任意类型的值，long 和 double 类型的值除外，它们占用两个局部变量。
 
-2.An operand stack used to store intermediate values that would act as operands for instructions, 
+- An operand stack used to store intermediate values that would act as operands for instructions, 
 or to push arguments to method invocations.
 一个操作数栈用于存储中间值，该中间值将充当指令的操作数，或者压入参数到方法调用。
 {% asset_img stack_frame_zoom.png stack frame %}
@@ -342,7 +342,7 @@ onto the operand stack in the correct order.
 invokestatic (or a similar invoke instruction, as will be seen later) will subsequently pop these arguments, 
 and a new frame is created for the invoked method where the arguments are placed in its local variable array.
 在主方法代码中唯一不同的是，不是使用iadd 命令，我们现在是一个 invokestatic 命令，它只是调用静态方法calc。
-关键需要注意的是，操作数栈包含传递给方法clac的两个参数。
+关键需要注意的是，操作数栈包含传递给方法calc的两个参数。
 换句话说，调用方法准备被调用方法的所有参数，通过以正确的顺序压入它们到操作数栈。
 invokestatic（或者类似的调用命令，稍后将会看到）将随后弹出这些参数，
 并为调用的方法创建一个新的栈帧，其中参数放在其局部变量数组中。
@@ -354,13 +354,13 @@ The reference is shown by javap as #2, which is a symbolic reference to the calc
 which is resolved from the constant pool described earlier.
 我们也注意到通过查看地址 invokestatic 命令占用3个字节，地址从6跳到9。
 这是因为不像目前看到的所有指令，invokestatic 指令包含两个附加的字节来构造调用方法的引用（除了操作码）。
-该引用由javap 显示为2，它是clac方法的符号引用，这是从前面描述的常量池中解析出来的。
+该引用由javap 显示为2，它是calc方法的符号引用，这是从前面描述的常量池中解析出来的。
 
 The other new information is obviously the code for the calc method itself. 
 It first loads the first integer argument onto the operand stack (iload_0). 
 The next instruction, i2d, converts it to a double by applying widening conversion. 
 The resulting double replaces the top of the operand stack.
-其他新信息显然是clac方法本身的代码。
+其他新信息显然是calc方法本身的代码。
 它首先加载第一个整型参数到操作数栈（iload_0）。
 下一个指令i2d，通过应用扩展转换将其转换为double。
 结果double 替换操作数栈顶。
@@ -389,7 +389,7 @@ The resulting int is returned to the main method, which stores it back to c (ist
 int类型的结果被返回到main方法，存储到变量c（istore_3）。
 
 #### Instance Creations
-创建实例
+#### 创建实例
 Let's modify the example and introduce a class Point to encapsulate XY coordinates.
 让我们修改示例并引入Point类来封装XY坐标。
 ```text
