@@ -612,7 +612,7 @@ and the near absence of compiler optimizations when generating its instructions,
 disassembling class files could be one way to examine changes into 
 your application code without having the source, if that ever becomes a need.
 由于字节码指令集的简化，并且在生成其指令时几乎没有编译器优化，
-在你的应用程序代码没有源码，如果需要的化，反编译类文件可能是检查更改的一种方法。
+在你的应用程序代码没有源码，如果需要的话，反编译类文件可能是检查更改的一种方法。
 
 
 
