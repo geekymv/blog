@@ -16,11 +16,20 @@ git init
 touch hello.txt
 vi hello.txt
 
+查看状态
+git status
+
 添加到暂存区
 git add hello.txt
 
-从缓存区回退到工作区
+从暂存区回退到工作区
 git rm --cached hello.txt
+
+提交到版本库
+git commit hello.txt -m "第一次提交"
+
+查看提交日志
+git log
 
 对于user.name user.email 有三个地方可以配置
 - /etc/gitconfig (几乎不会使用) 使用git config --system
