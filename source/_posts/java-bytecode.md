@@ -486,7 +486,7 @@ For example, if the variable a contained an instance of type SpecialPoint that e
 and the subtype overrides the area method, then the overriden method is invoked. 
 In this case, there is no subclass, and hence only one area method is available.
 例如，如果变量a 包含一个继承了Point的SpecialPoint类型的实例，并且子类型重写了area方法，然后重写的方法被调用。
-在这个例子中，没有子类，因此自由一个area方法是可用的。
+在这个例子中，没有子类，因此只有一个area方法是可用的。
 {% asset_img area2.png %}
 
 Note that even though the area method accepts one argument,
