@@ -76,5 +76,10 @@ git config user.name
 设置user.email
 git config --local user.email 'yingmi@qq.com'
 
-优先级：特定项目 > global > system
+优先级：local > global > system
 
+
+
+[Git Diff Example](https://examples.javacodegeeks.com/software-development/git/git-diff-example/)
+[Git Article]https://dzone.com/users/3208287/kristip.html
+[Git vs. SVN](https://backlog.com/blog/git-vs-svn-version-control-system/)
