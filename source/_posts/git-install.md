@@ -3,9 +3,9 @@ title: git-install
 date: 2019-05-27 09:05:04
 tags:
 ---
-Git安装
+#### Git安装
 在Linux上安装
-首先，你可以尝试输入git，如果没有安装，可能会得到如下提示
+首先，你可以尝试输入git，如果没有安装，可能会得到如下提示：
 ```text
 -bash: git: command not found
 ```
@@ -25,8 +25,14 @@ brew install git
 ```
 
 在Windows上安装
+官方版本可以在 Git 官方网站下载。 
+打开 https://git-scm.com/download/win，下载会自动开始。
+要注意这是一个名为 Git for Windows的项目（也叫做 msysGit），和 Git 是分别独立的项目。
+然后按默认选项安装即可。安装完成后，在开始菜单里找到Git->Git Bash，弹出一个类似命令行窗口的东西，就说明Git安装成功！
 
-使用git --version 命令查看Git版本
+{% asset_img git-install-win.png git-install-win %}
+
+使用`git --version` 命令查看Git版本
 ```text
 # git --version
 git version 1.7.1
