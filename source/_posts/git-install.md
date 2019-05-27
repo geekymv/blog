@@ -42,11 +42,7 @@ $ which git
 ```
 更多安装方法可以参考官网教程[1.5 起步 - 安装 Git](https://git-scm.com/book/zh/v2/%E8%B5%B7%E6%AD%A5-%E5%AE%89%E8%A3%85-Git)
 
-#### Git配置
-Git自带一个 git config 的工具，专门用来配置或读取相应的工作环境变量。这些变量可以存储在三个不同的位置：
-- /etc/gitconfig
-- ~/.gitconfig
-- 当前使用
+
 
 
 #### 创建版本库
