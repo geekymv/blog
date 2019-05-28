@@ -9,14 +9,14 @@ tags:
 ```text
 -bash: git: command not found
 ```
-- 在Debian/Ubuntu上
-```text
-$ sudo apt-get install git
-```
-- 在Centos/RedHat上
-```text
-$ yum install git
-```
+    - 在Debian/Ubuntu上
+    ```text
+    $ sudo apt-get install git
+    ```
+    - 在Centos/RedHat上
+    ```text
+    $ yum install git
+    ```
 
 - 在Mac上安装
 在Mac上，这里推荐使用Homebrew 安装，具体方法请参考Homebrew 的文档：http://brew.sh。
