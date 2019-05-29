@@ -93,33 +93,3 @@ git config --local user.email 'yingmi@qq.com'
 优先级：local > global > system
 
 
-#### 创建版本库
-创建目录mygit
-mkdir mygit
-
-进入mygit
-cd mygit
-
-仓库初始化
-git init
-
-创建文件
-touch hello.txt
-vi hello.txt
-
-查看状态
-git status
-
-添加到暂存区
-git add hello.txt
-
-从暂存区回退到工作区
-git rm --cached hello.txt
-
-提交到版本库
-git commit hello.txt -m "第一次提交"
-
-查看提交日志
-git log
-
-
