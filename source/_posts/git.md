@@ -72,7 +72,6 @@ Git 中的文件状态：
 - 暂存区(Index/Stage)：是一个文件，保存了下次将提交的文件列表信息，一般在 Git 仓库目录中。有时候也被称作`‘索引’'，不过一般说法还是叫暂存区域；
 - Git 仓库：Git 用来保存项目的元数据和对象数据库的地方，就是工作区中的隐藏目录.git。
 {% asset_img areas.png areas %}
-{% asset_img trees.png trees %}
 
 基本的 Git 工作流程如下：
 - 在工作目录中修改文件；
@@ -81,27 +80,7 @@ Git 中的文件状态：
 
 
 #### 小结
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+本文主要介绍了Git诞生的起因，Git 特点和 Git 工作流程，下一篇文章会介绍Git的安装和Git基本命令的使用。
 
 
 [Git Diff Example](https://examples.javacodegeeks.com/software-development/git/git-diff-example/)
