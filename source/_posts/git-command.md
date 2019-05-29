@@ -18,7 +18,7 @@ Initialized empty Git repository in E:/develop/source/mygit/.git/
 ```
 {% asset_img git-init.png git init %}
 当执行完`git init` 命令后，Git Bash 工具上多出了`(master)`的标识，
-表示当前是在master分支，这也是 Git 为我们创建的默认分支。
+表示当前是在master分支，这也是 Git 为我们创建的默认分支（后面会详细介绍 Git 分支）。
 
 使用`ls -al` 命令查看`git init` 命令为我们生成了哪些隐藏文件
 ```text
@@ -30,7 +30,7 @@ drwxr-xr-x 1 Administrator 197121 0 五月 29 14:50 .git/
 ```
 可以看到，mygit 目录下多出了.git 目录，先知道`git init` 命令为我们生成了.git 目录，后面再分析这个目录下的内容。
 
-我们现在可以创建一个文件，并提交到Git 仓库。
+我们现在可以创建一个文件：
 touch hello.txt
 编辑文件，添加如下内容
 vi hello.txt
@@ -38,7 +38,7 @@ vi hello.txt
 hello Git
 ```
 
-查看状态
+查看工作目录状态
 git status
 ```text
 $ git status
@@ -54,10 +54,10 @@ Untracked files:
 nothing added to commit but untracked files present (use "git add" to track)
 
 ```
-当前在 master 分支，hello.txt 文件未被跟踪，我们可以使用 `git add` 命令
+在状态报告中可以看到，当前在 master 分支，hello.txt 文件未被跟踪，我们可以使用 `git add` 命令
 来实现对指定文件的跟踪。
 
-添加到暂存区
+开始跟踪hello.txt文件
 git add hello.txt
 
 再一次查看状态
@@ -73,7 +73,8 @@ Changes to be committed:
 
         new file:   hello.txt
 ```
-通过查看当前状态，我们可以将hello.txt文件从暂存区回退到工作区，也可以提交hello.txt文件。
+可以看到，hello.txt文件已被跟踪，并处于暂存状态，只要在`Changes to be committed:`这行下面的，就说明是已暂存状态。
+对于已暂存的文件，我们可以将hello.txt文件从暂存区回退到工作区，也可以提交hello.txt文件。
 
 这里我们先演示从暂存区回退到工作区
 ```text
@@ -145,20 +146,3 @@ Date:   Wed May 29 16:12:48 2019 +0800
 
     commit hello.txt
 ```
-
-查看分支 git branch，前面带*号的分支是当前所在分支
-
-创建分支 git branch branch_name
-切换到某个分支 git checkout branch_name
-
-创建并切换到某个分支 git branch -b branch_name （合并了上面两个命令）
-
-合并分支：比如项目中有master分支、dev 分支，现在要将dev分支合并到master分支，
-首先要切换到master分支，使用git merge dev 将dev分支合并到master分支。
-
-合并过程中，如果有Git处理不了的冲突，还需要开发人员手动合并，决定冲突的代码需要保留的部分。
-
-删除分支：git branch -d branch_name
-删除分支的时候，不能删除当前所在的分支，需要先切换到别的分支上去。
-
-git branch -D branch_name 强制删除。
