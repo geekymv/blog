@@ -146,3 +146,5 @@ Date:   Wed May 29 16:12:48 2019 +0800
 
     commit hello.txt
 ```
+
+暂存已修改文件
