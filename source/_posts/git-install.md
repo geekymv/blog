@@ -5,19 +5,26 @@ tags:
 ---
 #### Git安装
 - 在Linux上安装
-首先，你可以尝试输入git，如果没有安装，可能会得到如下提示：
+- Debian / Ubuntu
 ```text
--bash: git: command not found
+$ sudo apt-get install git
 ```
-    - 在Debian/Ubuntu上
-    ```text
-    $ sudo apt-get install git
-    ```
-    - 在Centos/RedHat上
-    ```text
-    $ yum install git
-    ```
-
+- CentOS
+```text
+$ sudo yum install git
+```
+- Fedora
+```text
+$ sudo yum install git-core
+```
+- Arch Linux
+```text
+$ sudo pacman -Sy git
+```    
+- Gentoo
+```text
+$ sudo emerge --ask --verbose dev-vcs/git
+```
 - 在Mac上安装
 在Mac上，这里推荐使用Homebrew 安装，具体方法请参考Homebrew 的文档：http://brew.sh。
 ```text
@@ -25,10 +32,21 @@ $ brew install git
 ```
 
 - 在Windows上安装
-官方版本可以在 Git 官方网站下载，打开 https://git-scm.com/download/win，下载会自动开始。
+官方版本可以在 Git 官方网站（https://git-scm.com/）下载。
+{% asset_img git-win-download.png git-win-download %}
+
+1.点击`Download 2.21.0 for Windows`下载会自动开始，下载完成得到`Git-2.21.0-64-bit.exe` 可执行文件，
+通过浏览器可以得到下载连接类似`https://github.com/git-for-windows/git/releases/download/v2.21.0.windows.1/Git-2.21.0-64-bit.exe`，
+实际上是通过GitHub下载的，可能下载的很慢或者下载不了，不过不用担心我已经帮你下好了。
+
+2.
+
 要注意这是一个名为 Git for Windows的项目（也叫做 msysGit），和 Git 是分别独立的项目。
 然后按默认选项安装即可。安装完成后，在开始菜单里找到Git->Git Bash，弹出一个类似命令行窗口的东西，就说明Git安装成功！
 {% asset_img git-install-win.png git-install-win %}
+
+
+
 
 使用`git --version` 命令查看Git版本
 ```text
