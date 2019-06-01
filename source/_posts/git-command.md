@@ -52,7 +52,7 @@ $ ls -al
 $ git status
 ```
 {% asset_img git-status.png git status %}
-`git status` 命令将会成为以后经常会使用的命令，用来查看工作目录的状态，以便决定下一步的操作。
+`git status` 命令将会成为以后经常会使用的命令，用来查看工作目录文件的状态，以便决定下一步的操作。
 
 现在我们可以创建一个文件，然后使用`git add` 命令来实现对文件对追踪。
 ```text
@@ -120,17 +120,83 @@ Mac 下，通过 Terminal 操作如下：
 此时，hello.txt文件已成功提交，可以看到如下信息：
 {% asset_img git-commit.png git commit %}
 
-再次，查看工作区状态
+一般情况下，我们输入的提交信息都不会特别多，这时我们可以使用 `git commit -m "提交信息"`。
+
+查看工作区状态
 ```text
 $ git status
 On branch master
 nothing to commit, working tree clean
 ```
+说明现在的工作目录很干净。换句话说，就是当前目录下没有出现任何未跟踪状态的新文件，
+并且所有已跟踪文件在上次提交后都没有被修改过，否则Git 会在这里列出来。
 
 查看提交日志
 ```text
 $ git log
 ```
 {% asset_img git-log.png git log %}
+
+默认不加任何参数的话，`git log` 会按提交时间列出所有的更新，最近的更新排在最上面。
+git log 命令会列出每个提交的SHA-1 校验和、作者的名字和电子邮件地址、提交时间以及提交说明。
+
+
+
+
+#### 暂存修改的文件
+修改hello.txt 文件
+```text
+$ vi hello.txt
+```
+内容如下：
+```text
+hello Git
+hello Java
+```
+{% asset_img git-status-4.png git status %}
+出现在`Changes not staged for commit` 这行下面，说明修改了已跟踪的文件，但还没有放到暂存区。
+要暂存这次更新，需要运行`git add`命令。或者使用`git checkout` 命令将工作区的文件撤销修改。
+`git add` 是个多功能的命令：
+- 用于开始跟踪新文件；
+- 把已跟踪的文件放到暂存区；
+- 用于把有冲突的文件标记为已解决状态（这个后面会用到）。 
+
+
+我们先演示下使用`git checkout` 命令撤销修改
+```text
+git checkout -- hello.txt
+```
+{% asset_img git-checkout.png git checkout %}
+可以看到hello.txt文件中添加的一行文本（hello Java）被撤销。
+
+我们按照上面的方式再修改hello.txt文件，演示将修改添加到暂存取的功能
+运行`git add` 命令将已修改的hello.txt 文件放到暂存区
+```text
+$ git add hello.txt
+```
+{% asset_img git-add-2.png git add %}
+通过`git status` 可以看到hello.txt文件的修改已暂存。ß
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
