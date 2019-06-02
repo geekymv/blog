@@ -175,7 +175,7 @@ git checkout -- hello.txt
 $ git add hello.txt
 ```
 {% asset_img git-add-2.png git add %}
-通过`git status` 可以看到hello.txt文件的修改已暂存。ß
+通过`git status` 可以看到hello.txt文件的修改已暂存。
 
 
 
