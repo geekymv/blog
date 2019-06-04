@@ -243,7 +243,55 @@ git checkout -- hello.txt
 想把文件从Git仓库中删除，但是仍希望保留到当前工作目录中，
 git rm --cached hello.txt
 
-#### 移动文件
+#### 重命名文件
+在我们日常开发中，可能会出现修改文件名的情况，比如觉得某个类的名字取的不能够见名知义，想要修改。
+要在Git 中对文件重命名，可以使用`git mv` 命令
+```text
+$ git mv file_from file_to
+```
+比如，我们将文件 hello.txt 改名为hello2.txt
+```text
+$ git mv hello.txt hello2.txt
+```
+{% asset_img git-mv.png git mv %}
+
+查看状态信息，可以看到 Git 能够识别到我们对文件执行了重命名操作，并且已是暂存状态。
+运行git mv 相当与运行了下面三条命令：
+```text
+$ mv hello.txt hello2.txt
+$ git rm hello.txt
+$ git add hello2.txt
+```
+重命名已完成，这个时候我们可以提交修改 `git commit -m "重命名文件"`。
+或者误操作了这个文件，想要回退。
+```text
+$ git reset HEAD hello2.txt
+$ git status
+```
+{% asset_img git-reset.png git reset %}
+这样hello2.txt 文件处于未跟踪状态了。
+
+```text
+$ git reset HEAD hello.txt
+$ git status
+```
+{% asset_img git-reset-2.png git reset %}
+
+```text
+$ git checkout -- hello.txt
+$ rm hello2.txt
+```
+{% asset_img git-checkout-2.png git checkout %}
+
+
+
+
+
+
+
+
+
+
 
 
 
