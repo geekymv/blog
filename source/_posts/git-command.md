@@ -178,20 +178,72 @@ $ git add hello.txt
 通过`git status` 可以看到hello.txt文件的修改已暂存。
 
 
+#### 状态简览
+`git status` 命令的输出十分详细，使用 `git status -s` 或 `git status --short` 命令可以得到更为紧凑的格式输出。
+```text
+git status -s
+```
+新添加的未跟踪文件前面有 ?? 标记
+
+新添加到暂存区的文件前面有 A 标记
+
+修改过的文件前面有 M 标记，注意M有两个可以出现的位置，
+出现在右边的M表示该文件被修改了但还没有放到暂存区，出现在左边的 M 表示该文件被修改并放入了暂存区。
 
 
+#### 查看已暂存和未暂存的修改
+```text
+git diff 
+```
+git diff 不加任何参数比较工作目录中的当前文件和暂存区之间的差异
+git diff HEAD 比较工作区与最新本地版本库
+git diff commit-id 比较工作区与指定 commit-id 之间的差异
+
+git diff --cached 比较暂存区与最新本地版本库
+git diff --cached commit-id 比较暂存区与指定commit-id 之间差异
 
 
+#### 提交时跳过使用暂存区
+git commit 使用暂存区可以精心准备要提交的内容，但有时候这么做略显繁琐。Git提供了一个跳过使用暂存区的方式，
+在提交的时候给git commit 加上-a 选项，Git会自动把所有已跟踪过的文件暂存起来一并提交。
+```text
+git commit -am '提交说明'
+```
+
+#### 移除文件
+要从Git中移除某个文件，就必须要从已跟踪文件清单中移除，然后提交。
+```text
+git rm hello.txt
+git commit -m '提交说明'
+```
+
+大部分情况下，我们会直接在文件管理器中把文件删除了或者使用rm 命令删除
+```text
+$ rm hello.txt
+```
+```text
+$ git status
+```
+
+有两个选择:
+1.确实要从版本库中删除该文件，就用git rm 记录此次删除文件的操作，并用git commit。
+```text
+git rm hello.txt
+git commit -m '提交说明'
+```
+现在文件就从版本库中删除了。
+
+2.删错了，把误删的文件恢复到最新版本。
+```text
+git checkout -- hello.txt
+```
+用版本库里的版本替换工作区的版本，可能会丢失最近一次提交后你修改的内容。
 
 
+想把文件从Git仓库中删除，但是仍希望保留到当前工作目录中，
+git rm --cached hello.txt
 
-
-
-
-
-
-
-
+#### 移动文件
 
 
 
