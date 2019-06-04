@@ -216,6 +216,7 @@ git commit -am '提交说明'
 git rm hello.txt
 git commit -m '提交说明'
 ```
+{% asset_img git-rm-1.png git rm %}
 
 大部分情况下，我们会直接在文件管理器中把文件删除了或者使用rm 命令删除
 ```text
@@ -224,6 +225,7 @@ $ rm hello.txt
 ```text
 $ git status
 ```
+{% asset_img git-rm.png git rm %}
 
 有两个选择:
 1.确实要从版本库中删除该文件，就用git rm 记录此次删除文件的操作，并用git commit。
@@ -266,14 +268,12 @@ $ git add hello2.txt
 或者误操作了这个文件，想要回退。
 ```text
 $ git reset HEAD hello2.txt
-$ git status
 ```
 {% asset_img git-reset.png git reset %}
 这样hello2.txt 文件处于未跟踪状态了。
 
 ```text
 $ git reset HEAD hello.txt
-$ git status
 ```
 {% asset_img git-reset-2.png git reset %}
 
