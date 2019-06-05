@@ -284,6 +284,40 @@ $ rm hello2.txt
 {% asset_img git-checkout-2.png git checkout %}
 
 
+#### 文件撤销
+修改最近一次提交说明
+```text
+$ git commit -amend
+```
+
+- 撤销工作区文件的修改
+```text
+$ git checkout -- hello.txt
+```
+如果hello.txt 修改后，还没有添加到暂存区，现在执行撤销操作，则回到和版本库一样的状态。
+如果hello.txt 已经添加到暂存区，又做了修改，现在执行了撤销操作，撤销的是工作目录的修改，则回到和暂存区一样的状态。
+当然如果是一个新的文件还没有添加到暂存区，也就没有Git撤销操作了。
+总之，就是让这个文件回到最近一次git commit或git add时的状态。
+
+
+撤销暂存区与工作目录中已修改的文件
+- 撤销暂存区
+修改了hello.txt文件
+使用git add . 将修改后的文件添加到暂存区
+使用git status 查看当前工作区状态
+git reset HEAD hello.txt 将文件从暂存区回退到工作区
+git checkout -- hello.txt
+
+
+#### 版本回退
+git log
+
+git reset --hard HEAD^
+git reset --hard~2
+git reset --hard commit-id
+
+git reflog
+
 
 
 
