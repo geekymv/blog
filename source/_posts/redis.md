@@ -97,6 +97,7 @@ srem 如果给定的元素存在于集合中，那么删除这个元素
 hash 散列
 hmget key-name key [key ...] 从散列里面获取一个或多个键的值
 hmset key-name key value [key value ...] 为散列里面的一个或多个键设置值
+hscan
 
 
 
@@ -270,6 +271,13 @@ https://mp.weixin.qq.com/s/nBS9sLSZEN28ZSd8QMZDjQ
 
 
 [库存系统难破题？京东到家来分享](https://www.infoq.cn/article/jingdongdaojia-inventory-system)
+
+
+
+
+#### scan
+https://juejin.im/book/5afc2e5f6fb9a07a9b362527/section/5b3d97d9e51d4519634f8512
+https://juejin.im/post/5bbcc8325188255c74553ae3
 
 
 
