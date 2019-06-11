@@ -285,10 +285,46 @@ $ rm hello2.txt
 
 
 #### 文件撤销
-修改最近一次提交说明
+在日常开发的过程中，我们可能会遇到这样的场景：
+场景一：
+刚刚的代码写的太愚蠢了，需要撤销，此时还没添加到暂存区。
 ```text
-$ git commit -amend
+$ vim hello.txt
 ```
+
+```text
+$ git status
+```
+
+```text
+$ git checkout -- hello.txt
+
+```
+这样hello.txt 文件回到和版本库一样的状态。
+
+场景二：
+基于场景一，不同的是这个时候被修改的 hello.txt 文件已经添加到暂存区了，需要撤销。
+
+将文件从暂存区回退到工作区
+```text
+$ git reset HEAD hello.txt
+```
+```text
+$ git checkout -- hello.txt
+```
+
+场景三：
+终于把hello.txt 文件修改完了，这个时候愉快的提交了的代码
+```text
+$ git commit -m "fix bug #666"
+```
+提交完后发现bug号激动的写错了，其实修改的是bug #66。
+修改最近一次的提交说明
+```text
+$ git commit -amend -m "fix bug #66"
+```
+只是修改了提交说明，并没有新增commit id。
+
 
 - 撤销工作区文件的修改
 ```text
