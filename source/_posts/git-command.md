@@ -318,7 +318,7 @@ $ git checkout -- hello.txt
 ```text
 $ git commit -m "fix bug #666"
 ```
-提交完后发现bug号激动的写错了，其实修改的是bug #66。
+提交完后发现bug号写错了，其实修改的是bug #66。
 修改最近一次的提交说明
 ```text
 $ git commit -amend -m "fix bug #66"
