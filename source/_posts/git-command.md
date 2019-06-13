@@ -285,74 +285,281 @@ $ rm hello2.txt
 
 
 #### 文件撤销
-在日常开发的过程中，我们可能会遇到这样的场景：
+在日常开发的过程中，我们可能会遇到以下几种的场景：
 场景一：
-刚刚的代码写的太愚蠢了，需要撤销，此时还没添加到暂存区。
+在工作区修改了文件内容，还没添加到暂存区，发现修改错了想要撤销修改。
+```text
+$ cat hello.txt
+hello Git
+```
+修改hello.txt 文件，添加一行内容hello world
 ```text
 $ vim hello.txt
+hello Git
+hello world
 ```
 
 ```text
 $ git status
-```
+On branch master
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git checkout -- <file>..." to discard changes in working directory)
 
+        modified:   hello.txt
+
+no changes added to commit (use "git add" and/or "git commit -a")
+```
+使用`git checkout -- <file>...` 撤销修改
 ```text
 $ git checkout -- hello.txt
-
 ```
-这样hello.txt 文件回到和版本库一样的状态。
+
+查看状态
+```text
+$ git status
+On branch master
+nothing to commit, working tree clean
+```
+查看hello.txt 文件内容
+```text
+$ cat hello.txt
+hello Git
+```
+hello.txt 文件回到和版本库一样。
 
 场景二：
-基于场景一，不同的是这个时候被修改的 hello.txt 文件已经添加到暂存区了，需要撤销。
+与场景一一样在工作区修改了文件内容，不同的是这个时候被修改的 hello.txt 文件已经添加到暂存区了，需要撤销修改
+```text
+$ vim hello.txt
+hello Git
+hello world
+```
+查看状态
+```text
+$ git status
+On branch master
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git checkout -- <file>..." to discard changes in working directory)
 
-将文件从暂存区回退到工作区
+        modified:   hello.txt
+
+no changes added to commit (use "git add" and/or "git commit -a")
+```
+
+将修改的文件添加到暂存区
+```text
+$ git add hello.txt
+```
+查看状态
+```text
+$ git status
+On branch master
+Changes to be committed:
+  (use "git reset HEAD <file>..." to unstage)
+
+        modified:   hello.txt
+```
+
+现在我们首先将文件从暂存区回退到工作区
 ```text
 $ git reset HEAD hello.txt
+Unstaged changes after reset:
+M       hello.txt
 ```
+
+查看状态，此时和场景一的状态是一样的了。
+```text
+$ git status
+On branch master
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git checkout -- <file>..." to discard changes in working directory)
+
+        modified:   hello.txt
+
+no changes added to commit (use "git add" and/or "git commit -a")
+
+```
+使用`git checkout -- <file>...` 撤销修改
 ```text
 $ git checkout -- hello.txt
 ```
 
 场景三：
-终于把hello.txt 文件修改完了，这个时候愉快的提交了的代码
+与场景二一样在工作区修改了文件内容，被修改的 hello.txt 文件已经添加到暂存区了，这个时候在工作区又做了修改，需要撤销本次修改
+
+```text
+$ vim hello.txt 
+hello Git
+hello world
+```
+将修改的文件添加到暂存区
+```text
+$ git add hello.txt
+```
+
+再次编辑文件
+```text
+$ vim hello.txt 
+hello Git
+hello world
+hello Java
+```
+
+查看状态
+```text
+$ git status
+On branch master
+Changes to be committed:
+  (use "git reset HEAD <file>..." to unstage)
+
+        modified:   hello.txt
+
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git checkout -- <file>..." to discard changes in working directory)
+
+        modified:   hello.txt
+```
+此时，hello.txt 文件同时出现在暂存区和非暂存区。
+我们想要撤销本次的修改，那么只要执行`git checkout -- hello.txt` 就可以了。
+```text
+$ git checkout hello.txt
+Updated 1 path from the index
+``` 
+
+```text
+$ git status
+On branch master
+Changes to be committed:
+  (use "git reset HEAD <file>..." to unstage)
+
+        modified:   hello.txt
+```
+
+查看文件内容，本次修改已经撤销了。
+```text
+$ cat hello.txt
+hello Git
+hello world
+```
+
+#### 文件撤销小结
+如果hello.txt 修改后，还没有添加到暂存区，现在执行撤销操作，执行`git checkout -- hello.txt` 则回到和版本库一样的状态。
+如果hello.txt 已经添加到暂存区，又做了修改，现在执行了撤销操作，撤销的是工作目录的修改，则回到和暂存区一样的状态。
+当然如果是一个新的文件还没有添加到暂存区，也就没有Git撤销操作了。总之，就是让这个文件回到最近一次git commit或git add时的状态。
+
+
+场景四：
+这个时候终于把hello.txt 文件修改完了，愉快的提交了的代码
 ```text
 $ git commit -m "fix bug #666"
+[master 50b27fc] fix bug #666
+ 1 file changed, 1 insertion(+)
 ```
 提交完后发现bug号写错了，其实修改的是bug #66。
+
+查看提交说明
+```text
+$ git log
+
+commit 50b27fce9b19dd25736893bcc3bb49c46a1242ae (HEAD -> master)
+Author: geekymv <ym2011678@foxmail.com>
+Date:   Thu Jun 13 19:22:14 2019 +0800
+
+    fix bug #666
+```
+
 修改最近一次的提交说明
 ```text
-$ git commit -amend -m "fix bug #66"
+$ git commit --amend -m "fix bug #66"
+
+[master 5c10da1] fix bug #66
+ Date: Thu Jun 13 19:22:14 2019 +0800
+ 1 file changed, 1 insertion(+)
+```
+```text
+$ git log
+
+commit 5c10da1d45b53cf2f98c538b9f8d758ff961fd81 (HEAD -> master)
+Author: geekymv <ym2011678@foxmail.com>
+Date:   Thu Jun 13 19:22:14 2019 +0800
+
+    fix bug #66
 ```
 只是修改了提交说明，并没有新增commit id。
 
 
-- 撤销工作区文件的修改
-```text
-$ git checkout -- hello.txt
-```
-如果hello.txt 修改后，还没有添加到暂存区，现在执行撤销操作，则回到和版本库一样的状态。
-如果hello.txt 已经添加到暂存区，又做了修改，现在执行了撤销操作，撤销的是工作目录的修改，则回到和暂存区一样的状态。
-当然如果是一个新的文件还没有添加到暂存区，也就没有Git撤销操作了。
-总之，就是让这个文件回到最近一次git commit或git add时的状态。
-
-
-撤销暂存区与工作目录中已修改的文件
-- 撤销暂存区
-修改了hello.txt文件
-使用git add . 将修改后的文件添加到暂存区
-使用git status 查看当前工作区状态
-git reset HEAD hello.txt 将文件从暂存区回退到工作区
-git checkout -- hello.txt
-
-
 #### 版本回退
-git log
+```text
+$ git log
+commit 5c10da1d45b53cf2f98c538b9f8d758ff961fd81 (HEAD -> master)
+Author: geekymv <ym2011678@foxmail.com>
+Date:   Thu Jun 13 19:22:14 2019 +0800
 
-git reset --hard HEAD^
-git reset --hard~2
-git reset --hard commit-id
+    fix bug #66
 
-git reflog
+commit 29cf508b469fd4b89de66b8b979e14b10c2663ea
+Author: geekymv <ym2011678@foxmail.com>
+Date:   Thu Jun 13 18:55:47 2019 +0800
+
+    修改文件
+
+commit 0a49afaf82d809568ecc942baf4c170d5027ef6d
+Author: geekymv <ym2011678@foxmail.com>
+Date:   Wed Jun 5 21:03:17 2019 +0800
+
+    add
+```
+
+git log 命令显示从最近到最远的提交说明，如果觉得输出的信息太多，可以加上参数`--pretty=oneline`
+```text
+$ git log --pretty=oneline
+5c10da1d45b53cf2f98c538b9f8d758ff961fd81 (HEAD -> master) fix bug #66
+29cf508b469fd4b89de66b8b979e14b10c2663ea 修改文件
+0a49afaf82d809568ecc942baf4c170d5027ef6d add
+```
+这下清爽多了！
+
+在Git中，用HEAD表示当前版本，上一个版本就是HEAD^，上上一个版本就是HEAD^^，
+当然往上100个版本写100个^比较容易数不过来，所以写成HEAD~100。
+```text
+$ git reset --hard HEAD^
+HEAD is now at 29cf508 修改文件
+```
+
+```text
+$ git log --pretty=oneline
+29cf508b469fd4b89de66b8b979e14b10c2663ea (HEAD -> master) 修改文件
+0a49afaf82d809568ecc942baf4c170d5027ef6d add
+```
+
+现在要想还回到指定回到`5c10da1d45b53cf2f98c538b9f8d758ff961fd81`版本，
+当然版本号没必要写全，前几位就可以了，Git会自动去找。
+
+```text
+$ git reset --hard 5c10da
+HEAD is now at 5c10da1 fix bug #66
+```
+可以看到又回到了5c10da...版本
+```text
+$ git log --pretty=oneline
+5c10da1d45b53cf2f98c538b9f8d758ff961fd81 (HEAD -> master) fix bug #66
+29cf508b469fd4b89de66b8b979e14b10c2663ea 修改文件
+0a49afaf82d809568ecc942baf4c170d5027ef6d add
+```
+
+记录你的每一次命令
+```text
+$ git reflog
+29cf508 (HEAD -> master) HEAD@{0}: reset: moving to 29cf
+5c10da1 HEAD@{1}: reset: moving to 5c10da1d45b53cf2f98c538b9f8d758ff961fd81
+29cf508 (HEAD -> master) HEAD@{2}: reset: moving to HEAD^
+5c10da1 HEAD@{3}: commit (amend): fix bug #66
+50b27fc HEAD@{4}: commit: fix bug #666
+```
 
 
 
