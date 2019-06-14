@@ -214,26 +214,33 @@ sentinel auth-pass mymaster geekymv
 阿里云Redis开发规范 https://yq.aliyun.com/articles/531067
 
 #### Redis 淘汰策略
+内存是有限的，如果不断的往redis里面写数据，肯定是没法放下所有数据在内存中的。
+redis 会在数据超过一个最大限度之后，将数据进行一定的清理，
+
 maxmemory 最大可用内存
 maxmemory policy 最大内存淘汰策略
 根据自身业务类型，选好maxmemory-policy，设置好过期时间。
+
 默认策略是noeviction，不会剔除任何数据，拒绝所有写入操作并返回客户端错误信息"(error) OOM command not allowed when used memory"，
 此时Redis只响应读操作。
 
 ```text
-# maxmemory <bytes>
+# maxmemory <bytes> 设置redis 用来存放数据的最大内存大小，一旦超过这个内存大小之后，就会立即使用maxmemory-policy 配置的策略清理数据。
 
 # MAXMEMORY POLICY: how Redis will select what to remove when maxmemory
 # is reached. You can select among five behaviors:
 #
-# volatile-lru -> Evict using approximated LRU among the keys with an expire set. 用lru算法删除过期的键值
-# allkeys-lru -> Evict any key using approximated LRU. 用lru算法删除所有的键值
+# volatile-lru -> Evict using approximated LRU among the keys with an expire set. 
+# 用lru算法删除过期的键值（用LRU算法，但是仅仅移除哪些指定了存活时间(TTL)的key）
+# allkeys-lru -> Evict any key using approximated LRU. 
+# 用lru算法删除所有的键值（就是我们常说的LRU算法，移除掉哪些最近最少使用的keys对应的数据）
 # volatile-lfu -> Evict using approximated LFU among the keys with an expire set. 用lfu算法删除过期的键值
 # allkeys-lfu -> Evict any key using approximated LFU. 用lfu算法删除所有的键值
 # volatile-random -> Remove a random key among the ones with an expire set. 随机删除过期的键值
 # allkeys-random -> Remove a random key, any key. 随机删除任何键值
 # volatile-ttl -> Remove the key with the nearest expire time (minor TTL) 删除最近要到期的键值
-# noeviction -> Don't evict anything, just return an error on write operations. 不删除键，对于写操作只返回一个错误
+# noeviction -> Don't evict anything, just return an error on write operations. 
+# 不删除键，对于写操作只返回一个错误（如果内存达到了maxmemory，client还要继续写入数据，那么就直接给客户端报错）
 #
 # LRU means Least Recently Used 最近最少使用
 # LFU means Least Frequently Used 最不经常使用
@@ -252,7 +259,7 @@ maxmemory policy 最大内存淘汰策略
 #
 # The default is:
 #
-# maxmemory-policy noeviction
+# maxmemory-policy noeviction 默认是不会删除任何数据，建议一般设置成allkeys-lru 策略比较好。
 ```
 
 缓存淘汰算法
