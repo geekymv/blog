@@ -3,6 +3,22 @@ title: git-branch
 date: 2019-05-29 16:45:11
 tags:
 ---
+Git 的默认分支名字是`master`。Git的`master` 并不是一个特殊的分支，它跟其他的分支并没有什么区别，
+`master` 分支是`git init` 命令默认创建的分支名称。
+
+创建名字为test 的分支
+```text
+$ git branch test
+```
+会在当前所在的提交对象上常见一个指针。
+
+HEAD 指向当前所在的分支，
+
+分支切换
+要切换到一个已存在的分支
+```text
+$ git checkout test
+```
 
 查看分支 git branch，前面带*号的分支是当前所在分支
 
