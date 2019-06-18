@@ -329,7 +329,7 @@ hello Git
 hello.txt 文件回到和版本库一样。
 
 场景二：
-与场景一一样在工作区修改了文件内容，不同的是这个时候被修改的 hello.txt 文件已经添加到暂存区了，需要撤销修改
+与场景一一样在工作区修改了文件内容，不同的是这个时候被修改的 hello.txt 文件已经添加到暂存区了，需要撤销修改。
 ```text
 $ vim hello.txt
 hello Git
@@ -388,7 +388,7 @@ $ git checkout -- hello.txt
 ```
 
 场景三：
-与场景二一样在工作区修改了文件内容，被修改的 hello.txt 文件已经添加到暂存区了，这个时候在工作区又做了修改，需要撤销本次修改
+与场景二一样在工作区修改了文件内容，被修改的 hello.txt 文件已经添加到暂存区了，这个时候在工作区又做了修改，需要撤销本次修改。
 
 ```text
 $ vim hello.txt 
@@ -400,7 +400,7 @@ hello world
 $ git add hello.txt
 ```
 
-再次编辑文件
+再次编辑文件，添加新的一行内容hello Java
 ```text
 $ vim hello.txt 
 hello Git
@@ -428,7 +428,7 @@ Changes not staged for commit:
 ```text
 $ git checkout hello.txt
 Updated 1 path from the index
-``` 
+```
 
 ```text
 $ git status
@@ -447,19 +447,19 @@ hello world
 ```
 
 #### 文件撤销小结
-如果hello.txt 修改后，还没有添加到暂存区，现在执行撤销操作，执行`git checkout -- hello.txt` 则回到和版本库一样的状态。
-如果hello.txt 已经添加到暂存区，又做了修改，现在执行了撤销操作，撤销的是工作目录的修改，则回到和暂存区一样的状态。
+如果hello.txt 修改后，还没有添加到暂存区，现在想要撤销，执行`git checkout -- hello.txt` 则回到和版本库一样的状态。
+如果hello.txt 已经添加到暂存区，又做了修改，现在想要撤销本次修改，执行`git checkout -- hello.txt` ，撤销的是工作目录的修改，则回到和暂存区一样的状态。
 当然如果是一个新的文件还没有添加到暂存区，也就没有Git撤销操作了。总之，就是让这个文件回到最近一次git commit或git add时的状态。
 
 
 场景四：
-这个时候终于把hello.txt 文件修改完了，愉快的提交了的代码
+这个时候终于把hello.txt 文件修改完了，愉快的执行了提交。
 ```text
 $ git commit -m "fix bug #666"
 [master 50b27fc] fix bug #666
  1 file changed, 1 insertion(+)
 ```
-提交完后发现bug号写错了，其实修改的是bug #66。
+提交完后发现bug号写错了，其实修改的是bug #66，想要修改提交说明。
 
 查看提交说明
 ```text
@@ -489,7 +489,7 @@ Date:   Thu Jun 13 19:22:14 2019 +0800
 
     fix bug #66
 ```
-只是修改了提交说明，并没有新增commit id。
+已经成功修改了提交说明，并没有新增commit id。
 
 
 #### 版本回退
@@ -523,8 +523,8 @@ $ git log --pretty=oneline
 ```
 这下清爽多了！
 
-在Git中，用HEAD表示当前版本，上一个版本就是HEAD^，上上一个版本就是HEAD^^，
-当然往上100个版本写100个^比较容易数不过来，所以写成HEAD~100。
+在Git中，用HEAD表示当前版本，上一个版本就是`HEAD^`，上上一个版本就是`HEAD^^`，
+当然往上10个版本写10个^比较容易数不过来，所以写成HEAD~10。
 ```text
 $ git reset --hard HEAD^
 HEAD is now at 29cf508 修改文件
@@ -535,6 +535,7 @@ $ git log --pretty=oneline
 29cf508b469fd4b89de66b8b979e14b10c2663ea (HEAD -> master) 修改文件
 0a49afaf82d809568ecc942baf4c170d5027ef6d add
 ```
+可以看到当前版本是`29cf50...`。
 
 现在要想还回到指定回到`5c10da1d45b53cf2f98c538b9f8d758ff961fd81`版本，
 当然版本号没必要写全，前几位就可以了，Git会自动去找。
@@ -543,7 +544,7 @@ $ git log --pretty=oneline
 $ git reset --hard 5c10da
 HEAD is now at 5c10da1 fix bug #66
 ```
-可以看到又回到了5c10da...版本
+可以看到又回到了`5c10da...`版本
 ```text
 $ git log --pretty=oneline
 5c10da1d45b53cf2f98c538b9f8d758ff961fd81 (HEAD -> master) fix bug #66
@@ -551,7 +552,9 @@ $ git log --pretty=oneline
 0a49afaf82d809568ecc942baf4c170d5027ef6d add
 ```
 
-记录你的每一次命令
+当你用`$ git reset --hard HEAD^`命令回退到`29cf50...`版本时，再想恢复到最新版本怎么版呢？
+上面我们能恢复是因为我们在笔记中记录了 commit id。这个时候使用`git log` 已经看不到最新版本到commit id 了。
+不用担心，在Git中总是有后悔药可以吃，`git reflog`记录你的每一次命令。
 ```text
 $ git reflog
 29cf508 (HEAD -> master) HEAD@{0}: reset: moving to 29cf
