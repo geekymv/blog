@@ -14,21 +14,25 @@ Git 的默认分支名字是`master`。Git的`master` 并不是一个特殊的�
 `master` 分支是`git init` 命令默认创建的分支名称，
 都目前为止，我们一直在master分支上提交，此时master分支指向最后那个提交对象。
 
-创建名字为dev 的分支
+#### 创建分支
+创建名字为dev 的分支。
 ```text
 $ git branch dev
 ```
 会在当前所在的提交对象上创建一个指针。
 {% asset_img git-branch.png git branch %}
 
+在Git 中HEAD 指针指向当前所在的分支，通过上图可以看到HEAD 指向了master 分支。
+通过`git branch` 仅仅是创建了dev 分支，并不会自动切换到分支中去。
 
-HEAD 指向当前所在的分支，
-
-分支切换
-要切换到一个已存在的分支
+#### 分支切换
+要切换到一个已存在的分支，可以使用`git checkout` 命令。
 ```text
-$ git checkout test
+$ git checkout dev
 ```
+这个时候HEAD 指针就指向dev了。
+
+// 画图
 
 查看分支 git branch，前面带*号的分支是当前所在分支
 
