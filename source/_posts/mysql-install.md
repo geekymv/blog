@@ -62,6 +62,105 @@ show variables like 'character%';
 {% asset_img mysql-start.png mysql start %}
 
 
+#### mysql安装使用 Yum源方式
+在Centos 上通过yum 安装mysql5.7
+https://dev.mysql.com/downloads/repo/yum/
+
+rpm -Uvh mysql80-community-release-el6-3.noarch.rpm
+
+yum repolist all |grep mysql
+
+vim /etc/yum.repos.d/mysql-community.repo
+
+yum repolist enabled |grep mysql
+
+yum install mysql-community-server
+
+service mysqld start
+service mysqld status
+
+mysql -uroot -p
+grep 'temporary password' /var/log/mysqld.log
+
+修改字符集
+[mysqld]
+character_set_server=utf8
+
+
+查看创建库的语句
+show create database db_name;
+
+创建用户
+create user 'test'@'%' identified by 'pAssWord';
+select user, host from mysql.user;
+
+删除用户
+drop user test;
+
+修改用户密码
+alter user 'root'@'localhost' identified by 'MyNewPass4!';
+用户名和主机唯一确定一个用户
+
+赋予权限
+grant all on *.* to 'test'@'%'
+
+#### 主从复制
+优点：
+数据冗余，提高数据的安全性
+读写分离，提高数据库负载
+
+原理：
+binlog 日志文件
+
+在主库上创建用户repl
+create user 'repl'@'192.168.195.%' identified by 'p4ssword';
+给用户授权
+grant replication slave on *.* to repl@'192.168.195.%' identified by 'p4ssword';
+
+
+#### mysql 日志
+error log 错误日志
+general query log 普通查询日志
+slow query log 慢查询日志
+binary log 二进制日志文件
+
+binary log 二进制日志文件作用
+- 增量备份
+- 主从
+
+查看log_bin 是否开启
+show variables like '%log_bin%';
+
+开启binlog日志
+vim /etc/my.cnf
+```text
+log_bin=/var/lib/mysql/mysql-bin
+server-id=10
+```
+
+查看二进制日志文件内容
+mysqlbinlog filename
+
+可以通过mysqlbinlog 进行恢复
+
+登录mysql查看
+show binlog events in 'filename'
+
+每次mysql服务器重启，服务器会调用flush logs会创建一个新的日志文件
+
+flush logs 刷新日志文件，会产生一个新的日志文件
+
+```text
+show master status; 查看当前日志的状态
+show master logs 查看所有的日志文件，相当于查看mysql-bin.index 索引文件
+reset master 清空日志文件，不建议操作。
+```
+
+
+
+
+
+
 [mysql事务隔离级别](https://mp.weixin.qq.com/s/XhhAepgPcVFUBROKB6EN8Q)
 - 读未提交(READ UNCOMMITTED)： 一个事务可以读到另一个事务未提交的数据；
 - 读已提交(READ-COMMITTED)：一个事务可以读到另一个事务已提交的数据；
@@ -123,23 +222,152 @@ set global transaction isolation level read committed;
 
 
 #### mysql主从复制
+配置主节点
+    - 创建用户，赋予权限
+    - 开启binlog 日志
+    
+在主库上创建用户repl
+create user 'repl'@'192.168.159.%' identified by 'p4ssword';
+给用户授权
+grant replication slave on *.* to repl@'192.168.159.%' identified by 'p4ssword';
 
+```text
+mysql> create user 'repl'@'192.168.159.%' identified by 'p4ssword';
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> select user, host from mysql.user;
++---------------+---------------+
+| user          | host          |
++---------------+---------------+
+| repl          | 192.168.159.% |
+| mysql.session | localhost     |
+| mysql.sys     | localhost     |
+| root          | localhost     |
++---------------+---------------+
+4 rows in set (0.00 sec)
+
+mysql> grant replication slave on *.* to repl@'192.168.159.%' identified by 'p4ssword';
+Query OK, 0 rows affected, 1 warning (0.01 sec)
+
+```    
+开启binlog日志
+vim /etc/my.cnf
+```text
+server-id=10
+log_bin=/var/lib/mysql/mysql-bin
+```
+
+配置从节点
+    - 配置同步日志
+    - 指定主节点的IP、端口，用户
+    - 启动从节点
+    
+vim /etc/my.cnf
+```text
+server-id=11
+relay_log=/var/lib/mysql/relay-bin
+```
 
 启动复制
 ```text
-mysql> change master to master_host='node01',
-    -> master_user='repl',
-    -> master_password='p4ssword',
-    -> master_log_file='mysql-bin.000039',
-    -> master_log_pos=0;
+mysql> change master to master_host='192.168.159.103', master_user='repl', master_password='p4ssword', master_log_file='mysql-bin.000001', master_log_pos=0;
 
 ```
 
+启动从节点
 ```text
-mysql> show slave status\G;
-
 mysql> start slave;
 ```
+
+Last_IO_Errno: 1593
+Last_IO_Error: Fatal error: The slave I/O thread stops because master and slave have equal MySQL server UUIDs; these UUIDs must be different for replication to work.
+这个错误需要修改从节点/var/lib/mysql 目录下auto.cnf 的 server-uuid 值。
+```text
+[auto]
+server-uuid=cb323b2b-9a26-11e9-9429-000c2908cd5c
+```
+
+查看从节点状态
+```text
+mysql> show slave status\G;
+```
+Slave_IO_Running: Yes
+Slave_SQL_Running: Yes
+
+主节点配置
+```text
+# For advice on how to change settings please see
+# http://dev.mysql.com/doc/refman/5.7/en/server-configuration-defaults.html
+
+[mysqld]
+#
+# Remove leading # and set to the amount of RAM for the most important data
+# cache in MySQL. Start at 70% of total RAM for dedicated server, else 10%.
+# innodb_buffer_pool_size = 128M
+#
+# Remove leading # to turn on a very important data integrity option: logging
+# changes to the binary log between backups.
+# log_bin
+#
+# Remove leading # to set options mainly useful for reporting servers.
+# The server defaults are faster for transactions and fast SELECTs.
+# Adjust sizes as needed, experiment to find the optimal values.
+# join_buffer_size = 128M
+# sort_buffer_size = 2M
+# read_rnd_buffer_size = 2M
+datadir=/var/lib/mysql
+socket=/var/lib/mysql/mysql.sock
+
+character_set_server=utf8
+
+log_bin=/var/lib/mysql/mysql-bin
+server-id=10
+
+# Disabling symbolic-links is recommended to prevent assorted security risks
+symbolic-links=0
+
+log-error=/var/log/mysqld.log
+pid-file=/var/run/mysqld/mysqld.pid
+
+```
+
+从节点配置
+```text
+# For advice on how to change settings please see
+# http://dev.mysql.com/doc/refman/5.7/en/server-configuration-defaults.html
+
+[mysqld]
+#
+# Remove leading # and set to the amount of RAM for the most important data
+# cache in MySQL. Start at 70% of total RAM for dedicated server, else 10%.
+# innodb_buffer_pool_size = 128M
+#
+# Remove leading # to turn on a very important data integrity option: logging
+# changes to the binary log between backups.
+# log_bin
+#
+# Remove leading # to set options mainly useful for reporting servers.
+# The server defaults are faster for transactions and fast SELECTs.
+# Adjust sizes as needed, experiment to find the optimal values.
+# join_buffer_size = 128M
+# sort_buffer_size = 2M
+# read_rnd_buffer_size = 2M
+datadir=/var/lib/mysql
+socket=/var/lib/mysql/mysql.sock
+
+character_set_server=utf8
+
+server-id=11
+
+# Disabling symbolic-links is recommended to prevent assorted security risks
+symbolic-links=0
+
+log-error=/var/log/mysqld.log
+pid-file=/var/run/mysqld/mysqld.pid
+
+```
+
+
 
 #### [索引](https://mp.weixin.qq.com/s/9GKu1yv7D5BbuPvYmg6srA)
 索引是存储引擎快速找到记录的一种数据结构，
@@ -153,6 +381,19 @@ mysql> start slave;
 
 索引需要额外的磁盘空间，并降低写操作的性能。
 
+### MySQL 大型分布式集群myCat实战
+
+#####大型分布式架构发展
+- 初始阶段
+- 应用服务和数据服务分离
+- 使用缓存改善网站性能
+- 使用应用服务器集群改善网站的并发处理能力
+- 数据库读写分离
+- 使用反向代理和CDN加速网站响应
+- 使用分布式文件系统和分布式数据库系统
+- 使用NoSQL和搜索引擎
+- 业务拆分
+- 分布式服务
 
 
 
