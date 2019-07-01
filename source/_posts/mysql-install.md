@@ -286,6 +286,10 @@ Last_IO_Error: Fatal error: The slave I/O thread stops because master and slave 
 [auto]
 server-uuid=cb323b2b-9a26-11e9-9429-000c2908cd5c
 ```
+重启mysql
+```text
+service mysqld restart
+```
 
 查看从节点状态
 ```text
