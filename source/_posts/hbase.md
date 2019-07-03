@@ -45,3 +45,12 @@ disable 'test'
 
 删除表
 drop 'test'
+
+退出shell
+exit
+
+关闭hbase
+bin/stop-hbase.sh
+
+
+
