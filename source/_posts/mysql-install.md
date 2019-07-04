@@ -61,6 +61,51 @@ show variables like 'character%';
 
 {% asset_img mysql-start.png mysql start %}
 
+#### MySQL安全管理
+
+mysql 用户账号和信息存储在名为mysql 数据库中，mysql 库中有一个名为user 的表，它包含所有用户账号。
+user mysql;
+select user, host from user;
+
+创建用户账号
+create user zhangsan identified by '123456';
+
+重命名一个用户账号
+rename user zhangsan to zhangsan2;
+
+删除用户账号(mysql5及其后drop user 会删除用户账号和所有有关的权限)
+drop user zhangsan2;
+
+设置访问权限
+
+查看赋予用户的权限
+show grants for zhangsan;
+
+在mysql 中用户定义为user@host，mysql的权限用用户名和主机名结合定义。
+如果不指定主机名，则使用默认的主机名%（授予用户访问权限而不管主机名）
+
+使用grant 语句设置权限，需要给出以下信息
+- 要授予的权限
+- 被授予访问的数据库和表
+- 用户名
+grant select on eshop.* to zhangsan;
+表示允许用户在eshop数据库的所有表上使用select，
+通过只授予select 权限，用户zhangsan 对eshop 数据库中的所有数据具有只读权限。
+
+
+撤销用户权限
+revoke select on eshop.* from zhangsan; 
+取消用户的select 权限。
+
+整个服务器，使用grant all 和 revoke all
+整个数据库，使用 on database.*
+特定的表，使用 on database.table
+特定的列
+特定的存储过程
+
+更改口令
+set password for zhangsan = password('123456789');
+
 
 #### mysql安装使用 Yum源方式
 在Centos 上通过yum 安装mysql5.7
