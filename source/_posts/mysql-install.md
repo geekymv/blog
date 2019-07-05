@@ -107,6 +107,20 @@ revoke select on eshop.* from zhangsan;
 set password for zhangsan = password('123456789');
 
 
+mysql 字符集和校对顺序
+
+查看所支持的字符集
+
+字符集：字母和符号的集合
+编码：某个字符集成员的内部表示
+校对：规定字符如何比较的指令
+
+show character set;
+
+查看所支持校对
+show collation;
+
+
 #### mysql安装使用 Yum源方式
 在Centos 上通过yum 安装mysql5.7
 https://dev.mysql.com/downloads/repo/yum/
