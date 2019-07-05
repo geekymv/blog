@@ -208,6 +208,14 @@ yum install mysql-community-server
 
 #### 启动MySQL
 service mysqld start
+
+```text
+[root@node01 yum.repos.d]# service mysqld start
+Initializing MySQL database:                               [FAILED]
+[root@node01 yum.repos.d]# service mysqld start
+Starting mysqld:                                           [  OK  ]
+```
+
 service mysqld status
 
 MySQL安装初始化过程会创建一个超级账号`'root'@'localhost'`。超级账号的临时密码存储在日志中。
