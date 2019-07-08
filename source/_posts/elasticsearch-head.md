@@ -32,7 +32,7 @@ unzip elasticsearch-head-master.zip
 
 grunt安装：
 进入下载的elasticsearch-head-master
-cd elasticsearch-head
+cd elasticsearch-head-master
 # 安装依赖 指定淘宝的npm源加速
 npm install --registry=https://registry.npm.taobao.org
 
