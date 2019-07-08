@@ -22,10 +22,11 @@ scp -r /usr/local/software/elasticsearch-6.5.4/plugins/ik geekymv@node03:/usr/lo
 jps 查看pid
 kill pid
 
+#### 测试
 ```text
 curl -XGET "http://node02:9200/your_index/_analyze" -H 'Content-Type: application/json' -d'
 {
-   "text":"中华人民共和国MN","tokenizer": "ik_max_word"
+   "text":"中华人民共和国万岁","tokenizer": "ik_max_word"
 }'
 ```
 
