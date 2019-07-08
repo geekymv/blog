@@ -5,7 +5,7 @@ tags:
 ---
 全文检索
 Apache Lucene 提供一个全文检索的功能库。
-文档(document)：索引和搜索时使用的主要数据载体，包含一个或对个存有数据的字段(field)。
+文档(document)：索引和搜索时使用的主要数据载体，包含一个或多个存有数据的字段(field)。
 字段(field)：文档的一部分，包含名称和值两部分。
 词(term)：一个搜索单元，表示文本中的一个词。
 标记(token)：表示在字段文本中出现的词，由这个词的文本、开始和结束偏移量以及类型组成。
@@ -255,20 +255,39 @@ bin/elasticsearch -d
 新建文档
 指定标识符，使用PUT
 ```text
-curl -XPUT -H"content-type:application/json"  http://node03:9200/blog/article/1 -d '{"title":"ElasticSearch", "content":"Hello,ES", "tags":["es", "release", "today"]}'
+curl -XPUT 'http://node03:9200/blog/article/1?pretty' -H "Content-Type:application/json" -d '{"title":"ElasticSearch", "content":"Hello,ES", "tags":["es", "release", "today"]}'
 ```
+
 自动创建标识符，使用POST
 ```text
- curl -XPOST -H"content-type:application/json"  http://node03:9200/blog/article/ -d '{"title":"lasticSearch", "content":"Hello,ES", "tags":["es", "release", "today"]}'
+curl -XPOST 'http://node03:9200/blog/article/?pretty' -H "Content-Type:application/json"  -d '{"title":"ElasticSearch", "content":"Hello,ES1", "tags":["es", "release", "today"]}'
 ```
+
 检索文档
+
+检索id等于1的文章
 ```text
-curl -XGET http://node03:9200/blog/article/1?pretty
+curl -XGET 'http://node03:9200/blog/article/1?pretty'
 ```
+
+检索内容为hello的文章
+```text
+curl -XGET 'http://node03:9200/blog/article/_search?q=content:hello&pretty=true'
+
+或
+curl -XGET 'http://node03:9200/blog/article/_search?pretty=true' -H 'Content-Type: application/json' -d '
+{
+    "query" : {
+        "match" : { "content": "hello" }
+    }
+}'
+```
+
 更新文档
 ```text
  curl -XPOST -H"content-type:application/json" http://node03:9200/blog/article/1/_update -d '{"script":"ctx._source.content=\"new content\""}
 ```
+
 删除文档
 curl -XDELETE http://node03:9200/blog/article/1?pretty
 
@@ -304,8 +323,8 @@ curl -XPOST -H"content-type:application/json" http://node02:9200/blog/_analyze?p
 }
 ```
 
-
-
+相关文章
+https://www.elastic.co/guide/en/elastic-stack-get-started/6.5/index.html
 ES文章：https://blog.csdn.net/laoyang360/article/details/79293493
 elasticsearch启动常见错误：https://www.cnblogs.com/zhi-leaf/p/8484337.html
 集群部署：https://www.jianshu.com/p/2e3e4334b036
