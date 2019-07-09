@@ -85,9 +85,12 @@ See Removal of mapping types
 
 A type used to be a logical category/partition of your index to allow you to 
 store different types of documents in the same index, e.g. one type for users, 
-another type for blog posts. It is no longer possible to create multiple types in an index, 
+another type for blog posts. 
+It is no longer possible to create multiple types in an index, 
 and the whole concept of types will be removed in a later version. See Removal of mapping types for more.
-
+一个类型(type)曾经是索引的一个逻辑类别/分区，允许你在同一个索引(index)中存储不同类型的文档(document)，
+例如，一个用户类型，另一个博客文章类型。
+在一个索引中不能创建多个类型，并且在以后的版本中类型概念将被移除。
 
 Document
 文档
@@ -95,11 +98,15 @@ A document is a basic unit of information that can be indexed.
 For example, you can have a document for a single customer, another document for a single product, 
 and yet another for a single order. This document is expressed in JSON (JavaScript Object Notation) 
 which is a ubiquitous internet data interchange format.
+文档是可以建立索引的基本信息单元。
+例如，你可以为单个客户创建一个文档(document)，为单个产品创建一个文档(document)，还有单个订单。
+这个文档(document)用JSON表示（这是一种无处不在的互联网数据交换格式）。
 
 Within an index/type, you can store as many documents as you want. 
 Note that although a document physically resides in an index, 
 a document actually must be indexed/assigned to a type inside an index.
-
+在索引/类型中，可以存储任意类型的文档。
+注意，尽管文档实际上位于索引中，文档实际上必须被索引/分配 给索引中的类型。
 
 Shards & Replicas
 分片和副本
@@ -110,3 +117,35 @@ of a single node or may be too slow to serve search requests from a single node 
 To solve this problem, Elasticsearch provides the ability to subdivide your index into multiple pieces called shards. 
 When you create an index, you can simply define the number of shards that you want. 
 Each shard is in itself a fully-functional and independent "index" that can be hosted on any node in the cluster.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
