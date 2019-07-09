@@ -118,7 +118,46 @@ To solve this problem, Elasticsearch provides the ability to subdivide your inde
 When you create an index, you can simply define the number of shards that you want. 
 Each shard is in itself a fully-functional and independent "index" that can be hosted on any node in the cluster.
 
+Sharding is important for two primary reasons:
 
+It allows you to horizontally split/scale your content volume
+It allows you to distribute and parallelize operations across shards (potentially on multiple nodes) thus increasing performance/throughput
+
+
+The mechanics of how a shard is distributed and also how its documents are aggregated back into search requests 
+are completely managed by Elasticsearch and is transparent to you as the user.
+
+In a network/cloud environment where failures can be expected anytime, it is very useful and highly recommended to 
+have a failover mechanism in case a shard/node somehow goes offline or disappears for whatever reason. 
+To this end, Elasticsearch allows you to make one or more copies 
+of your index’s shards into what are called replica shards, or replicas for short.
+
+Replication is important for two primary reasons:
+
+It provides high availability in case a shard/node fails. For this reason, 
+it is important to note that a replica shard is never allocated on the same node as the original/primary shard that it was copied from.
+It allows you to scale out your search volume/throughput since searches can be executed on all replicas in parallel.
+
+
+To summarize, each index can be split into multiple shards. An index can also be replicated zero (meaning no replicas) or more times. 
+Once replicated, each index will have primary shards (the original shards that were replicated from) and replica shards (the copies of the primary shards).
+
+The number of shards and replicas can be defined per index at the time the index is created. 
+After the index is created, you may also change the number of replicas dynamically anytime. 
+You can change the number of shards for an existing index using the _shrink and _split APIs, 
+however this is not a trivial task and pre-planning for the correct number of shards is the optimal approach.
+
+By default, each index in Elasticsearch is allocated 5 primary shards and 1 replica which means that 
+if you have at least two nodes in your cluster, your index will have 5 primary shards 
+and another 5 replica shards (1 complete replica) for a total of 10 shards per index.
+
+
+Each Elasticsearch shard is a Lucene index. 
+There is a maximum number of documents you can have in a single Lucene index. 
+As of LUCENE-5843, the limit is 2,147,483,519 (= Integer.MAX_VALUE - 128) documents. 
+You can monitor shard sizes using the _cat/shards API.
+
+With that out of the way, let’s get started with the fun part…​
 
 
 
