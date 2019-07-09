@@ -39,19 +39,28 @@ Node
 A node is a single server that is part of your cluster, stores your data, 
 and participates in the cluster’s indexing and search capabilities. Just like a cluster, 
 a node is identified by a name which by default is a random Universally Unique IDentifier (UUID) 
-that is assigned to the node at startup. You can define any node name you want if you do not want the default. 
+that is assigned to the node at startup. 
+You can define any node name you want if you do not want the default. 
 This name is important for administration purposes where you want to 
 identify which servers in your network correspond to which nodes in your Elasticsearch cluster.
+一个节点是作为集群一部分的单个服务器，存储数据，并且参与集群索引和搜索功能。
+像集群一样，一个节点是通过名称唯一标识，默认是一个随机的UUID，在节点启动的时候分配给节点。
+如果你不想使用默认的，你可以定义你需要的的任何节点名称。
+这个名称对于管理目的很重要，你可以识别网络中的哪些服务器与Elasticsearch 集群中的哪些节点相对应。
 
 A node can be configured to join a specific cluster by the cluster name. 
 By default, each node is set up to join a cluster named elasticsearch which means that if you start up a number of 
 nodes on your network and—​assuming they can discover each other—​they will all automatically 
 form and join a single cluster named elasticsearch.
+一个节点可以通过配置集群名称加入到一个指定的集群。
+默认情况下，每个节点设置为加入集群名为elasticsearch 的集群，这意味着如果启动了多个网络上的节点-假设它们可以发现彼此-他们将自动完成组成
+并加入名为elasticsearch 的单个集群。
 
 In a single cluster, you can have as many nodes as you want. 
 Furthermore, if there are no other Elasticsearch nodes currently running on your network, 
 starting a single node will by default form a new single-node cluster named elasticsearch.
-
+在单个集群，你可以有任意多的节点。此外，如果当前运行在你的网络中没有其他Elasticsearch 节点，
+默认情况下，启动一个单节点将形成一个名为elasticsearch 的新单节点集群。
 
 Index
 索引
@@ -62,4 +71,37 @@ and this name is used to refer to the index when performing indexing, search, up
 
 In a single cluster, you can define as many indexes as you want.
 
+Type
+类型
+Warning
+Deprecated in 6.0.0.
+See Removal of mapping types
+在6.0.0中被废弃。
 
+A type used to be a logical category/partition of your index to allow you to 
+store different types of documents in the same index, e.g. one type for users, 
+another type for blog posts. It is no longer possible to create multiple types in an index, 
+and the whole concept of types will be removed in a later version. See Removal of mapping types for more.
+
+
+Document
+文档
+A document is a basic unit of information that can be indexed. 
+For example, you can have a document for a single customer, another document for a single product, 
+and yet another for a single order. This document is expressed in JSON (JavaScript Object Notation) 
+which is a ubiquitous internet data interchange format.
+
+Within an index/type, you can store as many documents as you want. 
+Note that although a document physically resides in an index, 
+a document actually must be indexed/assigned to a type inside an index.
+
+
+Shards & Replicas
+分片和副本
+An index can potentially store a large amount of data that can exceed the hardware limits of a single node. 
+For example, a single index of a billion documents taking up 1TB of disk space may not fit on the disk 
+of a single node or may be too slow to serve search requests from a single node alone.
+
+To solve this problem, Elasticsearch provides the ability to subdivide your index into multiple pieces called shards. 
+When you create an index, you can simply define the number of shards that you want. 
+Each shard is in itself a fully-functional and independent "index" that can be hosted on any node in the cluster.
