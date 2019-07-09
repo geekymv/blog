@@ -68,8 +68,13 @@ An index is a collection of documents that have somewhat similar characteristics
 For example, you can have an index for customer data, another index for a product catalog, 
 and yet another index for order data. An index is identified by a name (that must be all lowercase) 
 and this name is used to refer to the index when performing indexing, search, update, and delete operations against the documents in it.
+索引是具有某些相似特征的文档(document)集合。
+例如，你可以有客户数据的索引，产品目录的索引，还有另一个订单数据的索引。
+一个索引通过名称（必须全部小写）唯一标识。
+并且这个名称是用于在对其中的文档执行索引、搜索、更新和删除操作时引用索引。
 
 In a single cluster, you can define as many indexes as you want.
+在单个集群中，你可以定义任意多的索引。
 
 Type
 类型
