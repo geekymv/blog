@@ -6,6 +6,7 @@ tags:
 https://www.infoq.cn/article/java-interrupt-mechanism
 
 Java中断机制是一种协作机制，也就是说通过中断只是设置线程的中断状态，并不能直接终止另一个线程，而需要被中断的线程自己去检查中断状态然后做相应处理。
+甚至可以不理会该请求，就像这个线程没有被中断一样。
 
 ```text
 public static boolean interrupted() {
