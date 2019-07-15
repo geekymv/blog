@@ -14,12 +14,17 @@ Apache Lucene 将所有信息写到一个称为倒排索引(inverted index)的�
 
 [elasticsearch官网](https://www.elastic.co/downloads/elasticsearch)
 主要概念：
-- 索引(index)
+- 近实时(Near Realtime、NRT)：Elasticsearch 是一个近实时的搜索平台，这意味着从搜索文档到可搜索文档的时间有一点延迟（通常是1s）。
+- 集群(Cluster)
+- 节点(Node)
+- 索引(Index)
 索引(index)是ElasticSearch对逻辑数据的逻辑存储，可以把索引看成关系型数据库的数据库。ElasticSearch 可以把索引放在一台机器或者分散在多台机器上，每个索引有一个或多个分片(shard)，每个分片可以有多个副本(replica)。
--文档类型(type)
+-文档类型(Type)
 在ElasticSearch中，一个索引对象可以存储很多不同用途的对象。文档类型(type)可以让我们轻易区分单个索引中的不同对象。
 每个文档可以有不同的结构，
--文档(document)
+- 文档(Document)
+- 分片和副本(Shards and Replicas)
+
 
 
 
@@ -324,7 +329,7 @@ curl -XPOST -H"content-type:application/json" http://node02:9200/blog/_analyze?p
 ```
 
 相关文章
-https://www.elastic.co/guide/en/elastic-stack-get-started/6.5/index.html
+https://www.elastic.co/guide/en/elasticsearch/reference/6.5/getting-started.html
 ES文章：https://blog.csdn.net/laoyang360/article/details/79293493
 elasticsearch启动常见错误：https://www.cnblogs.com/zhi-leaf/p/8484337.html
 集群部署：https://www.jianshu.com/p/2e3e4334b036
