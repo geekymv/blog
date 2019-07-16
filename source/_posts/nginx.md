@@ -83,6 +83,8 @@ nginx 负载均衡器本身也是一台反向代理服务器，将用户请求�
 超时与重试机制
 网络连接/读/写超时时间
 
+[Nginx设置IP黑名单,限制某些IP的访问](https://wang123.net/post/detail-1066.html)
+
 
 
 
