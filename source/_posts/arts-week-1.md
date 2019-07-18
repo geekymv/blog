@@ -63,6 +63,11 @@ class Solution {
 
 LeetCode提供了时间复杂度是O(n)的解决方法，https://leetcode.com/problems/two-sum/solution/
 
+LeetCode 给出的第一种解决方法是类似我上面写的方法，也叫做 Brute Force Approach。
+注意，LeetCode 给出的这种方法并没有直接将两个int 值相加，而是使用减法`if (nums[j] == target - nums[i])`，为什么这么做呢？
+这样可以防止整型溢出！
+
+
 # Review
 [Elasticsearch Getting Started](https://www.elastic.co/guide/en/elasticsearch/reference/6.5/getting-started.html)
 总结：
@@ -182,3 +187,6 @@ class Insurance {
 }
 ```
 # Share
+分享coolshell上的一篇文章
+[C语言的整型溢出问题](https://coolshell.cn/articles/11466.html)
+虽然文章标题是C语言，其中提供的思路不仅限于C语言，文章中提到如何防止整型溢出，值得一读。
