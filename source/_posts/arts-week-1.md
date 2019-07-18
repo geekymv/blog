@@ -65,7 +65,7 @@ LeetCode提供了时间复杂度是O(n)的解决方法，https://leetcode.com/pr
 
 LeetCode 给出的第一种解决方法是类似我上面写的方法，也叫做 Brute Force Approach。
 注意，LeetCode 给出的这种方法并没有直接将两个int 值相加，而是使用减法`if (nums[j] == target - nums[i])`，为什么这么做呢？
-这样可以防止整型溢出！
+这样可以防止整型溢出！本周ARTS的Share部分分享了一篇关于整型溢出问题，请移步->。
 
 
 # Review
