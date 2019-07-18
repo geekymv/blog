@@ -27,6 +27,14 @@ Given nums = [2, 7, 11, 15], target = 9,
 Because nums[0] + nums[1] = 2 + 7 = 9,
 return [0, 1].
 ```
+两数之和
+
+给定一个整型数组nums和一个目标值target，在数组中找出两个数相加之和等于目标值，返回它们的下标。
+可以假设每个目标值只有一个对应的答案，但是你不能使用这个数组中同样的元素两次。
+
+
+思路：
+将数组中每个数和它后面的元素依次相加之和与目标值比较，如果相等就返回这两个值的下标。
 
 ## Java 程序实现
 ```text
@@ -35,6 +43,7 @@ class Solution {
         int[] result = new int[2];
 
         for(int i = 0, len = nums.length; i < len - 1; i++) {
+            // j 从i 后面的一个元素开始
             for(int j = i + 1;  j < len; j++) {
                 if(nums[i] + nums[j] == target) {
                     result[0] = i;
@@ -48,6 +57,12 @@ class Solution {
     }
 }
 ```
+复杂度分析：
+- 时间复杂度O(n^2)
+- 空间复杂度O(1)
+
+LeetCode提供了时间复杂度是O(n)的解决方法，https://leetcode.com/problems/two-sum/solution/
+
 # Review
 [Elasticsearch Getting Started](https://www.elastic.co/guide/en/elasticsearch/reference/6.5/getting-started.html)
 总结：
