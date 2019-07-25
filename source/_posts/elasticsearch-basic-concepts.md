@@ -113,52 +113,73 @@ Shards & Replicas
 An index can potentially store a large amount of data that can exceed the hardware limits of a single node. 
 For example, a single index of a billion documents taking up 1TB of disk space may not fit on the disk 
 of a single node or may be too slow to serve search requests from a single node alone.
+索引可能存储大量的数据，可能超过单节点的硬盘限制。
+例如，占用1TB磁盘空间的十亿文档的单索引可能不适合在单节点的磁盘，或者可能对于单节点服务搜索请求会太慢。
 
 To solve this problem, Elasticsearch provides the ability to subdivide your index into multiple pieces called shards. 
 When you create an index, you can simply define the number of shards that you want. 
 Each shard is in itself a fully-functional and independent "index" that can be hosted on any node in the cluster.
+为了解决这个问题，Elasticsearch 提供了拆分索引成多个片的功能叫作分片(shards)。
+当你创建一个索引的时候，你可以定义你想要的分片数量。
+每个分片本身都是功能齐全且独立的索引，可以托管在集群中的任何节点上。
 
 Sharding is important for two primary reasons:
+分片之所以重要，主要有两个原因：
 
 It allows you to horizontally split/scale your content volume
 It allows you to distribute and parallelize operations across shards (potentially on multiple nodes) thus increasing performance/throughput
-
+允许你水平拆分/扩展你的数据
+允许你跨分片(可能在多个节点)分布和并行操作，从而提升性能/吞吐量
 
 The mechanics of how a shard is distributed and also how its documents are aggregated back into search requests 
 are completely managed by Elasticsearch and is transparent to you as the user.
+分片如何分布以及如何将其文档聚合回搜索请求的机制完全由Elasticsearch 管理，对用户来说是透明的。
 
 In a network/cloud environment where failures can be expected anytime, it is very useful and highly recommended to 
 have a failover mechanism in case a shard/node somehow goes offline or disappears for whatever reason. 
 To this end, Elasticsearch allows you to make one or more copies 
 of your index’s shards into what are called replica shards, or replicas for short.
+在一个网络/云环境中可能随时出现故障，这是非常有用并且强烈推荐有一个失败转移机制，以防一个分片/节点由于某种原因离线或消失。
+为此，Elasticsearch 允许你创建一个或多个复制索引分片，被称作副本分片，或简称副本。
 
 Replication is important for two primary reasons:
+副本之所以重要，主要有两个原因：
 
 It provides high availability in case a shard/node fails. For this reason, 
 it is important to note that a replica shard is never allocated on the same node as the original/primary shard that it was copied from.
 It allows you to scale out your search volume/throughput since searches can be executed on all replicas in parallel.
-
+它在一个分片/节点出现故障时提供高可用，为此原因，请务必注意，一个副本分片从不与它复制的源/主分配(original/primary shard)分配在同一节点上。
+它允许你扩展搜索量/吞吐量，因为可以在所有副本上并行执行搜索。
 
 To summarize, each index can be split into multiple shards. An index can also be replicated zero (meaning no replicas) or more times. 
 Once replicated, each index will have primary shards (the original shards that were replicated from) and replica shards (the copies of the primary shards).
+总结，每个索引可以被拆分成多个分片，一个索引可以被复制零（意味着没有副本）或多次。
+复制后，每个索引将具有主分片(primary shards，从中复制的原始分片)和副本分片(replica shards，主分片的副本)。
 
 The number of shards and replicas can be defined per index at the time the index is created. 
 After the index is created, you may also change the number of replicas dynamically anytime. 
 You can change the number of shards for an existing index using the _shrink and _split APIs, 
 however this is not a trivial task and pre-planning for the correct number of shards is the optimal approach.
+在创建索引的时候，分片和副本的数量可以自定义。索引被创建之后，你也可以在任何时候动态的改变副本数量。
+对于已存在的索引，你可以使用_shrink 和 _split API改变分片数量，
+然而，这不是一个微不足道的任务，预先规划正确数量的分片是最佳方法。
 
 By default, each index in Elasticsearch is allocated 5 primary shards and 1 replica which means that 
 if you have at least two nodes in your cluster, your index will have 5 primary shards 
 and another 5 replica shards (1 complete replica) for a total of 10 shards per index.
-
+默认情况下，Elasticsearch 中的每个索引分配了5个主分片和1个副本，这意味着如果在你的集群中至少2个节点，
+你的索引将有5个主分片和另外5个副本分片（1个完整副本），每个索引总共有10个分片。
 
 Each Elasticsearch shard is a Lucene index. 
 There is a maximum number of documents you can have in a single Lucene index. 
 As of LUCENE-5843, the limit is 2,147,483,519 (= Integer.MAX_VALUE - 128) documents. 
 You can monitor shard sizes using the _cat/shards API.
+每个Elasticsearch 分片都是Lucene 索引。
+在单个Lucene 索引上包含最多文档，在LUCENE-5843中，限制为2,147,483,519 (= Integer.MAX_VALUE - 128) 个文档。 
+你可以使用_cat/shards API 监控分片大小。
 
 With that out of the way, let’s get started with the fun part…​
-
+有了这个，让我们开始有趣的部分...
 
 
 
