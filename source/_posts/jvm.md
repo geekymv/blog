@@ -67,7 +67,7 @@ Java虚拟机与程序的生命周期，在如下几种情况下，Java虚拟机
 - 从专有数据库中提取.class文件；
 - 将Java源文件动态编译为.class文件。
 
-类加载器
+#### 类加载器
 - Java虚拟机自带的加载器
     - 根类加载器（Bootstrap），或者叫做启动类加载器，该加载器没有父加载器，加载jre/lib/rt.jar 或者-Xbootclasspath选项指定的jar包；
     - 扩展类加载器（Extension），加载jre/lib/ext/*.jar 或者-Djava.ext.dirs指定目录下的jar包；
@@ -93,6 +93,10 @@ JVM规范允许类加载器在预料某个类将要被使用时就预先加载�
 然后由根类加载器尝试去加载，如果根类加载加载不了，则让子类加载器去加载，直到加载成功或者加载失败。
 
 自底向上检查类是否已经加载，自顶向下尝试加载类。
+
+
+扩展类加载器ExtClassLoader 和应用类加载器AppClassLoader（或称系统类加载器SystemClassLoader） 都是由启动类加载器BootstrapClassLoader 加载。
+BootstrapClassLoader 是Java虚拟机内建的类加载器。
 
 #### 命名空间
 每个类加载器都有自己的命名空间，命名空间由该加载器及所有父加载器所加载的类组成。
