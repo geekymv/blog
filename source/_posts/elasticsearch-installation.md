@@ -5,6 +5,7 @@ tags:
 ---
 #### Installation
 Tip
+提示
 You can skip installation completely by using our hosted Elasticsearch Service on Elastic Cloud, 
 which is available on AWS and GCP. You can try out the hosted service for free.
 你可以完全跳过安装，使用我们在Elastic Cloud 托管的Elasticsearch Service，
@@ -177,3 +178,4 @@ and port (9200) that our node is reachable from.
 By default, Elasticsearch uses port 9200 to provide access to its REST API. This port is configurable if necessary.
 另外请注意标有http的行，其中包含有关我们的节点是可以访问的http地址(192.168.8.112) 和端口（9200）的信息。
 默认情况下，Elasticsearch 使用9200端口提供访问它的REST API。如果需要，这个端口是可配置的。
+
