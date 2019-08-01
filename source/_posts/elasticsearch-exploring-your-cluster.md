@@ -153,10 +153,133 @@ Once that replica gets allocated onto a second node, the health status for this 
 由于我们目前只有一个节点在运行，因此直到稍后在另一个节点加入集群时，才可以分配该副本（为了高可用性）。
 一旦将该副本分配在第二个节点，这个索引的健康状态将变成绿色。
 
-
-
-
 #### Index and Query a Document
+索引和查询文档
 
+Let’s now put something into our customer index. We’ll index a simple customer document into the customer index, with an ID of 1 as follows:
+现在让我们在customer 索引中加入一些内容。我们将一个简单的customer文档索引到customer 索引中，ID为1，如下所示：
+
+```text
+PUT /customer/_doc/1?pretty
+{
+  "name": "John Doe"
+}
+```
+COPY AS CURL
+```text
+curl -X PUT "localhost:9200/customer/_doc/1?pretty" -H 'Content-Type: application/json' -d'
+{
+  "name": "John Doe"
+}
+'
+```
+And the response:
+响应：
+```text
+{
+  "_index" : "customer",
+  "_type" : "_doc",
+  "_id" : "1",
+  "_version" : 1,
+  "result" : "created",
+  "_shards" : {
+    "total" : 2,
+    "successful" : 1,
+    "failed" : 0
+  },
+  "_seq_no" : 0,
+  "_primary_term" : 1
+}
+```
+From the above, we can see that a new customer document was successfully created inside the customer index. 
+The document also has an internal id of 1 which we specified at index time.
+从上面我们可以看到，在customer索引中成功的创建了一个新的customer文档。
+
+It is important to note that Elasticsearch does not require you to explicitly create an index first before you can index documents into it. 
+In the previous example, Elasticsearch will automatically create the customer index if it didn’t already exist beforehand.
+值得注意的是，Elasticsearch 不需要你将文档编入到索引之前先显示地创建索引。
+在前面的示例中，如果事先不存在customer索引，Elasticsearch 将自动地创建customer索引。
+
+Let’s now retrieve that document that we just indexed:  
+让我们现在检索我们刚才索引的文档：
+```text
+GET /customer/_doc/1?pretty
+```
+```text
+curl -X GET "localhost:9200/customer/_doc/1?pretty"
+```
+And the response:
+响应：
+```text
+{
+  "_index" : "customer",
+  "_type" : "_doc",
+  "_id" : "1",
+  "_version" : 1,
+  "found" : true,
+  "_source" : { "name": "John Doe" }
+}
+```
+Nothing out of the ordinary here other than a field, found, stating that we `found` a document with the requested ID 1 
+and another field, `_source`, which returns the full JSON document that we indexed from the previous step.
+除了字段之外没有任何异常，found 说明我们找到了ID为1的文档和另一个字段_source它返回我们从上一步索引的完整JSON文档。
 
 #### Delete an Index
+删除索引
+
+Now let’s delete the index that we just created and then list all the indexes again:
+现在，我们删除刚才创建的索引，然后再列出所有索引：
+```text
+DELETE /customer?pretty
+GET /_cat/indices?v
+```
+
+```text
+curl -X DELETE "localhost:9200/customer?pretty"
+curl -X GET "localhost:9200/_cat/indices?v"
+```
+
+And the response:
+响应：
+
+```text
+health status index uuid pri rep docs.count docs.deleted store.size pri.store.size
+```
+Which means that the index was deleted successfully and we are now back to where we started with nothing in our cluster.
+这意味着索引被成功删除了，并且我们现在回到了集群中没有任何内容的地方。
+
+Before we move on, let’s take a closer look again at some of the API commands that we have learned so far:
+在我们继续之前，我们再仔细看看到目前为止我们已经学到的API命令：
+```text
+PUT /customer
+PUT /customer/_doc/1
+{
+  "name": "John Doe"
+}
+GET /customer/_doc/1
+DELETE /customer
+```
+COPY AS CURL
+```text
+curl -X PUT "localhost:9200/customer"
+curl -X PUT "localhost:9200/customer/_doc/1" -H 'Content-Type: application/json' -d'
+{
+  "name": "John Doe"
+}
+'
+curl -X GET "localhost:9200/customer/_doc/1"
+curl -X DELETE "localhost:9200/customer"
+```
+If we study the above commands carefully, we can actually see a pattern of how we access data in Elasticsearch. 
+That pattern can be summarized as follows:
+如果我们仔细研究上面的命令，我们实际上可以看到我们如何在Elasticsearch中访问数据的模式。
+该模式可归纳如下：
+```text
+<HTTP Verb> /<Index>/<Type>/<ID>
+```
+
+This REST access pattern is so pervasive throughout all the API commands that if you can simply remember it, 
+you will have a good head start at mastering Elasticsearch.
+这种REST访问模式在所有API命令中都非常普遍，如果你能够简单地记住它，你将在掌握Elasticsearch方面有一个良好的开端。
+
+
