@@ -15,7 +15,7 @@ Elasticsearch 是一个高度可扩展的开源全文搜索和分析引擎。它
 
 Here are a few sample use-cases that Elasticsearch could be used for:
 Elasticsearch 使用案例
-
+<!-- more -->
 You run an online web store where you allow your customers to search for products that you sell. 
 In this case, you can use Elasticsearch to store your entire product catalog and inventory and 
 provide search and autocomplete suggestions for them.

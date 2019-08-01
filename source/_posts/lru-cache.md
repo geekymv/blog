@@ -4,7 +4,7 @@ date: 2019-04-04 11:04:54
 tags:
 ---
 参考 org.apache.kafka.common.cache.LRUCache
-
+<!-- more -->
 ```java
 /**
  * Interface for caches, semi-peristent maps which store key-value mappings until either an eviction criteria is met

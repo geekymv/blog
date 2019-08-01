@@ -14,7 +14,7 @@ Elasticsearch is a near-realtime search platform.
 What this means is there is a slight latency (normally one second) 
 from the time you index a document until the time it becomes searchable.
 Elasticsearch 是一个近实时的搜索平台，这意味着从搜索文档到可搜索文档的时间有一点延迟（通常是1s）。
-
+<!-- more -->
 Cluster
 集群
 A cluster is a collection of one or more nodes (servers) that together holds your entire data 

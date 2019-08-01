@@ -15,7 +15,7 @@ Here is a simple scenario that happened to me last week:
 
 I had made some code changes on my machine a long time ago, compiled a JAR, 
 很久以前，我在自己的机器上修改了一些代码，编译成一个JAR包，
-
+<!-- more -->
 and deployed it on a server to test a potential fix for a performance issue. 
 并且部署在一台服务器上以测试性能问题的潜在修复。
 

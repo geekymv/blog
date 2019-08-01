@@ -10,7 +10,7 @@ Zookeeper 就将负责通知已经在Zookeeper 上注册的那些观察者做出
 Zookeeper = 文件系统 + 通知机制。
 
 数据结构
-
+<!-- more -->
 节点类型
 - Znode 有两种类型
 临时(ephemeral)：客户端和服务端断开连接后，创建的节点自己删除；

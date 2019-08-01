@@ -11,7 +11,7 @@ I wanted a text that would bring together the ideas behind many of the more rece
 
 In this text I've tried to provide a more accessible introduction to distributed systems. 
 在本文中，我尝试提供一个更易于理解的分布式系统介绍。
-
+<!-- more -->
 To me, that means two things: introducing the key concepts that you will need in order to 
 have a good time reading more serious texts, and providing a narrative that covers things in enough detail 
 that you get a gist of what's going on without getting stuck on details. 

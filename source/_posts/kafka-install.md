@@ -21,6 +21,7 @@ tags:
 - vim config/server.properties
 - bin/kafka-server-start.sh -daemon ./config/server.properties
 
+<!-- more -->
 ```text
 # Licensed to the Apache Software Foundation (ASF) under one or more
 # contributor license agreements.  See the NOTICE file distributed with

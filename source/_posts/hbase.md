@@ -17,7 +17,7 @@ vim conf/hbase-site.xml
 
 启动
 bin/start-hbase.sh
-
+<!-- more -->
 进入shell
 bin/hbase shell
 创建表

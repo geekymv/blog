@@ -14,7 +14,7 @@ TARGET=linux26 #内核版本，使用uname -r查看内核，如：2.6.18-371.el5
 ARCH=x86_64 #系统位数
 PREFIX=/usr/local/haprpxy  #/usr/local/haprpxy为haprpxy安装路径
 ```
-
+<!-- more -->
 cd /usr/local/haprpxy
 ```text
 # ls

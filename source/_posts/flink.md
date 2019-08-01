@@ -22,7 +22,7 @@ Ingestion Time 进入Flink 数据流的时间
 Processing Time 
 
 - API
-
+<!-- more -->
 Flink Architecture
 有界和无界数据流：Flink 具备一套框架处理两种数据集合；
 部署灵活：支持多种部署方式，包括Yarn、K8s；

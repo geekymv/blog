@@ -14,6 +14,7 @@ mkdir -p /usr/local/software/elasticsearch-6.5.4/plugins/ik
 
 将elasticsearch-analysis-ik-6.5.4.zip 解压到ik 目录下
 unzip -d /usr/local/software/elasticsearch-6.5.4/plugins/ik elasticsearch-analysis-ik-6.5.4.zip
+<!-- more -->
 
 同步到其他节点
 scp -r /usr/local/software/elasticsearch-6.5.4/plugins/ik geekymv@node03:/usr/local/software/elasticsearch-6.5.4/plugins/

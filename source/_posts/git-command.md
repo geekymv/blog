@@ -17,7 +17,7 @@ tags:
 ```text
 $ mkdir mygit
 ```
-
+<!-- more -->
 进入mygit
 ```text
 $ cd mygit

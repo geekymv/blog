@@ -13,6 +13,7 @@ $ sudo apt-get install git
 ```text
 $ sudo yum install git
 ```
+<!-- more -->
 - Fedora
 ```text
 $ sudo yum install git-core

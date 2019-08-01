@@ -14,7 +14,7 @@ https://mp.weixin.qq.com/s/bc2YcVeBglZkeHdASg3wXw
 2.使用消息队列有什么缺点?
 - 系统可用性降低
 - 系统复杂性增加
-
+<!-- more -->
 3.消息队列如何选型?
 
 4.如何保证消息队列是高可用的？

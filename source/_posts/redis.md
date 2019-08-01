@@ -10,7 +10,7 @@ Redis 是 Remote Dictionary Service 的首字母缩写，也就是远程字典�
 - 
 
 redis 生产环境启动方案
-
+<!-- more -->
 tar -zxvf redis-4.0.12.tar.gz -C /usr/local/
 进入 Redis 的解压文件
 cd redis-4.0.12/

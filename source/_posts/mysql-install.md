@@ -23,7 +23,7 @@ sudo service mysql start
 
 直接连上
 $ mysql
-
+<!-- more -->
 退出
 mysql>exit
 

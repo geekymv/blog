@@ -15,7 +15,7 @@ tar -zxvf nginx-1.14.2.tar.gz
 cd nginx-1.14.2
 ./configure --prefix=/usr/local/nginx
 ```
-
+<!-- more -->
 可能会报错
 ```text
 [root@node02 nginx-1.14.2]# ./configure --prefix=/usr/local/nginx

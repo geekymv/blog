@@ -22,7 +22,7 @@ kafka 的架构，如何用kafka保证消息的有序性
 
 Cloneable接口实现原理
 
-
+<!-- more -->
 ```text
 package java.lang;
 

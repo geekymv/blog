@@ -7,7 +7,7 @@ linux下.xz文件的解压方式
 安装xz：yum -y install xz
 xz -d *.tar.xz //生成了.tar文件
 tar -xvf *.tar
-
+<!-- more -->
 解压.xz文件
 xz -d node-v10.15.0-linux-x64.tar.xz 
 解压tar文件

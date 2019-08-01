@@ -15,7 +15,7 @@ tags:
 
 阈值
 threshold = capacity * load factor
-
+<!-- more -->
 ```text
 /**
  * Associates the specified value with the specified key in this map.

@@ -11,6 +11,8 @@ tar -zxvf kibana-6.5.4-linux-x86_64.tar.gz -C /usr/local/software/
 
 修改配置
 vim config/kibana.yml
+<!-- more -->
+
 ```text
 # Kibana is served by a back end server. This setting specifies the port to use.
 server.port: 5601

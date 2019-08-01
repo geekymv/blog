@@ -9,7 +9,7 @@ tags:
 当你点击star的时候，你会发现网页跳转到了996.ICU在 GitHub的主页，作为程序员的你如果还不知道GitHub是什么真的是有点out了！
 {% asset_img 996.icu-star.png 996.icu.star %}
 GitHub 是什么呢，我们有必要先了解下Git。
-
+<!-- more -->
 #### Git 是什么？
 Git 是一款开源免费的分布式版本控制系统。
 Git 官网 https://git-scm.com，下面一段话摘自Git 官网：

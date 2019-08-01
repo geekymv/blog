@@ -25,9 +25,7 @@ Apache Lucene 将所有信息写到一个称为倒排索引(inverted index)的�
 - 文档(Document)
 - 分片和副本(Shards and Replicas)
 
-
-
-
+<!-- more -->
 
 下载最新版本 wget https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-6.5.4.tar.gz
 解压修改config下的elasticsearch.yml配置文件，内容如下：

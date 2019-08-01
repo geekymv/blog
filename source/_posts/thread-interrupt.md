@@ -23,7 +23,7 @@ public boolean isInterrupted() {
 ```
 测试线程是否已经中断。线程的中断状态不受该方法影响。
 
-
+<!-- more -->
 ```text
 public void interrupt() {
     if (this != Thread.currentThread())
