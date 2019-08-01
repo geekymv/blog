@@ -25,7 +25,7 @@ Elasticsearch 需要至少Java8，特别是撰写本文时，推荐你使用Orac
 Java安装因平台而异，因此我们在此不会详细介绍。
 可以在Oracle 网站找到Oracle 的推荐安装文档。
 就是说，安装Elasticsearch 之前，请先运行`java -version`检查Java版本。
-
+<!-- more -->
 Once we have Java set up, we can then download and run Elasticsearch. 
 The binaries are available from www.elastic.co/downloads along with all the releases that have been made in the past. 
 For each release, you have a choice among a zip or tar archive, a DEB or RPM package, or a Windows MSI installation package.

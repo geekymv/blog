@@ -27,6 +27,7 @@ Given nums = [2, 7, 11, 15], target = 9,
 Because nums[0] + nums[1] = 2 + 7 = 9,
 return [0, 1].
 ```
+<!-- more -->
 两数之和
 
 给定一个整型数组nums和一个目标值target，在数组中找出两个数相加之和等于目标值，返回它们的下标。

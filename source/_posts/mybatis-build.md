@@ -22,7 +22,8 @@ DefaultSqlSessionFactory 实现接口 SqlSessionFactory
   
     // DefaultSqlSessionFactory 中只有一个成员变量 configuration
     private final Configuration configuration;    
-    
+
+<!-- more -->    
 
 // 创建 SqlSession
 SqlSession sqlSession = sqlSessionFactory.openSession()

@@ -12,7 +12,7 @@ Among the few things that can be done with the API are as follows:
 现在，我们已经启动并运行了节点（和集群），下一步是了解如何与之沟通。
 幸运的是，Elasticsearch 提供了一个非常全面且强大的REST API，你可以使用它与集群进行交互。
 使用API可以完成的一些事项如下：
-
+<!-- more -->
 - Check your cluster, node, and index health, status, and statistics
 - Administer your cluster, node, and index data and metadata
 - Perform CRUD (Create, Read, Update, and Delete) and search operations against your indexes
