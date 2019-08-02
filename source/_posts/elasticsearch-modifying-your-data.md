@@ -15,7 +15,7 @@ Elasticsearch 提供了近实时的数据处理和搜索功能。
 
 #### Indexing/Replacing Documents
 #### 搜索/替换文档
-
+<!-- more -->
 We’ve previously seen how we can index a single document. Let’s recall that command again:
 我们之前已经看到了如何索引单个文档，让我们再一次调用这个命令：
 ```text
