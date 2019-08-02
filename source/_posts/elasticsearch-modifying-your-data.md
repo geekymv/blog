@@ -4,6 +4,7 @@ date: 2019-08-02 11:12:24
 tags:
 ---
 #### Modifying Your Data
+#### 修改数据
 Elasticsearch provides data manipulation and search capabilities in near real time. 
 By default, you can expect a one second delay (refresh interval) from the time you index/update/delete your data 
 until the time that it appears in your search results. 
@@ -169,7 +170,7 @@ Elasticsearch 提供了在给定查询条件（如SQL UPDATE-WHERE语句）的�
 请参阅[docs-update-by-query API](https://www.elastic.co/guide/en/elasticsearch/reference/6.5/docs-update-by-query.html)
 
 #### Deleting Documents
-删除文档
+#### 删除文档
 
 Deleting a document is fairly straightforward. This example shows how to delete our previous customer with the ID of 2:
 删除文档非常简单。这个例子展示怎样删除我们之前ID为2的customer：

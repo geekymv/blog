@@ -2,6 +2,10 @@
 title: git
 date: 2019-05-21 20:20:18
 tags:
+- Git
+- Github
+categories:
+- Git
 ---
 还记得前段时间的热门话题[996.ICU](https://996.icu)么？
 作为程序员的你，深恶痛绝996的你，当然要给个star。

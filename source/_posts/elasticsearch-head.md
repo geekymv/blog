@@ -2,6 +2,8 @@
 title: elasticsearch-head
 date: 2019-01-17 17:21:37
 tags:
+categories:
+- Elasticsearch
 ---
 linux下.xz文件的解压方式
 安装xz：yum -y install xz
