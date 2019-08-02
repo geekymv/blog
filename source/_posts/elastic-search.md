@@ -2,6 +2,9 @@
 title: elastic-search
 date: 2019-01-16 19:41:13
 tags:
+- Elasticsearch
+categories:
+- Elasticsearch
 ---
 全文检索
 Apache Lucene 提供一个全文检索的功能库。

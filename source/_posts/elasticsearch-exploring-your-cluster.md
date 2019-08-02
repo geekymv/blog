@@ -2,6 +2,9 @@
 title: elasticsearch-exploring-your-cluster
 date: 2019-07-25 17:12:24
 tags:
+- Elasticsearch
+categories:
+- Elasticsearch
 ---
 ### Exploring Your Cluster
 

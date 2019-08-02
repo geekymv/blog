@@ -2,6 +2,9 @@
 title: kafka install
 date: 2019-06-14 19:50:14
 tags:
+- Kafka 
+categories:
+- Kafka
 ---
 
 这一章将介绍如何安装和运行Kafka，包括如何设置Zookeeper（Kafka使用Zookeeper保存Broker的元数据），

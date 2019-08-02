@@ -2,6 +2,7 @@
 title: elasticsearch-head
 date: 2019-01-17 17:21:37
 tags:
+- Elasticsearch
 categories:
 - Elasticsearch
 ---

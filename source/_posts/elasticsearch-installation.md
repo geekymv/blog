@@ -2,6 +2,10 @@
 title: elasticsearch-installation
 date: 2019-07-25 16:01:07
 tags:
+- Elasticsearch
+- Installation
+categories:
+- Elasticsearch
 ---
 #### Installation
 Tip

@@ -2,6 +2,10 @@
 title: elasticsearch-analysis-ik
 date: 2019-07-08 14:31:16
 tags:
+- Elasticsearch
+- IK Analysis
+categories:
+- Elasticsearch
 ---
 #### 下载
 https://github.com/medcl/elasticsearch-analysis-ik

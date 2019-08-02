@@ -2,6 +2,9 @@
 title: nginx
 date: 2019-03-22 15:49:45
 tags:
+- nginx 
+categories:
+- nginx
 ---
 ```text
 wget http://nginx.org/download/nginx-1.14.2.tar.gz

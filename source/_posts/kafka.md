@@ -2,6 +2,9 @@
 title: kafka
 date: 2018-12-19 18:50:14
 tags:
+- Kafka 
+categories:
+- Kafka
 ---
 https://mp.weixin.qq.com/s/bc2YcVeBglZkeHdASg3wXw
 

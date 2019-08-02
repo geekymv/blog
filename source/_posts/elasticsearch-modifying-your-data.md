@@ -1,7 +1,10 @@
 ---
-title: elasticsearch-exploring-your-cluster
+title: elasticsearch-modifying-your-data
 date: 2019-08-02 11:12:24
 tags:
+- Elasticsearch
+categories:
+- Elasticsearch
 ---
 #### Modifying Your Data
 #### 修改数据

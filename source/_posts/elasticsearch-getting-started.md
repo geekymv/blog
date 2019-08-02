@@ -2,6 +2,9 @@
 title: elasticsearch-getting-started
 date: 2019-07-09 10:30:35
 tags:
+- Elasticsearch
+categories:
+- Elasticsearch
 ---
 Getting Started
 入门

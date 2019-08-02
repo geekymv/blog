@@ -2,6 +2,9 @@
 title: elasticsearch-basic-concepts
 date: 2019-07-09 10:39:26
 tags:
+- Elasticsearch
+categories:
+- Elasticsearch
 ---
 [Basic Concepts](https://www.elastic.co/guide/en/elasticsearch/reference/6.5/getting-started-concepts.html#getting-started-concepts)
 There are a few concepts that are core to Elasticsearch. 

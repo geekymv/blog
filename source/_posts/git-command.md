@@ -2,6 +2,9 @@
 title: git-command
 date: 2019-05-29 08:56:27
 tags:
+- Git 
+categories:
+- Git
 ---
 配置并初始化一个仓库（repository）
 开始或听着跟踪（track）文件
