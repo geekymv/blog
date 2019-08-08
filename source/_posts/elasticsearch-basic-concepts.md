@@ -31,7 +31,7 @@ Make sure that you don’t reuse the same cluster names in different environment
 otherwise you might end up with nodes joining the wrong cluster. 
 For instance you could use logging-dev, logging-stage, and logging-prod for the development, staging, and production clusters.
 确保你没有在不同环境重用相同集群名称，否则你可能将节点加入错误的集群。
-例如，你可以使用logging-dev、logging-stage 和 logging-prod 用于开发、stage和生产集群。
+例如，你可以使用logging-dev、logging-stage 和 logging-prod 用于开发、预发和生产集群。
 
 Note that it is valid and perfectly fine to have a cluster with only a single node in it. 
 Furthermore, you may also have multiple independent clusters each with its own unique cluster name.
