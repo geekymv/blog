@@ -1,5 +1,5 @@
 ---
-title: jvm
+title: Java中类的主动使用举例
 date: 2019-08-7 22:20:22
 tags: 
 - jvm
@@ -8,6 +8,7 @@ tags:
 在上一节中，我们知道Java程序对类对使用方式有两种：主动使用和被动使用。
 其中Java程序对类的主动使用有5种情况，其余情况均为被动使用。
 下面我们通过一个例子来看看主动使用：
+<!-- more -->
 ```text
 public class Test01ClassInit {
 

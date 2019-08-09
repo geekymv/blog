@@ -31,6 +31,7 @@ Each document has the following schema:
     "state": "CO"
 }
 ```
+<!-- more -->
 For the curious, this data was generated using `www.json-generator.com/`, 
 so please ignore the actual values and semantics of the data as these are all randomly generated.
 好奇的是，这些数据是使用[www.json-generator.com](www.json-generator.com)生成的，
