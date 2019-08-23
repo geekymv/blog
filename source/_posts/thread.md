@@ -93,6 +93,38 @@ public synchronized int getValue() {
 
 #### 线程无处不在
 
+Thread t1 = new Thread() {
+    @Overvide
+    public void run() {
+    }
+};
+t1 是指向Thread 实例的一个引用，并不是一个真正的线程。
+t1.start();
+
+1.Java程序的main方法是一个线程，是被JVM启动时候调用，线程的名字是main。
+2.实现一个线程，必须创建Thread实例，Override run方法，并且调用start方法。
+3.当
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 为什么要学习并发编程
 并发优点：
