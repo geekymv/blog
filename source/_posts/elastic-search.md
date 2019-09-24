@@ -126,10 +126,9 @@ discovery.zen.ping.unicast.hosts: ["node01"]
 不能使用root用户启动！！！这里使用新创建的geekymv用户启动。
 添加用户组
 groupadd geekymv
-添加用户
-useradd geekymv
-修改用户所属组
-usermod -g geekymv geekymv
+添加用户，并指定用户组
+useradd -g geekymv geekymv
+
 设置密码
 passwd geekymv
 
