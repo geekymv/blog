@@ -73,3 +73,23 @@ public class CurrentUserMethodArgumentResolver implements HandlerMethodArgumentR
 
 spring循环引用问题及解决方式
 https://blog.csdn.net/chejinqiang/article/details/80003868
+
+
+Spring IOC Bean 生成过程
+
+DefaultBeanDefinitionDocumentReader 类
+
+// Process the given bean element, parsing the bean definition 
+// and registering it with the registry.
+processBeanDefinition();方法
+
+
+DefaultListableBeanFactory 类
+registerBeanDefinition()
+
+成员变量
+/** Map of bean definition objects, keyed by bean name */
+private final Map<String, BeanDefinition> beanDefinitionMap = new ConcurrentHashMap<String, BeanDefinition>(256);
+
+/** List of bean definition names, in registration order */
+private volatile List<String> beanDefinitionNames = new ArrayList<String>(256);
