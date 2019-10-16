@@ -2,6 +2,9 @@
 title: spring-aop
 date: 2018-12-13 19:25:05
 tags:
+- Spring
+categories:
+- Spring
 ---
 AOP()
 实现AOP的语言为AOL（Aspect-Oriented Language）
@@ -25,6 +28,7 @@ Advice 是单一横切关注点逻辑的载体，它代表将会织入到Joinpoi
 - After Advice
 - Around Advice
 
+Advice 实现了将被织入到Pointcut规定的Joinpoint 处的横切逻辑。
 
 “叵” 字
 中间的那一“口” 就是Joinpoint
@@ -52,5 +56,25 @@ Spring AOP 会尝试使用CGLIB（Code Generation Library）动态字节码生�
 动态字节码生成是对目标对象进行继承扩展，在系统运行期间动态地为目标对象生成相应子类。
 而子类可以通过重写来扩展父类的行为，只要将横切逻辑的实现放到子类中，然后让系统使用扩展后的目标对象的子类，就可以达到与代理模式相同的效果了。
 使用CGLIB 对类进行扩展的唯一限制就是无法对final方法进行重写。
+
+
+org.springframework.aop.BeforeAdvice 所实现的横切逻辑将在相应的Joinpoint 之前执行，在Before Advice 执行完成之后，程序执行流程将从Joinpoint 处继续执行。
+所以Before Advice 通常不会打断程序的执行流程，如果需要，可以通过抛出异常的形式中断程序流程。
+
+org.springframework.aop.ThrowsAdvice 对应通常AOP概念中的 AfterThrowingAdvice。
+
+
+ProxyFactory 织入器，进行横切逻辑的织入，生成代理对象。
+基于接口的代理
+
+基于类的代理
+如果目标类没有实现任何接口，那么默认情况下，ProxyFactory会对目标类进行基于类的代理，即使用CGLIB。
+
+
+可以通过设置ProxyFactory的proxyTargetClass属性值为true，强制ProxyFactory采用基于类的代理。
+
+
+
+
 
 
