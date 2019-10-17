@@ -45,14 +45,14 @@ Spring AOP 采用动态代理机制和字节码生成技术实现。在运行期
 
 - 代理模式（Proxy Pattern）
 
-- 动态代理（Dynamic Proxy）
+- 动态代理（Dynamic Proxy）（基于接口的代理）
 InvocationHandler 就是我们要实现横切逻辑的地方，它是横切逻辑的载体，作用跟Advice是一样的。
 动态代理机制只能对实现了相应interface 的类使用，如果某个类没有实现任何interface，就无法使用动态代理机制为其生成相应的动态代理对象。
 
 默认情况下，Spring AOP 发现目标对象如果实现了相应interface，则采用动态代理机制为其生成代理对象实例，如果目标对象没有实现任何interface，
 Spring AOP 会尝试使用CGLIB（Code Generation Library）动态字节码生成技术为目标对象生成动态的代理对象实例。
 
-- 动态字节码生成技术
+- 动态字节码生成技术（基于类的代理）
 动态字节码生成是对目标对象进行继承扩展，在系统运行期间动态地为目标对象生成相应子类。
 而子类可以通过重写来扩展父类的行为，只要将横切逻辑的实现放到子类中，然后让系统使用扩展后的目标对象的子类，就可以达到与代理模式相同的效果了。
 使用CGLIB 对类进行扩展的唯一限制就是无法对final方法进行重写。
@@ -71,10 +71,11 @@ ProxyFactory 织入器，进行横切逻辑的织入，生成代理对象。
 如果目标类没有实现任何接口，那么默认情况下，ProxyFactory会对目标类进行基于类的代理，即使用CGLIB。
 
 
-可以通过设置ProxyFactory的proxyTargetClass属性值为true，强制ProxyFactory采用基于类的代理。
+可以通过设置ProxyFactory的proxyTargetClass 或optimize 属性值为true，强制ProxyFactory采用基于类的代理。
 
 
-
+FactoryBean
+如果容器的某个对象持有FactoryBean 的引用，它取得的不是FactoryBean 本身，而是FactoryBean 的getObject方法所返回的对象。
 
 
 
