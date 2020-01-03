@@ -42,7 +42,7 @@ and use its reverse-search (Percolator) capability to match price movements agai
 and eventually push the alerts out to the customer once matches are found.
 你运行一个价格提醒平台，允许精通价格的客户指定一个规则类似
 “我有兴趣购买特定的电子产品，如果产品价格在下个月内从任何供应商的价格降到$X 以下，我希望收到通知”。
-并使用其反向搜索（过滤器）功能来匹配价格变动与客户查询，一旦找到匹配项，最终将会通知推送给客户。
+在这种情况下，你可以抓取供应商价格，将其推入Elasticsearch并使用其反向搜索（过滤器）功能来匹配价格变动与客户查询，一旦找到匹配项，最终将会通知推送给客户。
 
 You have analytics/business-intelligence needs and want to quickly investigate, analyze, visualize, 
 and ask ad-hoc questions on a lot of data (think millions or billions of records). 
