@@ -30,7 +30,7 @@ This name is important because a node can only be part of a cluster if the node 
 Make sure that you don’t reuse the same cluster names in different environments, 
 otherwise you might end up with nodes joining the wrong cluster. 
 For instance you could use logging-dev, logging-stage, and logging-prod for the development, staging, and production clusters.
-确保你没有在不同环境重用相同集群名称，否则你可能将节点加入错误的集群。
+确保你在不同环境没有重用集群名称，否则你可能将节点加入错误的集群。
 例如，你可以使用logging-dev、logging-stage 和 logging-prod 用于开发、预发和生产集群。
 
 Note that it is valid and perfectly fine to have a cluster with only a single node in it. 
@@ -48,7 +48,7 @@ This name is important for administration purposes where you want to
 identify which servers in your network correspond to which nodes in your Elasticsearch cluster.
 一个节点是作为集群一部分的单个服务器，存储数据，并且参与集群索引和搜索功能。
 像集群一样，一个节点是通过名称唯一标识，默认是一个随机的UUID，在节点启动的时候分配给节点。
-如果你不想使用默认的，你可以定义你需要的的任何节点名称。
+如果你不想使用默认的，你可以定义你想要的任何节点名称。
 这个名称对于管理目的很重要，你可以识别网络中的哪些服务器与Elasticsearch 集群中的哪些节点相对应。
 
 A node can be configured to join a specific cluster by the cluster name. 
@@ -151,7 +151,7 @@ Replication is important for two primary reasons:
 It provides high availability in case a shard/node fails. For this reason, 
 it is important to note that a replica shard is never allocated on the same node as the original/primary shard that it was copied from.
 It allows you to scale out your search volume/throughput since searches can be executed on all replicas in parallel.
-它在一个分片/节点出现故障时提供高可用，为此原因，请务必注意，一个副本分片从不与它复制的源/主分配(original/primary shard)分配在同一节点上。
+它在一个分片/节点出现故障时提供高可用，为此原因，请务必注意，一个副本分片从不与它复制的源/主分片(original/primary shard)分配在同一节点上。
 它允许你扩展搜索量/吞吐量，因为可以在所有副本上并行执行搜索。
 
 To summarize, each index can be split into multiple shards. An index can also be replicated zero (meaning no replicas) or more times. 
