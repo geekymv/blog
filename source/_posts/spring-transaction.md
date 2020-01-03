@@ -10,3 +10,6 @@ tags:
 那么，methodA()调用methodB()时，不会开启事务！！！
 
 即：同一个类中，无事务的方法调用有事务的方法，结果就是没有事务！！！
+
+声明式事务配置详解
+https://blog.csdn.net/jiadajing267/article/details/81056057

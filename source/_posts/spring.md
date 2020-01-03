@@ -93,3 +93,60 @@ private final Map<String, BeanDefinition> beanDefinitionMap = new ConcurrentHash
 
 /** List of bean definition names, in registration order */
 private volatile List<String> beanDefinitionNames = new ArrayList<String>(256);
+
+
+
+
+Spring MVC 框架主要角色
+DispatcherServlet
+HandlerMapping 负责查找相应的Handler以处理Web请求
+Controller
+ModelAndView
+ViewResolver
+View
+
+
+HandlerInterceptor
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
