@@ -51,7 +51,7 @@ and then use Kibana (part of the Elasticsearch/Logstash/Kibana stack) to build c
 that can visualize aspects of your data that are important to you. 
 Additionally, you can use the Elasticsearch aggregations functionality 
 to perform complex business intelligence queries against your data.
-你有分析/商业智能需求，并希望快速调查、分析、可视化，并就大量数据提出问题（认为数百万或数十亿条记录）。
+你有分析/商业智能需求，并希望快速调查、分析、可视化，并就大量数据提出问题（想象数百万或数十亿条记录）。
 在这种情况下，你可以使用Elasticsearch 存储你的数据，然后使用Kibana（Elasticsearch/Logstash/Kibana 栈的一部分）构建
 自定义仪表盘，可以显示对你来说重要的数据特征。
 
