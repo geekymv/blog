@@ -213,6 +213,12 @@ sudo lsmod|grep bridge
 *               hard    nproc           4096
 ```
 
+nofile 打开文件的最大数目
+noproc 进程的最大数目
+soft 指的是当前系统生效的设置值
+hard 表明系统中所能设定的最大值
+
+
 再次启动，出现如下信息 initialized starting ... started，启动成功。
 ```text
 [2019-01-16T22:25:42,839][INFO ][o.e.d.DiscoveryModule    ] [node01] using discovery type [zen] and host providers [settings]
