@@ -33,3 +33,6 @@ firewall-cmd --reload
 
 查看指定区域所有打开的端口
 firewall-cmd --zone=public --list-ports
+
+删除端口
+firewall-cmd --zone=public --remove-port=3080/tcp --permanent
