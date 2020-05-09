@@ -7,6 +7,8 @@ categories:
 - nginx
 ---
 ```text
+yum -y install wget
+
 wget http://nginx.org/download/nginx-1.14.2.tar.gz
 
 yum install pcre
