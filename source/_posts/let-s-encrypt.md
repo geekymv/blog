@@ -98,3 +98,18 @@ IMPORTANT NOTES:
 
 nginx从http跳转到https
 https://www.cnblogs.com/nuccch/p/7681592.html
+
+
+##### CentOS 7 下 安装 Let's Encrypt 的通配符证书
+
+sudo yum install epel-release
+sudo yum install certbot
+
+certbot --server https://acme-v02.api.letsencrypt.org/directory -d npe4j.com -d *.npe4j.com --manual --preferred-challenges dns-01 certonly
+
+https://qizhanming.com/blog/2019/04/23/how-to-install-let-s-encrypt-wildcards-certificate-on-centos-7
+https://www.infoq.cn/article/2018/03/lets-encrypt-wildcard-https
+https://www.jianshu.com/p/c5c9d071e395
+
+删除弃用的Let’s encrypt安全证书的域名
+https://www.vmvps.com/how-to-delete-unused-lets-encrypt-ssl-domain.html
