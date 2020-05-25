@@ -13,6 +13,9 @@ https://blog.csdn.net/jkjkjkll/article/details/80015635
 ##### centos7 防火墙
 https://www.4spaces.org/centos-open-porter/
 
+禁止开机启动
+systemctl disable firewalld
+
 启动防火墙
 systemctl start firewalld
 
