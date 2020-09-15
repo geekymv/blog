@@ -7,15 +7,14 @@ categories:
 - nginx
 ---
 ```text
+下载安装包 wget http://nginx.org/download/nginx-1.14.2.tar.gz
 yum -y install wget
 
 wget http://nginx.org/download/nginx-1.14.2.tar.gz
 
-yum install pcre
-yum install pcre-devel
-yum install zlib
-yum install zlib-devel
+安装依赖项 yum -y install gcc zlib zlib-devel pcre pcre-devel openssl openssl-devel
  
+解压、编译 
 tar -zxvf nginx-1.14.2.tar.gz 
 cd nginx-1.14.2
 ./configure --prefix=/usr/local/nginx
@@ -91,7 +90,6 @@ nginx 负载均衡器本身也是一台反向代理服务器，将用户请求�
 网络连接/读/写超时时间
 
 [Nginx设置IP黑名单,限制某些IP的访问](https://wang123.net/post/detail-1066.html)
-[nginx反向代理配置去除前缀](https://blog.csdn.net/gongchenyu/article/details/85960027)
 
 
 
