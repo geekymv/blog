@@ -13,7 +13,7 @@ $ sudo chmod 0755 /usr/local/bin/certbot-auto
 ```
 ```text
 $ sudo /usr/local/bin/certbot-auto --nginx
-```    
+```
 
 ```text
 Could not choose appropriate plugin: The nginx plugin is not working; there may be problems with your existing configuration.
@@ -36,7 +36,8 @@ https://blog.csdn.net/guangcaiwudong/article/details/98858337
 通过nginx -V查看nginxconfigure arguments没有安装ssl模板，在nginx目录中重新构建
 cd /opt/nginx-1.14.0
 ./configure --with-http_ssl_module
-make && make install
+执行 make
+这里不要进行make install，否则就是覆盖安装。
 
 使用sudo certbot certonly --nginx生成证书，中间需要填写email和域名，生成成功后会提示证书存放路径：
 
