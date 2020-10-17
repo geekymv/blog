@@ -39,7 +39,9 @@ cd /opt/nginx-1.14.0
 执行 make
 这里不要进行make install，否则就是覆盖安装。
 
-使用sudo certbot certonly --nginx生成证书，中间需要填写email和域名，生成成功后会提示证书存放路径：
+[Nginx安装后增加SSL模块](http://hacksteven.com/?p=183)
+
+使用`sudo certbot certonly --nginx`生成证书，中间需要填写email和域名，生成成功后会提示证书存放路径：
 
 ```text
 $ sudo /usr/local/bin/certbot-auto --nginx
