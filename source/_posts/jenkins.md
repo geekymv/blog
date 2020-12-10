@@ -7,6 +7,11 @@ tags:
 Jenkins 原名Hudson，2011年改为现在的名字，它是一个用Java编写的开源的持续集成工具。
 本文带你从零开始安装和使用Jenkins部署项目。
 
+
+配置jenkins_home
+vi /etc/profile
+export JENKINS_HOME=/home/soft/jenkins/jenkinshome
+
 ```text
 java –jar Jenkins.war --httpPort=80
 nohup java -jar jenkins.war --httpPort=8080 --prefix=/jenkins &

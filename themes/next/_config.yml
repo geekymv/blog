@@ -95,10 +95,10 @@ index_with_subtitle: false
 # Value after `||` delimeter is the name of FontAwesome icon. If icon (with or without delimeter) is not specified, question icon will be loaded.
 menu:
   home: / || home
-  #about: /about/ || user
-  #tags: /tags/ || tags
-  #categories: /categories/ || th
+  categories: /categories/ || th
   archives: /archives/ || archive
+  tags: /tags/ || tags
+  about: /about/ || user
   #schedule: /schedule/ || calendar
   #sitemap: /sitemap.xml || sitemap
   #commonweal: /404/ || heartbeat
@@ -244,9 +244,9 @@ post_wordcount:
   #description: ex. subscribe to my blog by scanning my public wechat account
 
 # Reward
-#reward_comment: Donate comment here
+reward_comment: 坚持原创技术分享，您的支持将鼓励我继续创作！
 #wechatpay: /images/wechatpay.jpg
-#alipay: /images/alipay.jpg
+alipay: /images/alipay.jpg
 #bitcoin: /images/bitcoin.png
 
 # Declare license on posts
@@ -415,6 +415,20 @@ gitment:
   client_secret: # EITHER this or proxy_gateway, Github access secret token for the Gitment
   proxy_gateway: # Address of api proxy, See: https://github.com/aimingoo/intersect
   redirect_protocol: # Protocol of redirect_uri with force_redirect_protocol when mint enabled
+
+gitalk:
+  enable: true
+  ClientID: 7ba92bf62d54c647c905
+  ClientSecret: 7ae2dbfd950a779266974e470d2d69d1f37155a2
+  repo: blog
+  owner: geekymv
+  adminUser: "['geekymv']"
+  ID: location.pathname
+  labels: "['Gitalk']"
+  perPage: 15
+  pagerDirection: last
+  createIssueManually: true
+  distractionFreeMode: false
 
 # Baidu Share
 # Available value:
