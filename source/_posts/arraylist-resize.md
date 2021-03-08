@@ -57,6 +57,8 @@ private int size;
 
 问题二：ArrayList 源码中为何定义两个 Object[] 呢？它们各有什么用处？
 
+<!-- more -->
+
 #### ArrayList 的构造方法
 
 1、ArrayList 无参构造方法
