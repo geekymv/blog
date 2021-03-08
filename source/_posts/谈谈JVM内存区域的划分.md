@@ -2,6 +2,9 @@
 title: 谈谈JVM内存区域的划分
 date: 2021-03-03 17:21:51
 tags:
+-JVM
+categories:
+-JVM
 ---
 1、程序计数器（Program Counter Register）
 程序计数器也叫PC寄存器。是一块较小的内存空间。
