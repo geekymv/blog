@@ -17,5 +17,49 @@ tags:
 一个线程就是一个指令流，将指令流中的一条条指令以一定的顺序交给CPU执行。
 Java中，线程作为最小调度单位，进程作为资源分配的最小单位。
 
+#### 进程和线程对比
+进程基本上相互独立，而线程存在于进程内，是进程的一个子集。
+进程拥有共享的资源，如内存空间等，供其内部的线程共享。
+进程间通信较为复杂，同一台计算机的进程通信称为IPC（Inter-process communication），
+不同计算机之间的进程通信，需要通过网络，并遵守共同的协议，例如HTTP。
+线程通信相对简单，因为它们共享进程内的内存，一个例子是多个线程可以访问同一个共享变量。
+线程更轻量，线程上下文切换成本一般要比进程上下文切换要低。
+
+#### 并行与并发
+单核CPU下，线程实际还是串行执行的，操作系统中有一个组件叫作任务调度器，将CPU的时间片分给不同的线程使用。
 
 
+
+
+
+#### 查看进程线程的方法
+Linux
+```shell
+ps -fe 查看所有进程
+
+ps -fT -p pid 查看某个进程(pid)的所有线程
+
+kill 杀死进程
+
+top 按大写 H 切换是否显示线程
+
+top -H -p pid 查看某个进程(pid)的所有线程
+```
+
+Java
+```shell
+jps 查看所有Java进程
+jps -l 显示完整的包名
+
+jstack pid 查看某个Java进程(pid)的所有线程状态
+```
+
+jconsole 远程连接配置
+```shell
+nohup java -jar \
+-Djava.rmi.server.hostname=10.0.231.7 -Dcom.sun.management.jmxremote \
+-Dcom.sun.management.jmxremote.port=8999 \
+-Dcom.sun.management.jmxremote.ssl=false \
+-Dcom.sun.management.jmxremote.authenticate=false \
+geek-1.0-SNAPSHOT.jar > /dev/null 2>&1 &
+```
