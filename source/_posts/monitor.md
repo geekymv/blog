@@ -32,6 +32,7 @@ obj 是一个Java对象，当第一个线程t1执行 synchronized 代码块时�
 synchronized 必须是进入同一个对象的Monitor 才有上述效果。
 不加 synchronized 的对象不会关联监视器，不遵循以上规则。
 
+若线程调用 wait()方法，将释放当前持有的 monitor， Owner 属性恢复为null，该线程进入 WaitSet 集合中等待被唤醒，处于 WAITTING 状态。
 WaitSet 中存放的是之前获得过锁，但条件不满足进入 WAITING 状态的线程。
 
 EntryList 可能是公平的，也可能是非公平的。
@@ -99,6 +100,80 @@ monitirexit 将lock 对象的 MarkWord 重置，唤醒 EntryList
 最后一个 monitorexit 异常退出时释放锁。
 
 
+synchronized 修饰方法
+```java
+public class MonitorSyncDemo {
+
+    private static int counter = 0;
+
+    public static void main(String[] args) {
+
+        MonitorSyncDemo demo = new MonitorSyncDemo();
+
+        demo.test();
+    }
+
+    public synchronized void test() {
+        counter++;
+        System.out.println("counter = " + counter);
+    }
+}
+```
+
+```java
+public synchronized void test();
+    descriptor: ()V
+    flags: ACC_PUBLIC, ACC_SYNCHRONIZED
+    Code:
+      stack=3, locals=1, args_size=1
+         0: getstatic     #5                  // Field counter:I
+         3: iconst_1
+         4: iadd
+         5: putstatic     #5                  // Field counter:I
+         8: getstatic     #6                  // Field java/lang/System.out:Ljava/io/PrintStream;
+        11: new           #7                  // class java/lang/StringBuilder
+        14: dup
+        15: invokespecial #8                  // Method java/lang/StringBuilder."<init>":()V
+        18: ldc           #9                  // String counter =
+        20: invokevirtual #10                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+        23: getstatic     #5                  // Field counter:I
+        26: invokevirtual #11                 // Method java/lang/StringBuilder.append:(I)Ljava/lang/StringBuilder;
+        29: invokevirtual #12                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+        32: invokevirtual #13                 // Method java/io/PrintStream.println:(Ljava/lang/String;)V
+        35: return
+      LineNumberTable:
+        line 15: 0
+        line 16: 8
+        line 17: 35
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+            0      36     0  this   Lcom/geekymv/concurrent/lock/MonitorSyncDemo;
+```
+synchronized 修饰的方法并没有使用 monitorenter、monitirexit 指令， 而是通过 ACC_SYNCHRONIZED 标志判断是否为同步方法。
+
+
+
+在 Java6 之前，Monitor 的实现完全依赖操作系统内部的互斥锁，需要进行用户态到内核态的切换，同步操作时一个重量级的操作。
+现在的 Oracle JDK 中，JVM 提供了三种不同的Monitor 实现，也就是常说的三种不同的锁：偏向锁、轻量级锁和重量级锁，
+
+
+锁升级过程
 无锁、偏向锁、轻量级锁、重量级锁
+
+```java
+
+
+```
+
+一个对象被new 出来的时候是正常(normal)状态，或者无锁状态。
+
+
+
+
+轻量级锁
+轻量级锁的使用场景，如果一个多线有多线程访问，但多线程访问的时间是错开的（也就是没有竞争），那么可以使用轻量级锁来优化。
+轻量级锁对使用者是通明的，仍然使用 synchronized。
+
+
 
 
