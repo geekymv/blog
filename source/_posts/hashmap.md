@@ -4,6 +4,8 @@ date: 2019-01-04 13:53:29
 tags:
 ---
 
+https://tech.meituan.com/2016/06/24/java-hashmap.html
+
 |比较| HashMap | HashTable |
 |------|------|------|
 |key/value 是否为null|key 和 value 都可以为null|key 和 value 都不可以为null|
@@ -12,6 +14,197 @@ tags:
 影响HashMap性能的两个参数
 - initial capacity 初始容量，默认值 16
 - load factor 负载因子，默认值 0.75
+
+
+##### 成员变量
+```java
+// 默认的初始容量16
+static final int DEFAULT_INITIAL_CAPACITY = 1 << 4; // aka 16
+
+// 最大容量
+static final int MAXIMUM_CAPACITY = 1 << 30;
+
+// 默认加载因子0.75
+static final float DEFAULT_LOAD_FACTOR = 0.75f;
+
+// Entry数组
+static final Entry<?,?>[] EMPTY_TABLE = {};
+transient Entry<K,V>[] table = (Entry<K,V>[]) EMPTY_TABLE;
+
+// map 中键值对数量
+transient int size;
+
+// 阈值，Entry数组超过 threshold 时进行扩容
+int threshold;
+
+// 加载因子
+final float loadFactor;
+
+```
+
+##### 构造方法
+```java
+
+ /**
+ * Constructs an empty <tt>HashMap</tt> with the default initial capacity
+ * (16) and the default load factor (0.75).
+ */
+public HashMap() {
+    // 使用默认的初始容量16 和 默认的加载因子0.75 构造HashMap
+    this(DEFAULT_INITIAL_CAPACITY, DEFAULT_LOAD_FACTOR);
+}
+
+
+/**
+ * Constructs an empty <tt>HashMap</tt> with the specified initial
+ * capacity and load factor.
+ *
+ * @param  initialCapacity the initial capacity
+ * @param  loadFactor      the load factor
+ * @throws IllegalArgumentException if the initial capacity is negative
+ *         or the load factor is nonpositive
+ */
+public HashMap(int initialCapacity, float loadFactor) {
+    if (initialCapacity < 0)
+        throw new IllegalArgumentException("Illegal initial capacity: " +
+                                           initialCapacity);
+    if (initialCapacity > MAXIMUM_CAPACITY)
+        initialCapacity = MAXIMUM_CAPACITY;
+    if (loadFactor <= 0 || Float.isNaN(loadFactor))
+        throw new IllegalArgumentException("Illegal load factor: " +
+                                           loadFactor);
+    // 加载因子
+    this.loadFactor = loadFactor;
+    // 将阈值设置为初始容量
+    threshold = initialCapacity;
+    // init 方法由子类实现
+    init();
+}
+
+```
+
+
+##### 添加元素
+```java
+/**
+ * Associates the specified value with the specified key in this map.
+ * If the map previously contained a mapping for the key, the old
+ * value is replaced.
+ *
+ * @param key key with which the specified value is to be associated
+ * @param value value to be associated with the specified key
+ * @return the previous value associated with <tt>key</tt>, or
+ *         <tt>null</tt> if there was no mapping for <tt>key</tt>.
+ *         (A <tt>null</tt> return can also indicate that the map
+ *         previously associated <tt>null</tt> with <tt>key</tt>.)
+ */
+public V put(K key, V value) {
+    if (table == EMPTY_TABLE) {
+        // 初始化Entry数组
+        inflateTable(threshold);
+    }
+    // 处理key值为null的情况
+    if (key == null)
+        return putForNullKey(value);
+    // 计算hash值
+    int hash = hash(key);
+    // 计算hash值在Entry数组中对应的索引
+    int i = indexFor(hash, table.length);
+    // 取出索引i对应的Entry值，判断Entry是否为null，如果Entry有值，遍历Entry链表
+    for (Entry<K,V> e = table[i]; e != null; e = e.next) {
+        Object k;
+        // 判断hash值和key是否相等，如果相等则将value替换为新值
+        if (e.hash == hash && ((k = e.key) == key || key.equals(k))) {
+            V oldValue = e.value;
+            e.value = value;
+            e.recordAccess(this);
+            return oldValue;
+        }
+    }
+
+    modCount++;
+    // 添加新的元素
+    addEntry(hash, key, value, i);
+    return null;
+}
+```
+
+```java
+/**
+ * Inflates the table.
+ */
+private void inflateTable(int toSize) {
+    // Find a power of 2 >= toSize 找到一个大于等于toSize的2的幂的数
+    int capacity = roundUpToPowerOf2(toSize);
+    // 计算阈值 threshold = capacity * loadFactor 容量乘以加载因子
+    threshold = (int) Math.min(capacity * loadFactor, MAXIMUM_CAPACITY + 1);
+    // 初始化Entry数组
+    table = new Entry[capacity];
+    initHashSeedAsNeeded(capacity);
+}
+
+```
+
+```java
+ /**
+ * Adds a new entry with the specified key, value and hash code to
+ * the specified bucket.  It is the responsibility of this
+ * method to resize the table if appropriate.
+ *
+ * Subclass overrides this to alter the behavior of put method.
+ */
+void addEntry(int hash, K key, V value, int bucketIndex) {
+    // 判断是否需要扩容
+    if ((size >= threshold) && (null != table[bucketIndex])) {
+        // Entry数组扩容为原来的2倍
+        resize(2 * table.length);
+        // 计算hash值，如果key为null 则hash值为0
+        hash = (null != key) ? hash(key) : 0;
+        // 计算hash值的索引
+        bucketIndex = indexFor(hash, table.length);
+    }
+
+    createEntry(hash, key, value, bucketIndex);
+}
+
+/**
+ * Like addEntry except that this version is used when creating entries
+ * as part of Map construction or "pseudo-construction" (cloning,
+ * deserialization).  This version needn't worry about resizing the table.
+ *
+ * Subclass overrides this to alter the behavior of HashMap(Map),
+ * clone, and readObject.
+ */
+void createEntry(int hash, K key, V value, int bucketIndex) {
+    // 先取出目标索引位置的值
+    Entry<K,V> e = table[bucketIndex];
+    // 头插法，将新的Entry键值对插入链表头部
+    table[bucketIndex] = new Entry<>(hash, key, value, e);
+    size++;
+}
+
+```
+
+
+
+HashMap 是数组+链表数据结构组成的，那么数组的类型是什么
+
+计算hash值
+计算元素在数组中的位置
+数组的长度
+数组的类型Entry
+
+Entry 类型的数组 和 Entry类型的链表
+hash
+key 
+value
+next
+
+如果key 值相同，hash值肯定相同，则直接替换值。
+如果hash 值相同，key 不同，则放在链表中。
+
+发生hash冲突时，jdk1.7头插法，jdk1.8尾插法。
+
 
 阈值
 threshold = capacity * load factor
