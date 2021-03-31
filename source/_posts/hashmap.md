@@ -178,7 +178,7 @@ void addEntry(int hash, K key, V value, int bucketIndex) {
 void createEntry(int hash, K key, V value, int bucketIndex) {
     // 先取出目标索引位置的值
     Entry<K,V> e = table[bucketIndex];
-    // 头插法，将新的Entry键值对插入链表头部
+    // 头插法，将新的Entry键值对插入链表头部，并将索引位置的值添加到新值后面（next属性）
     table[bucketIndex] = new Entry<>(hash, key, value, e);
     size++;
 }
