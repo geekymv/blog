@@ -113,7 +113,7 @@ public V put(K key, V value) {
     // 取出索引i对应的Entry值，判断Entry是否为null，如果Entry有值，遍历Entry链表
     for (Entry<K,V> e = table[i]; e != null; e = e.next) {
         Object k;
-        // 判断hash值和key是否相等，如果相等则将value替换为新值
+        // hash值相等 并且 key值相等
         if (e.hash == hash && ((k = e.key) == key || key.equals(k))) {
             V oldValue = e.value;
             e.value = value;
