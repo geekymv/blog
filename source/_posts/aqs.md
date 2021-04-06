@@ -1,5 +1,5 @@
 ---
-title: aqs
+title: ReentrantLock 源码分析
 date: 2021-04-06 13:43:39
 tags:
 - AQS
@@ -188,7 +188,7 @@ final boolean nonfairTryAcquire(int acquires) {
 }
 ```
 
-如果获取锁失败，执行 acquireQueued(addWaiter(Node.EXCLUSIVE), arg)。
+如果 tryAcquire 方法获取锁失败，执行 acquireQueued(addWaiter(Node.EXCLUSIVE), arg)
 ```java
  /**
  * Creates and enqueues node for current thread and given mode.
@@ -197,7 +197,7 @@ final boolean nonfairTryAcquire(int acquires) {
  * @return the new node
  */
 private Node addWaiter(Node mode) {
-    // 将当前线程封装成 Node
+    // 将当前线程封装成 Node，Node内部维护当前线程
     Node node = new Node(Thread.currentThread(), mode);
     // Try the fast path of enq; backup to full enq on failure
     Node pred = tail;

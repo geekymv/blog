@@ -167,6 +167,8 @@ synchronized 修饰的方法并没有使用 monitorenter、monitirexit 指令，
 
 一个对象被new 出来的时候是正常(normal)状态，或者无锁状态。
 
+偏向锁 threadId
+
 
 
 

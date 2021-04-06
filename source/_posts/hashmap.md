@@ -134,7 +134,7 @@ public V put(K key, V value) {
  * Inflates the table.
  */
 private void inflateTable(int toSize) {
-    // Find a power of 2 >= toSize 找到一个大于等于toSize的2的幂的数
+    // Find a power of 2 >= toSize 找到一个大于等于toSize的2的N次幂
     int capacity = roundUpToPowerOf2(toSize);
     // 计算阈值 threshold = capacity * loadFactor 容量乘以加载因子
     threshold = (int) Math.min(capacity * loadFactor, MAXIMUM_CAPACITY + 1);
@@ -382,6 +382,17 @@ JDK8虽然修复了死循环的BUG，将原来的链表部分改为数据量少�
 - 拉链法（HashMap中使用这种方法进行冲突处理的）
 
 [http://www.cnblogs.com/binyue/p/3726403.html](HashMap在并发下可能出现的问题分析)
+
+
+
+红黑树
+平衡二叉树
+结点是黑色或红色及诶单那
+根结点是黑色
+最长子树不能超过最短子树的2倍
+每一条搜索路径有相同的黑色结点
+任何一条路径不能连续出现两个相同的红色结点，所有叶子节点都是黑色
+
 
 参考 
 - [疫苗：JAVA HASHMAP的死循环](https://coolshell.cn/articles/9606.html)

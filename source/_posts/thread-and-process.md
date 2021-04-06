@@ -1,5 +1,5 @@
 ---
-title: thread-and-process
+title: 线程和进程
 date: 2021-03-18 16:02:25
 tags:
 ---
