@@ -33,6 +33,7 @@ try {
 }
 
 ```
+<!-- more -->
 
 创建 ReentrantLock 实例，为 ReentrantLock 内部成员变量 sync 赋值，默认是非公平锁。
 ```java
@@ -190,7 +191,7 @@ final boolean nonfairTryAcquire(int acquires) {
 
 如果 tryAcquire 方法获取锁失败，执行 acquireQueued(addWaiter(Node.EXCLUSIVE), arg)
 ```java
- /**
+/**
  * Creates and enqueues node for current thread and given mode.
  *
  * @param mode Node.EXCLUSIVE for exclusive, Node.SHARED for shared
@@ -212,7 +213,6 @@ private Node addWaiter(Node mode) {
     enq(node);
     return node;
 }
-
 
 /**
  * Inserts node into queue, initializing if necessary. See picture above.
@@ -239,6 +239,40 @@ private Node enq(final Node node) {
 
 acquireQueued 方法内部 parkAndCheckInterrupt() 方法实现
 ```java
+/**
+ * Acquires in exclusive uninterruptible mode for thread already in
+ * queue. Used by condition wait methods as well as acquire.
+ *
+ * @param node the node
+ * @param arg the acquire argument
+ * @return {@code true} if interrupted while waiting
+ */
+final boolean acquireQueued(final Node node, int arg) {
+    boolean failed = true;
+    try {
+        boolean interrupted = false;
+        for (;;) {
+            final Node p = node.predecessor();
+            // 如果前面结点是头结点，执行 tryAcquire 尝试获取锁
+            if (p == head && tryAcquire(arg)) {
+                // 获取到锁，将新结点设置为头结点
+                setHead(node);
+                p.next = null; // help GC
+                failed = false;
+                return interrupted;
+            }
+            // 获取锁失败后执行park操作
+            if (shouldParkAfterFailedAcquire(p, node) &&
+                parkAndCheckInterrupt())
+                interrupted = true;
+        }
+    } finally {
+        if (failed)
+            cancelAcquire(node);
+    }
+}
+
+
  /**
  * Convenience method to park and then check if interrupted
  *
