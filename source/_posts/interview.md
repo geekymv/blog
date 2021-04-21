@@ -78,7 +78,7 @@ Selector 会根据Channel上发生的读写事件，将请求交给某个空闲�
 Buffer 和 Channel 都是可读可写的。
 
 
-四、select poll和epoll 有什么区别？
+四、Select Poll和EPoll 有什么区别？
 
 五、描述Http 和 Https的区别
 
