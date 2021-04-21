@@ -72,6 +72,11 @@ AIO 异步非阻塞IO
 
 
 三、Java NIO 的几个核心组件是什么？分别有什么作用？
+Channel、Buffer、Selector
+Channel 类似于流，每个Channel对应一个Buffer缓冲区，Channel会注册到Selector 上。
+Selector 会根据Channel上发生的读写事件，将请求交给某个空闲的线程处理。Selector 对应一个或多个线程。
+Buffer 和 Channel 都是可读可写的。
+
 
 四、select poll和epoll 有什么区别？
 
