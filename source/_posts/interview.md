@@ -79,6 +79,11 @@ Buffer 和 Channel 都是可读可写的。
 
 
 四、Select Poll和EPoll 有什么区别？
+它们是NIO中多路复用的三种实现机制，是由操作系统提供的。
+
+Java 的NIO当中使用哪种机制？可以查看JDK中 DefaultSelectorProvider 源码，在Windows和Linux 实现方式是不同的。
+在Windows下是 WindowsSelectorProvider，而Linux下，根据Linux内核版本，2.6版本以上就是EPollSelectorProvider，否则就是默认的 PollSelectorProvider。
+
 
 五、描述Http 和 Https的区别
 
