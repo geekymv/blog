@@ -1,6 +1,6 @@
 ---
 title: hashmap
-date: 2019-01-04 13:53:29
+date: 2021-05-14 13:53:29
 tags:
 ---
 
@@ -10,6 +10,21 @@ https://tech.meituan.com/2016/06/24/java-hashmap.html
 |------|------|------|
 |key/value 是否为null|key 和 value 都可以为null|key 和 value 都不可以为null|
 |是否同步|不同步|同步|
+
+
+##### 说一下HashMap的实现原理
+HashMap的数据结构：数组 + 链表（红黑树），HashMap基于hash算法实现的，当我们往HashMap中put元素时，利用key的hashCode重新hash计算出当前对象的元素在数组中的下标。
+存储时，如果出现hash值相同的key，此时有两种情况：
+1.如果key相同，则覆盖原来的值；
+2.如果key不同，也就是出现了冲突，则将当前的key-value放入链表中。
+
+根据key获取时，同样是利用key的hashCode计算hash值对应的下标，再进一步判断key是否相同，从而找到对应值。
+
+HashMap解决hash冲突的方式就是使用数组的存储方式，将冲突的key的对象放入链表中，一旦发现冲突就在链表中做进一步的对比。
+
+在JDK1.8中对HashMap的实现做了优化，当链表中的节点数超过8个之后，该链表会转换为红黑树来提高查询效率，从原来的O(N)到O(logN)。
+
+
 
 影响HashMap性能的两个参数
 - initial capacity 初始容量，默认值 16
