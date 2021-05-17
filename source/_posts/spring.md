@@ -125,10 +125,10 @@ Bean factory implementations should support the standard bean lifecycle interfac
 10.ServletContextAware's setServletContext (only applicable when running in a web application context)
 前面10个都是XxxAware接口的方法
 
-postProcessBeforeInitialization methods of BeanPostProcessors
-InitializingBean's afterPropertiesSet
-a custom init-method definition
-postProcessAfterInitialization methods of BeanPostProcessors
+11.postProcessBeforeInitialization methods of BeanPostProcessors
+12.InitializingBean's afterPropertiesSet
+13.a custom init-method definition
+14.postProcessAfterInitialization methods of BeanPostProcessors
 
 
 On shutdown of a bean factory, the following lifecycle methods apply:
