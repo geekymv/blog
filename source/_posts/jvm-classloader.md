@@ -8,7 +8,7 @@ tags:
 Java 解释执行，编译执行。
 
 解释器
- bytecode intepreter
+ bytecode interpreter
 
 JIT 
  Just In Time compiler
