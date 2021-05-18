@@ -378,17 +378,56 @@ int[10] 每个int类型的整数是4*8=32个bit，则int[10]一共有320 bit，�
 2、Quartz定时任务，使用Redis的zset替代订单超时未支付检查。
 
 
+https://www.cnkirito.moe/about/
+
+##### zoom 一面
+
+dubbo 服务拆分
+dubbo 线程池、通信协议
+http接口安全
 
 
+线程池
+线程池生命周期
+线程生命周期
+线程池大小设置
+阻塞队列
+线程池退出钩子方法
+synchronized 修饰静态方法和非静态方法
+synchronized 锁升级
+ReentrantLock 公平锁与非公平锁
 
+redis
+缓存一致性
+淘汰策略
+分布式锁
+缓存穿透、击穿、雪崩
 
+MySQL
+隔离级别
+死锁
+锁类型
+日期类型 timestamp datetime 
 
+Spring
+设计模式
+Spring事务失效
+Spring事务注解
 
+Springboot 
+配置文件优先级
+自定义 starter 
 
+SpringCloud 
 
+JVM内存模型
+垃圾收集器
 
+CPU100%问题排查
 
-
+Netty
+核心组件
+心跳机制
 
 
 
