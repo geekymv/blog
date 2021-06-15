@@ -22,3 +22,6 @@ $ uptime
 ```text
 cat /proc/cpuinfo
 ```
+
+Linux杀不死的进程之CPU使用率700%
+https://www.cnblogs.com/l-hh/p/11358038.html
