@@ -19,4 +19,16 @@ printf "%x\n" tid
 jstack pid | grep tid对应的十六进制
 
 
+线程池大小设置多大合适
+https://mp.weixin.qq.com/s/G0toGUjKQRcCpskheR32vA
+https://mp.weixin.qq.com/s/YbyC3qQfUm4B_QQ03GFiNw
+https://segmentfault.com/a/1190000022296465
+
+CPU密集型
+IO密集型
+
+程序在进行IO操作时，CPU是处于空闲状态的。
+
+线程等待时间所占比例越高，需要越多线程；
+线程CPU时间所在比例越高，需要越少线程。
 
