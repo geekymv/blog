@@ -2,6 +2,8 @@
 title: centos7
 date: 2019-07-23 16:15:47
 tags:
+- Linux
+
 ---
 配置网络
 https://blog.csdn.net/akipa11/article/details/81414875
@@ -9,6 +11,11 @@ https://blog.csdn.net/akipa11/article/details/81414875
 设置时区
 https://blog.csdn.net/jkjkjkll/article/details/80015635
 
+
+关闭selinux
+https://blog.csdn.net/fake_hydra/article/details/83061765
+修改/etc/selinux/config文件中的SELINUX="" 为 disabled ，然后重启。 
+如果不想重启系统，使用命令setenforce 0
 
 ##### centos7 防火墙
 https://www.4spaces.org/centos-open-porter/
