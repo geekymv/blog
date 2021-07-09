@@ -80,7 +80,7 @@ table = newTab;
 Node[] 数组就这么被创建好了，是不是很简单（具体看源码中的resize()方法）。
 
 数组创建好了，key在数组中对应的位置bucket也找到了，那么现在就该将key-value放入数组中了，该如何放入呢？
-当然是将key-value封装成数组的元素类类型Node了。
+当然是将key-value封装成数组的元素类型Node了。
 ```java
 /**
  * Basic hash bin node, used for most entries.  (See below for
@@ -103,7 +103,7 @@ static class Node<K,V> implements Map.Entry<K,V> {
 ```
 Node类中包含4个属性，K key、V value、int hash、Node<K,V> next。
 key、value就是我们要放入HashMap中的数据，hash就是我们上面计算出来的key的hash值，这个Node类型的next是干嘛的呢？
-还记得HashMap底层的数据结构吗？数组 + 链表，没错，next这个地方就是链表的实现。next指向与key的hash值相同的新Node。
+还记得HashMap底层的数据结构吗？数组 + 链表，next这个地方就是链表的实现。next指向与key的hash值相同的新Node。
 
 
 根据key在数组中对应的位置bucket，获取bucket位置上的元素，如果该位置上没有元素，则直接将key-value封装成的Node放入数组中
@@ -111,6 +111,10 @@ key、value就是我们要放入HashMap中的数据，hash就是我们上面计�
 tab = table
 tab[i] = newNode(hash, key, value, null);
 ```
+如果该位置上有元素，则比较key的值是否相等
+如果key的值相等，则要更新key对应的vaule，将新的value覆盖旧的value；
+如果key的值不相等，则说明发生了hash冲突。也就是说不同的key计算出的hash值相等。这个时候链表就开始起作用了。
+
 
 JDK1.8中put方法源码
 ```java
@@ -151,23 +155,28 @@ final V putVal(int hash, K key, V value, boolean onlyIfAbsent,
         tab[i] = newNode(hash, key, value, null);
     else {
         Node<K,V> e; K k;
+        // 目标位置上有元素，则比较key值是否相等
         if (p.hash == hash &&
             ((k = p.key) == key || (key != null && key.equals(k))))
-            // 目标位置上有元素，则比较key值是否相等
+            // key值相等
             e = p;
         else if (p instanceof TreeNode)
             e = ((TreeNode<K,V>)p).putTreeVal(this, tab, hash, key, value);
         else {
+            // key值不相等
             for (int binCount = 0; ; ++binCount) {
                 if ((e = p.next) == null) {
+                    // 遍历链表，找到链表的最后一个节点，将新的元素插入到链表的尾部（尾插法）
                     p.next = newNode(hash, key, value, null);
                     if (binCount >= TREEIFY_THRESHOLD - 1) // -1 for 1st
+                        // 判断是否需要将链表转成红黑树
                         treeifyBin(tab, hash);
                     break;
                 }
                 if (e.hash == hash &&
                     ((k = e.key) == key || (key != null && key.equals(k))))
                     break;
+                // 链表继续遍历
                 p = e;
             }
         }
