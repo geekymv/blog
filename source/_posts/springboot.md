@@ -14,6 +14,7 @@ META-INF/spring.factories 中的key是接口或抽象类，value是实现类，�
 org.springframework.beans.BeanInfoFactory=org.springframework.beans.ExtendedBeanInfoFactory
 
 
+SpringApplication 类
 ```java
 public SpringApplication(ResourceLoader resourceLoader, Class<?>... primarySources) {
     this.resourceLoader = resourceLoader;
@@ -46,6 +47,7 @@ private <T> Collection<T> getSpringFactoriesInstances(Class<T> type, Class<?>[] 
     return instances;
 }
 ```
+
 
 SpringFactoriesLoader 类
 ```java
@@ -119,3 +121,27 @@ private static Map<String, List<String>> loadSpringFactories(@Nullable ClassLoad
     }
 }
 ```
+
+SpringApplication 类 createSpringFactoriesInstances 方法，通过反射创建实例
+```java
+@SuppressWarnings("unchecked")
+private <T> List<T> createSpringFactoriesInstances(Class<T> type, Class<?>[] parameterTypes,
+        ClassLoader classLoader, Object[] args, Set<String> names) {
+    List<T> instances = new ArrayList<>(names.size());
+    for (String name : names) {
+        try {
+            Class<?> instanceClass = ClassUtils.forName(name, classLoader);
+            Assert.isAssignable(type, instanceClass);
+            Constructor<?> constructor = instanceClass.getDeclaredConstructor(parameterTypes);
+            T instance = (T) BeanUtils.instantiateClass(constructor, args);
+            instances.add(instance);
+        }
+        catch (Throwable ex) {
+            throw new IllegalArgumentException("Cannot instantiate " + type + " : " + name, ex);
+        }
+    }
+    return instances;
+}
+```
+
+
