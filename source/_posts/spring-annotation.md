@@ -117,6 +117,106 @@ public AnnotatedBeanDefinitionReader(BeanDefinitionRegistry registry, Environmen
 }
 ```
 
+AnnotationConfigUtils.registerAnnotationConfigProcessors 方法将注解相关的post processor 注册到registry
+
+- ConfigurationClassPostProcessor
+- AutowiredAnnotationBeanPostProcessor
+- RequiredAnnotationBeanPostProcessor
+- CommonAnnotationBeanPostProcessor
+- PersistenceAnnotationBeanPostProcessor
+- EventListenerMethodProcessor
+- DefaultEventListenerFactory
+
+
+```java
+/**
+ * Register all relevant annotation post processors in the given registry.
+ * @param registry the registry to operate on
+ */
+public static void registerAnnotationConfigProcessors(BeanDefinitionRegistry registry) {
+    registerAnnotationConfigProcessors(registry, null);
+}
+
+/**
+ * Register all relevant annotation post processors in the given registry.
+ * @param registry the registry to operate on
+ * @param source the configuration source element (already extracted)
+ * that this registration was triggered from. May be {@code null}.
+ * @return a Set of BeanDefinitionHolders, containing all bean definitions
+ * that have actually been registered by this call
+ */
+public static Set<BeanDefinitionHolder> registerAnnotationConfigProcessors(
+        BeanDefinitionRegistry registry, Object source) {
+
+    DefaultListableBeanFactory beanFactory = unwrapDefaultListableBeanFactory(registry);
+    if (beanFactory != null) {
+        if (!(beanFactory.getDependencyComparator() instanceof AnnotationAwareOrderComparator)) {
+            beanFactory.setDependencyComparator(AnnotationAwareOrderComparator.INSTANCE);
+        }
+        if (!(beanFactory.getAutowireCandidateResolver() instanceof ContextAnnotationAutowireCandidateResolver)) {
+            beanFactory.setAutowireCandidateResolver(new ContextAnnotationAutowireCandidateResolver());
+        }
+    }
+
+    Set<BeanDefinitionHolder> beanDefs = new LinkedHashSet<BeanDefinitionHolder>(8);
+
+    if (!registry.containsBeanDefinition(CONFIGURATION_ANNOTATION_PROCESSOR_BEAN_NAME)) {
+        RootBeanDefinition def = new RootBeanDefinition(ConfigurationClassPostProcessor.class);
+        def.setSource(source);
+        beanDefs.add(registerPostProcessor(registry, def, CONFIGURATION_ANNOTATION_PROCESSOR_BEAN_NAME));
+    }
+
+    if (!registry.containsBeanDefinition(AUTOWIRED_ANNOTATION_PROCESSOR_BEAN_NAME)) {
+        RootBeanDefinition def = new RootBeanDefinition(AutowiredAnnotationBeanPostProcessor.class);
+        def.setSource(source);
+        beanDefs.add(registerPostProcessor(registry, def, AUTOWIRED_ANNOTATION_PROCESSOR_BEAN_NAME));
+    }
+
+    if (!registry.containsBeanDefinition(REQUIRED_ANNOTATION_PROCESSOR_BEAN_NAME)) {
+        RootBeanDefinition def = new RootBeanDefinition(RequiredAnnotationBeanPostProcessor.class);
+        def.setSource(source);
+        beanDefs.add(registerPostProcessor(registry, def, REQUIRED_ANNOTATION_PROCESSOR_BEAN_NAME));
+    }
+
+    // Check for JSR-250 support, and if present add the CommonAnnotationBeanPostProcessor.
+    if (jsr250Present && !registry.containsBeanDefinition(COMMON_ANNOTATION_PROCESSOR_BEAN_NAME)) {
+        RootBeanDefinition def = new RootBeanDefinition(CommonAnnotationBeanPostProcessor.class);
+        def.setSource(source);
+        beanDefs.add(registerPostProcessor(registry, def, COMMON_ANNOTATION_PROCESSOR_BEAN_NAME));
+    }
+
+    // Check for JPA support, and if present add the PersistenceAnnotationBeanPostProcessor.
+    if (jpaPresent && !registry.containsBeanDefinition(PERSISTENCE_ANNOTATION_PROCESSOR_BEAN_NAME)) {
+        RootBeanDefinition def = new RootBeanDefinition();
+        try {
+            def.setBeanClass(ClassUtils.forName(PERSISTENCE_ANNOTATION_PROCESSOR_CLASS_NAME,
+                    AnnotationConfigUtils.class.getClassLoader()));
+        }
+        catch (ClassNotFoundException ex) {
+            throw new IllegalStateException(
+                    "Cannot load optional framework class: " + PERSISTENCE_ANNOTATION_PROCESSOR_CLASS_NAME, ex);
+        }
+        def.setSource(source);
+        beanDefs.add(registerPostProcessor(registry, def, PERSISTENCE_ANNOTATION_PROCESSOR_BEAN_NAME));
+    }
+
+    if (!registry.containsBeanDefinition(EVENT_LISTENER_PROCESSOR_BEAN_NAME)) {
+        RootBeanDefinition def = new RootBeanDefinition(EventListenerMethodProcessor.class);
+        def.setSource(source);
+        beanDefs.add(registerPostProcessor(registry, def, EVENT_LISTENER_PROCESSOR_BEAN_NAME));
+    }
+
+    if (!registry.containsBeanDefinition(EVENT_LISTENER_FACTORY_BEAN_NAME)) {
+        RootBeanDefinition def = new RootBeanDefinition(DefaultEventListenerFactory.class);
+        def.setSource(source);
+        beanDefs.add(registerPostProcessor(registry, def, EVENT_LISTENER_FACTORY_BEAN_NAME));
+    }
+
+    return beanDefs;
+}
+```
+
+
 ClassPathBeanDefinitionScanner 类的构造方法
 ```java
 /**
