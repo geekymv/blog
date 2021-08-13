@@ -3,7 +3,7 @@ title: tcpdump排查线上接口请求问题
 date: 2021-08-13 10:14:25
 tags:
 ---
-
+{% asset_img log.png 错误日志 %}
 是的，线上环境出问题了，调用第三方的接口出现服务端响应状态码401，于是赶紧查询HTTP Code 401代表啥意思，于是找到了这篇文章
 
 [http常见的状态码，400,401,403状态码分别代表什么？](https://blog.csdn.net/liouswll/article/details/80698619)
