@@ -208,7 +208,7 @@ private void storeCookie() {
 
 在HttpRequest中的 execute() 方法发送请求之后，获取响应数据的时候会调用 httpConnection.getInputStream()，获取服务端返回的信息时，从响应头中提取Set-Cookie字段的值，保存到CookiePool中。
 
-原来是我们大部分的接口都是根据第三方接口，通过在请求header中添加 X_API_KEY用于接口验证，而有一个接口第三方并没有提供，于是我们通过模拟登录的方式登录到网站来抓取数据，就是在调动登录接口的时候，第三方服务端在响应中返回了 Set-Cookie 信息，而Hutool工具会从响应中提取 Set-Cookie信息保存在CookiePool 中，并在后续请求中携带这个cookie。
+原来是我们大部分的接口都是根据第三方接口文档，通过在请求header中添加 X_API_KEY用于接口验证，而有一个接口第三方并没有提供，于是我们通过模拟登录的方式登录到网站来抓取数据，就是在调动登录接口的时候，第三方服务端在响应中返回了 Set-Cookie 信息，而Hutool工具会从响应中提取 Set-Cookie信息保存在CookiePool 中，并在后续请求中携带这个cookie。
 
 第三方网站登录接口返回的cookie
 
