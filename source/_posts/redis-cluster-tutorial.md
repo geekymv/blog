@@ -55,9 +55,52 @@ If you don't open both TCP ports, your cluster will not work as expected.
 The cluster bus uses a different, binary protocol, for node to node data exchange, 
 which is more suited to exchange information between nodes using little bandwidth and processing time.
 
-每一个Redis Cluster节点有2个端口，命令端口(command port)用于服务客户端比如6379，集群总线端口(cluster bus port) 等于命令端口加上10000，即16379，用于节点之间数据交换。
+```text
+每一个Redis Cluster节点有2个端口，命令端口(command port)比如6379，用于服务客户端，集群总线端口(cluster bus port) 等于命令端口加上10000，即16379，用于节点之间数据交换。
+```
+
+#### Redis Cluster and Docker
+Currently Redis Cluster does not support NATted environments and in general environments where IP addresses or TCP ports are remapped.
+
+Docker uses a technique called port mapping: programs running inside Docker containers may be exposed with a different port compared to the one the program believes to be using. 
+This is useful in order to run multiple containers using the same ports, at the same time, in the same server.
+
+In order to make Docker compatible with Redis Cluster you need to use the host networking mode of Docker. 
+Please check the --net=host option in the Docker documentation for more information.
 
 
+#### Redis Cluster data sharding
+Redis Cluster does not use consistent hashing, but a different form of sharding where every key is conceptually part of what we call a hash slot.
+
+There are 16384 hash slots in Redis Cluster, and to compute what is the hash slot of a given key, we simply take the CRC16 of the key modulo 16384.
+
+Every node in a Redis Cluster is responsible for a subset of the hash slots, so for example you may have a cluster with 3 nodes, where:
+
+- Node A contains hash slots from 0 to 5500.
+- Node B contains hash slots from 5501 to 11000.
+- Node C contains hash slots from 11001 to 16383.
+This allows to add and remove nodes in the cluster easily. For example if I want to add a new node D, 
+I need to move some hash slot from nodes A, B, C to D. 
+Similarly if I want to remove node A from the cluster I can just move the hash slots served by A to B and C. 
+When the node A will be empty I can remove it from the cluster completely.
+
+Because moving hash slots from a node to another does not require to stop operations, adding and removing nodes, 
+or changing the percentage of hash slots hold by nodes, does not require any downtime.
+
+Redis Cluster supports multiple key operations as long as all the keys involved into a single command execution (or whole transaction, or Lua script execution) 
+all belong to the same hash slot. The user can force multiple keys to be part of the same hash slot by using a concept called hash tags.
+
+Hash tags are documented in the Redis Cluster specification, but the gist is that if there is a substring between {} brackets in a key, 
+only what is inside the string is hashed, so for example this{foo}key and another{foo}key are guaranteed to be in the same hash slot, 
+and can be used together in a command with multiple keys as arguments.
+
+```text
+Redis Cluster 没有使用一致性Hash算法，而是使用Hash slot 实现数据分片，集群共有16384个hash slots。
+
+对于给定key的hash slot = CRC16(key) % 16384。
+
+Hash tags 可以将多个不同的key存储到同一个hash slot上。
+```
 
 
 
