@@ -95,9 +95,16 @@ only what is inside the string is hashed, so for example this{foo}key and anothe
 and can be used together in a command with multiple keys as arguments.
 
 ```text
-Redis Cluster 没有使用一致性Hash算法，而是使用Hash slot 实现数据分片，集群共有16384个hash slots。
-
+Redis Cluster 没有使用一致性Hash算法，而是使用Hash slot 实现数据分片，一个集群共有16384个hash slots。
 对于给定key的hash slot = CRC16(key) % 16384。
+
+每个节点包含部分hash slots，可以添加和删除节点，比如集群有3个节点，其中
+节点A包含的hash slots 从 0 到 5500
+节点B包含的hash slots 从 5501 到 11000
+节点C包含的hash slots 从 11001 到 16383
+
+如果想要添加一个新的节点D，那么可以从A，B，C 节点移动一些hash slots到节点D。删除节点需要先将节点中的hash slots 移到其他的节点中。
+从一个节点到另一个节点移动hash slots 无需停机。 
 
 Hash tags 可以将多个不同的key存储到同一个hash slot上。
 ```
