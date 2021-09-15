@@ -89,7 +89,22 @@ Redis Cluster 没有使用一致性Hash算法，而是使用Hash slot 实现数�
 Hash tags 可以将多个不同的key存储到同一个hash slot上。
 ```
 
+#### Redis Cluster master-slave model
 
+In order to remain available when a subset of master nodes are failing or are not able to communicate with the majority of nodes, Redis Cluster uses a master-slave model where every hash slot has from 1 (the master itself) to N replicas (N-1 additional slaves nodes).
+
+In our example cluster with nodes A, B, C, if node B fails the cluster is not able to continue, since we no longer have a way to serve hash slots in the range 5501-11000.
+
+However when the cluster is created (or at a later time) we add a slave node to every master, so that the final cluster is composed of A, B, C that are master nodes, and A1, B1, C1 that are slave nodes. This way, the system is able to continue if node B fails.
+
+Node B1 replicates B, and B fails, the cluster will promote node B1 as the new master and will continue to operate correctly.
+
+However, note that if nodes B and B1 fail at the same time, Redis Cluster is not able to continue to operate.
+
+```text
+Redis Cluster 使用主从模式，每个hash slot 有1~N个副本，其中1个master和 N-1个 slaves
+当Master出现故障，集群会将其中一个从节点提升为新的Master，继续提供服务。
+```
 
 
 
