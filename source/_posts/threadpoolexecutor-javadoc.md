@@ -34,8 +34,20 @@ Rejected tasks
 会执行拒绝策略 RejectedExecutionHandler.rejectedExecution(Runnable r, ThreadPoolExecutor executor)。
 
 JDK提供了4个拒绝策略
+ThreadPoolExecutor.AbortPolicy：默认拒绝策略，抛出RejectedExecutionException异常。
+ThreadPoolExecutor.CallerRunsPolicy：调用者执行，调用execute方法的线程自己执行任务，会降低任务提交的速度。
+ThreadPoolExecutor.DiscardPolicy：丢弃当前任务。
+ThreadPoolExecutor.DiscardOldestPolicy：丢弃队列头的任务，再次执行当前任务。
 
+可以自定义实现其他种类的 RejectedExecutionHandler的实现，参考 https://cloud.tencent.com/developer/article/1520860
 
 Hook methods
+ThreadPoolExecutor 类提供了 beforeExecute 和 afterExecute 方法在任务执行前后会执行，子类可以重写这两个方法做一些统计、日志等。
 
 Queue maintenance
+getQueue() 方法允许访问工作队列，可以用于监控和调试。
+
+
+Finalization
+
+
