@@ -49,9 +49,8 @@ but this can be overridden dynamically using method prestartCoreThread or presta
 You probably want to prestart threads if you construct the pool with a non-empty
 默认情况下，当新的任务到达时创建并启动核心线程，也可以使用 prestartCoreThread 或 prestartAllCoreThreads 方法提前创建线程。
 
-Creating new threads
-New threads are created using a ThreadFactory. If not otherwise specified, a Executors.defaultThreadFactory is used, 
-that creates threads to all be in the same ThreadGroup and with the same NORM_PRIORITY priority and non-daemon status. By supplying a different ThreadFactory, you can alter the thread's name, thread group, priority, daemon status, etc. If a ThreadFactory fails to create a thread when asked by returning null from newThread, the executor will continue, but might not be able to execute any tasks. Threads should possess the "modifyThread" RuntimePermission. 
+#### Creating new threads
+New threads are created using a ThreadFactory. If not otherwise specified, a Executors.defaultThreadFactory is used, that creates threads to all be in the same ThreadGroup and with the same NORM_PRIORITY priority and non-daemon status. By supplying a different ThreadFactory, you can alter the thread's name, thread group, priority, daemon status, etc. If a ThreadFactory fails to create a thread when asked by returning null from newThread, the executor will continue, but might not be able to execute any tasks. Threads should possess the "modifyThread" RuntimePermission. 
 If worker threads or other threads using the pool do not possess this permission, service may be degraded: 
 configuration changes may not take effect in a timely manner, and a shutdown pool may remain in a state in which termination is possible but not completed.
 
@@ -150,8 +149,8 @@ A pool that is no longer referenced in a program AND has no remaining threads wi
 #### workerCount and runState
 
 The main pool control state, ctl, is an atomic integer packing two conceptual fields 
-workerCount, indicating the effective number of threads 
-runState, indicating whether running, shutting down etc 
+- workerCount, indicating the effective number of threads 
+- runState, indicating whether running, shutting down etc 
 
 In order to pack them into one int, we limit workerCount to (2^29)-1 (about 500 million) threads rather than (2^31)-1 (2 billion) otherwise representable. If this is ever an issue in the future, the variable can be changed to be an AtomicLong, and the shift/mask constants below adjusted. But until the need arises, this code is a bit faster and simpler using an int. 
 
@@ -195,7 +194,9 @@ RUNNING -> SHUTDOWN 调用shutdown()方法
 RUNNING / SHUTDOWN -> STOP 调用shutdownNow()方法
 SHUTDOWN -> TIDYING 队列和线程池为空
 STOP -> TIDYING 线程池为空
-TIDYING -> TIDYING terminated()钩子方法已经完成
+TIDYING -> TIDYING terminated()钩子方法已经完成。
+
+更多详细信息参见 java.util.concurrent.ThreadPoolExecutor 的Javadoc。
 
 
 
