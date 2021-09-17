@@ -188,13 +188,13 @@ RUNNING：接收新任务并处理队列里的任务
 SHUTDOWN：不接受新任务，处理队列任务
 STOP：不接受新任务，不处理队列任务，中断正在执行的任务
 TIDYING：所有任务已经终止，workerCount是0，线程状态转换为TIDYING，将运行terminated()钩子方法
-TIDYING：terminated()钩子方法已经完成
+TERMINATED：terminated() 钩子方法已经完成
 
 RUNNING -> SHUTDOWN 调用shutdown()方法
 RUNNING / SHUTDOWN -> STOP 调用shutdownNow()方法
 SHUTDOWN -> TIDYING 队列和线程池为空
 STOP -> TIDYING 线程池为空
-TIDYING -> TIDYING terminated()钩子方法已经完成。
+TIDYING -> TERMINATED terminated()钩子方法已经完成。
 
 更多详细信息参见 java.util.concurrent.ThreadPoolExecutor 的Javadoc。
 
