@@ -32,8 +32,21 @@ show variables like '%slow_query%';
 show variables like '%long_query_time%';
 ```
 
-二进制日志（bin log）
+修改 my.cnf，在 [mysqld] 添加下面配置
+```
+slow_query_log=ON
+slow_query_log_file=/var/log/mysql-slow-log.log
+long_query_time=3
+```
+有可能没有创建/var/log/mysql-slow-log.log权限，手动创建并修改用户组
 
+
+二进制日志（bin log）
+```text
+server-id=1
+log-bin=mysql-bin
+```
+show variables like '%log_bin%';
 
 
 
