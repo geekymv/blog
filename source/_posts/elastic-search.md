@@ -127,10 +127,13 @@ discovery.zen.ping.unicast.hosts: ["node01"]
 添加用户组
 groupadd geekymv
 添加用户，并指定用户组
-useradd -g geekymv geekymv -s /sbin/nologin
+useradd -g geekymv geekymv
 
 设置密码
 passwd geekymv
+
+修改所属用户
+chown -R geekymv:geekymv elasticsearch-6.5.4
 
 [geekymv@node01 elasticsearch-6.5.4]$ bin/elasticsearch
 [2019-01-16T21:43:43,227][WARN ][o.e.b.JNANatives         ] [node01] unable to install syscall filter: 
