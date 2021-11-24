@@ -127,7 +127,7 @@ discovery.zen.ping.unicast.hosts: ["node01"]
 添加用户组
 groupadd geekymv
 添加用户，并指定用户组
-useradd -g geekymv geekymv
+useradd -g geekymv geekymv -s /sbin/nologin
 
 设置密码
 passwd geekymv
