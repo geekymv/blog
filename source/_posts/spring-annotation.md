@@ -376,3 +376,9 @@ public void registerBean(Class<?> annotatedClass, String name, Class<? extends A
 ```
 BeanDefinitionReaderUtils 工具类的registerBeanDefinition 方法将bean注册到registry。
 
+
+
+@Bean注解
+ConfigurationClassPostProcessor 类
+
+ConfigurationClassBeanDefinitionReader.loadBeanDefinitionsForBeanMethod

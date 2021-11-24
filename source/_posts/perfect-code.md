@@ -23,3 +23,37 @@ public static <T extends EurekaEndpoint> List<T> randomize(List<T> list) {
     return randomList;
 }
 ```
+
+
+com.netflix.discovery.DiscoveryClient 类
+创建线程池
+```text
+// default size of 2 - 1 each for heartbeat and cacheRefresh
+scheduler = Executors.newScheduledThreadPool(2,
+        new ThreadFactoryBuilder()
+                .setNameFormat("DiscoveryClient-%d")
+                .setDaemon(true)
+                .build());
+
+heartbeatExecutor = new ThreadPoolExecutor(
+        1, clientConfig.getHeartbeatExecutorThreadPoolSize(), 0, TimeUnit.SECONDS,
+        new SynchronousQueue<Runnable>(),
+        new ThreadFactoryBuilder()
+                .setNameFormat("DiscoveryClient-HeartbeatExecutor-%d")
+                .setDaemon(true)
+                .build()
+);  // use direct handoff
+
+cacheRefreshExecutor = new ThreadPoolExecutor(
+        1, clientConfig.getCacheRefreshExecutorThreadPoolSize(), 0, TimeUnit.SECONDS,
+        new SynchronousQueue<Runnable>(),
+        new ThreadFactoryBuilder()
+                .setNameFormat("DiscoveryClient-CacheRefreshExecutor-%d")
+                .setDaemon(true)
+                .build()
+);  // use direct handoff
+```
+
+Eureka 每30s 执行一次renew操作
+
+EurekaHttpClient 接口

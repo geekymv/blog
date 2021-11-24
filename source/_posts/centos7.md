@@ -38,6 +38,9 @@ firewall-cmd --get-active-zones
 开放443端口
 firewall-cmd --zone=public --add-port=443/tcp --permanent
 
+开放多个端口
+firewall-cmd --zone=public --add-port=8080-8090/tcp --permanent
+
 重启防火墙
 firewall-cmd --reload
 
