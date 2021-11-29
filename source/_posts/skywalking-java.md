@@ -4,8 +4,8 @@ date: 2021-11-29 10:41:08
 tags:
 ---
 
-***基于 SkyWalking Java Agent 8.8.0 版本***
- 
+**基于 SkyWalking Java Agent 8.8.0 版本**
+
 SkyWalkingAgent 类包含 Java Agent 的入口 premain 方法
 
 ```java
@@ -136,7 +136,7 @@ protected void logger(LogLevel level, String message, Throwable e) {
 }
 ```
 
-其中 format 方法是一个抽象方法，留给子类去实现日志输出的格式，返回字符串的字符串将输出到文件或控制台。
+其中 format 方法是一个抽象方法，留给子类去实现日志输出的格式，返回字符串的字符串将输出到文件或标准输出。
 ```java
  /**
  * The abstract method left for real loggers.
@@ -151,4 +151,4 @@ protected void logger(LogLevel level, String message, Throwable e) {
 protected abstract String format(LogLevel level, String message, Throwable e);
 ```
 
-抽象类对接口中的大部分方法做了实现，然后搞个抽象方法，让子类来实现。
+抽象类对接口中的方法做了实现，每个实现中都调用了一个抽象方法，这个抽象方法让子类来实现具体的业务逻辑。
