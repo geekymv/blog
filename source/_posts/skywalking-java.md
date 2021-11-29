@@ -30,7 +30,11 @@ SkyWalkingAgent 类的第一行代码就是 SkyWalking Java Agent 自己实现�
 private static ILog LOGGER = LogManager.getLogger(SkyWalkingAgent.class);
 ```
 首先通过日志管理器 LogManager 获取 ILog 接口的一个具体实现，这是典型的Java多态 - 父类（接口）的引用指向子类的实现。
+
+#### ILog 接口
+
 ILog 接口提供了我们常用的打印日志的方法
+
 ```java
 /**
  * The Log interface. It's very easy to understand, like any other log-component. Do just like log4j or log4j2 does.
@@ -51,7 +55,10 @@ public interface ILog {
 }    
 ```
 
+#### LogManager
+
 LogManager 类的具体实现：
+
 ```java
 public class LogManager {
     private static LogResolver RESOLVER = new PatternLogResolver();
@@ -100,13 +107,15 @@ public interface LogResolver {
 ```
 
 #### ILog 接口的实现类
+
+![image-20211129180301956](skywalking-java.assets/image-20211129180301956.png)
+
 - NoopLogger 枚举
-NoopLogger 直接继承了 ILog，NoopLogger 只是实现了 ILog 接口，所有方法都是空实现，NoopLogger 存在的意义是为了防止 NullPointerException。
-因为调用者可以通过 LogManager 的 setLogResolver 方法设置不同的日志解析器 LogResolver，如果为null，则返回 ILog 接口的默认实现 NoopLogger。
+NoopLogger 直接继承了 ILog，NoopLogger 只是实现了 ILog 接口，所有方法都是空实现，NoopLogger 存在的意义是为了防止 NullPointerException，因为调用者可以通过 LogManager 的 setLogResolver 方法设置不同的日志解析器 LogResolver，如果为null，则返回 ILog 接口的默认实现 NoopLogger。
 
 - AbstractLogger 抽象类
     - PatternLogger
-    - JsonLogResolver
+    - JsonLogger
 
 AbstractLogger 抽象类是为了简化 ILog 接口的具体实现，主要功能：
 1. 它持有logger类名 targetClass；
@@ -152,3 +161,36 @@ protected abstract String format(LogLevel level, String message, Throwable e);
 ```
 
 抽象类对接口中的方法做了实现，每个实现中都调用了一个抽象方法，这个抽象方法让子类来实现具体的业务逻辑。
+
+
+
+#### WriterFactory 
+
+WriterFactory 工厂类负责创建 IWriter 接口的实现类，用于将日志信息写入到目的地。
+
+```java
+public interface IWriter {
+    void write(String message);
+}
+```
+
+IWriter 接口有2种实现
+
+- FileWriter：使用一个阻塞队列 ArrayBlockingQueue 作为缓冲，线程池 ScheduledExecutorService 异步从队列中取出日志信息，使用 FileOutputStream 将日志信息写入日志文件中，典型的生产者-消费者模式；
+- SystemOutWriter：将日志信息输出到控制台；
+
+#### FileWriter 工作原理：
+
+- 负责将日志信息写入ArrayBlockingQueue队列中
+
+- ScheduledExecutorService 定时任务
+  a）每秒从 ArrayBlockingQueue 取出所有日志信息，写入到文件中；
+  b）判断文件大小是否超过最大值Config.Logging.MAX_FILE_SIZE；
+  c）如果超过将当前文件重命名。
+
+
+
+#### 日志组件实现使用到的技术点：
+
+- 工厂模式
+- 生产者-消费者模式
