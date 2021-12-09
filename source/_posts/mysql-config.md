@@ -45,6 +45,11 @@ long_query_time=3
 ```text
 server-id=1
 log-bin=mysql-bin
+binlog-format=ROW
+# 指定db
+binlog-do-db=backup_cloud
+# 日志保留时间
+expire_logs_days=15
 ```
 show variables like '%log_bin%';
 
