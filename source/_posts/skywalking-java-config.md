@@ -51,6 +51,8 @@ initializeConfig() 将以上读取到的配置信息映射到 Config 类的静�
 configureLogger() 根据配置的 Config.Logging.RESOLVER 重配置 Log，更多关于日志参见文章
 验证非空参数 agent.service_name 和 collector.servers。
 
+
+
 1. 从指定的配置文件路径读取配置文件内容，通过 -Dskywalking_config=/xxx/yyyy
 2. 如果没有指定配置文件路径，则从默认配置文件 config/agent.config 读取；
 3. 将配置文件内容加载到 Properties；
@@ -171,4 +173,6 @@ service_name 对应静态内部类 Agent 的静态属性 SERVICE_NAME
 SkyWalking Java Agent 在这里面使用了下划线而不是驼峰来命名配置项，将类的静态属性名称转换成下划线配置名称非常方便，直接转成小写就可以通过 Properties 获取对应的值了。
 
 ConfigInitializer.initNextLevel 方法涉及到的技术点有反射、递归调用、栈等，更多实现细节参考 ConfigInitializer 类源码。
+
+阅读源码过程对部分代码添加的注释已经提交到 GitHub 上了，我就不在此贴太多代码了，具体参见 https://github.com/geekymv/skywalking-java/tree/v8.8.0-annotated
 
