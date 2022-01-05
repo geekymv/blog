@@ -132,6 +132,9 @@ useradd -g geekymv geekymv
 设置密码
 passwd geekymv
 
+修改所属用户
+chown -R geekymv:geekymv elasticsearch-6.5.4
+
 [geekymv@node01 elasticsearch-6.5.4]$ bin/elasticsearch
 [2019-01-16T21:43:43,227][WARN ][o.e.b.JNANatives         ] [node01] unable to install syscall filter: 
 java.lang.UnsupportedOperationException: seccomp unavailable: requires kernel 3.5+ with CONFIG_SECCOMP and CONFIG_SECCOMP_FILTER compiled in

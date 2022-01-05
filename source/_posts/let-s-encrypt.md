@@ -116,3 +116,26 @@ https://www.jianshu.com/p/c5c9d071e395
 
 删除弃用的Let’s encrypt安全证书的域名
 https://www.vmvps.com/how-to-delete-unused-lets-encrypt-ssl-domain.html
+
+
+
+#### Let's Encrypt 续期
+crontab -e
+
+0 1 * * * /usr/local/bin/certbot-auto renew --no-self-upgrade
+5 1 * * * /usr/sbin/nginx -s reload
+
+强制更新
+--force-renew
+
+查看日志
+tail -F /var/log/letsencrypt/letsencrypt.log
+
+查看crontab 日志
+tail -30f /var/log/cron
+
+
+报错
+Could not find a usable 'nginx' binary. Ensure nginx exists, the binary is executable, and your PATH is set correctly
+
+https://www.jianshu.com/p/1ce5f1bc8f0d
