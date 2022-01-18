@@ -329,7 +329,7 @@ public class AgentClassLoader extends ClassLoader {
 }
 ```
 
-
+#### 类加载器
 
 类加载器对象负责加载类，ClassLoader 是一个抽象类，给定一个类的 binary name，类加载器尝试定位或生成构成类定义的数据。典型的场景是从文件系统读取类的 class 文件。
 每一个Class 对象包含一个指向定义它的类加载器的引用。
@@ -363,7 +363,6 @@ sun.misc.Launcher$AppClassLoader@18b4aac2
 
 当请求查找一个类或资源的时候，ClassLoader 实例在它尝试自己查找类或资源之前会将查找委托给它的父类加载器。Java 虚拟机内置的类加载器叫作启动类加载器（bootstrap class loader），它没有父类加载#器，但是可以作为 ClassLoader 实例的父类加载器。
 
-
 #### 类加载器的并行能力
 支持并发加载类的类加载器被称为具有并行能力的类加载器，需要在类初始化的时候通过调用 ClassLoader.registerAsParallelCapable() 注册自己。注意，ClassLoader 类在默认情况下被注册为具有并行能力，而它的子类如果需要具有并行能力，需要注册它们自己。
 
@@ -385,6 +384,36 @@ public class AgentClassLoader extends ClassLoader {
 ```
 
 在委托模式不是严格分层的环境中，类加载器需要并行能力，否则类加载可能导致死锁，因为加载器锁在类加载过程一直被持有（参见 ClassLoader.loadClass方法）。
+
+通常，Java 虚拟机从本地文件系统加载类，比如从  CLASSPATH 环境变量定义的目录加载类，然而一些类可能不是以文件的形式存在，它们可能从其他形式产生，例如网络或由应用程序构造。defineClass 方法将类的字节数组转换成 Class 实例，这个新定义的类的 Class 实例可以通过 Class.newInstance() 创建类的实例。
+
+一个类加载创建的对象的方法和构造器可能引用了其他类，为了确定引用的类，Java 虚拟机调用同一个类加载器的 loadClass 方法加载引用的类。例如，应用程序可以创建一个类加载器从服务器下载类的 class 文件，示例代码如下
+
+```java
+ClassLoader loader = new NetworkClassLoader(host, port);
+Object main = loader.loadClass("Main", true).newInstance();
+. . .
+```
+
+NetworkClassLoader 必须继承 ClassLoader，并重写 findClass 方法从网络下载 class 的字节数组，然后使用 defineClass 方法创建 Class 实例。
+
+```java
+class NetworkClassLoader extends ClassLoader {
+    String host;
+    int port;
+
+    @Override
+    public Class<?> findClass(String name) throws ClassNotFoundException {
+        byte[] b = loadClassData(name);
+        return defineClass(name, b, 0, b.length);
+    }
+
+    private byte[] loadClassData(String name) {
+        // load the class data from the connection
+        . . .
+    }
+}
+```
 
 
 
