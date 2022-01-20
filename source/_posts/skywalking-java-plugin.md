@@ -6,6 +6,14 @@ tags:
 
 SkyWalking Java Agent 插件加载机制（上）
 
+之前的两篇文章分别介绍了 SkyWalking Java Agent 日志组件 和 配置初始化流程
+
+- [SkyWalking Java Agent 日志组件分析](https://juejin.cn/post/7047329063135871013)
+
+- [SkyWalking Java Agent 配置初始化流程分析](https://juejin.cn/post/7050487296243531784)
+
+今天我们要分析的是 SkyWalking Java Agent 插件加载机制
+
 ```java
 /**
  * The main entrance of sky-walking agent, based on javaagent mechanism.
@@ -40,7 +48,7 @@ public class SkyWalkingAgent {
 ```
 
 
-今天我们要分析的源码是插件加载部分
+核心代码
 ```java
 pluginFinder = new PluginFinder(new PluginBootstrap().loadPlugins());
 ```
@@ -65,7 +73,8 @@ public class PluginBootstrap {
         AgentClassLoader.initDefaultLoader();
 
         PluginResourcesResolver resolver = new PluginResourcesResolver();
-        List<URL> resources = resolver.getResources(); // 2.使用 AgentClassLoader 读取插件定义文件 skywalking-plugin.def
+      	// 2.使用 AgentClassLoader 读取插件定义文件 skywalking-plugin.def
+        List<URL> resources = resolver.getResources();
 
         if (resources == null || resources.size() == 0) {
             LOGGER.info("no plugin files (skywalking-plugin.def) found, continue to start application.");
@@ -120,12 +129,12 @@ AbstractClassEnhancePluginDefine plugin = (AbstractClassEnhancePluginDefine) Cla
     .getDefault()).newInstance();
 ```
 
-关于插件加载机制的分为准备上下两篇来写，上篇我们要分析的是自定义类加载器 AgentClassLoader 部分
+关于插件加载机制的内容比较多，因此分为准备上下两篇来写，上篇我们要分析的是自定义类加载器 AgentClassLoader 部分
 
 首先我们回顾下 Java 类加载器
 
 #### 类加载器
-类加载器对象负责加载类，ClassLoader 是一个抽象类，给定一个类的 binary name，类加载器尝试定位或生成构成类定义的数据。典型的场景是从文件系统读取类的 class 文件。
+类加载器对象负责加载类，ClassLoader 是一个抽象类，给定一个类的 binary name，类加载器尝试定位或生成构成类定义的数据，典型的场景是从文件系统读取类的 class 文件。对于任意一个类，都必须由加载它的类加载器和这个类本身共同决定了其在 Java 虚拟机中的唯一性。
 每一个Class 对象包含一个指向定义它的类加载器的引用。
 
 数组类的 class 对象不是由类加载器创建的，而是根据 Java 运行时的需要自动创建的，通过 Class.getClassLoader() 返回的数组类的类加载器和它的元素类（element type）的类加载器相同，比如下面的示例代码 Foo[]数组的 class 对象的类加载器和 Foo 的 class 对象的类加载器相同，原生类型的数组没有类加载器。
@@ -492,38 +501,6 @@ public class AgentClassLoader extends ClassLoader {
     }
 }
 ```
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
