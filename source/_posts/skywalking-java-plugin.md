@@ -4,7 +4,7 @@ date: 2022-01-06 10:40:57
 tags:
 ---
 
-SkyWalking Java Agent 插件机制—自定义类加载器
+SkyWalking Java Agent 插件加载机制—自定义类加载器
 
 ```java
 /**
@@ -18,19 +18,9 @@ public class SkyWalkingAgent {
      */
     public static void premain(String agentArgs, Instrumentation instrumentation) throws PluginException {
         final PluginFinder pluginFinder;
-        try {
-            SnifferConfigInitializer.initializeCoreConfig(agentArgs);
-        } catch (Exception e) {
-            // try to resolve a new logger, and use the new logger to write the error log here
-            // 配置初始化过程可能会抛出异常（验证非空参数），这里为了使用新的 LogResolver 需要重新获取日志对象
-            LogManager.getLogger(SkyWalkingAgent.class)
-                    .error(e, "SkyWalking agent initialized failure. Shutting down.");
-            return;
-        } finally {
-            // refresh logger again after initialization finishes
-            LOGGER = LogManager.getLogger(SkyWalkingAgent.class);
-        }
-
+        
+        // 省略部分代码....
+        
         try {
             pluginFinder = new PluginFinder(new PluginBootstrap().loadPlugins());
         } catch (AgentPackageNotFoundException ape) {
@@ -130,6 +120,94 @@ AbstractClassEnhancePluginDefine plugin = (AbstractClassEnhancePluginDefine) Cla
     .getDefault()).newInstance();
 ```
 
+关于插件加载机制的分为准备上下两篇来写，上篇我们要分析的是自定义类加载器 AgentClassLoader 部分
+
+首先我们回顾下 Java 类加载器
+
+#### 类加载器
+类加载器对象负责加载类，ClassLoader 是一个抽象类，给定一个类的 binary name，类加载器尝试定位或生成构成类定义的数据。典型的场景是从文件系统读取类的 class 文件。
+每一个Class 对象包含一个指向定义它的类加载器的引用。
+
+数组类的 class 对象不是由类加载器创建的，而是根据 Java 运行时的需要自动创建的，通过 Class.getClassLoader() 返回的数组类的类加载器和它的元素类（element type）的类加载器相同，比如下面的示例代码 Foo[]数组的 class 对象的类加载器和 Foo 的 class 对象的类加载器相同，原生类型的数组没有类加载器。
+
+```java
+public class FooArrayTest {
+    public static void main(String[] args) {
+        Foo[] foos = new Foo[10];
+        foos[0] = new Foo();
+        System.out.println(foos.getClass().getClassLoader());
+        System.out.println(Foo.class.getClassLoader());
+    }
+}
+
+class Foo {
+}
+```
+
+输出
+
+```java
+sun.misc.Launcher$AppClassLoader@18b4aac2
+sun.misc.Launcher$AppClassLoader@18b4aac2
+```
+
+
+
+应用程序可以通过继承 ClassLoader 来扩展 Java 虚拟机动态加载类的方式。ClassLoader 采用委托模式查找类和资源，每一个 ClassLoader 实例都有一个相关联的父类加载器（parent class loader）。
+
+当请求查找一个类或资源的时候，ClassLoader 实例在它尝试自己查找类或资源之前会将查找委托给它的父类加载器。Java 虚拟机内置的类加载器叫作启动类加载器（bootstrap class loader），它没有父类加载#器，但是可以作为 ClassLoader 实例的父类加载器。
+
+#### 类加载器的并行能力
+支持并发加载类的类加载器被称为具有并行能力的类加载器，需要在类初始化的时候通过调用 ClassLoader.registerAsParallelCapable() 注册自己。注意，ClassLoader 类在默认情况下被注册为具有并行能力，而它的子类如果需要具有并行能力，需要注册它们自己。
+
+AgentClassLoader 类加载器就是通过静态代码块将自己注册为具有并行能力。
+
+```java
+public class AgentClassLoader extends ClassLoader {
+
+    static {
+        /*
+         * Try to solve the classloader dead lock. See https://github.com/apache/skywalking/pull/2016
+         * 支持并发的加载类，参见 ClassLoader 的 Javadoc
+         */
+        registerAsParallelCapable();
+    }
+    
+    // 省略部分代码....
+}
+```
+
+在委托模式不是严格分层的环境中，类加载器需要并行能力，否则类加载可能导致死锁，因为加载器锁在类加载过程一直被持有（参见 ClassLoader.loadClass方法）。
+
+通常，Java 虚拟机从本地文件系统加载类，比如从  CLASSPATH 环境变量定义的目录加载类，然而一些类可能不是以文件的形式存在，它们可能从其他形式产生，例如网络或由应用程序构造。defineClass 方法将类的字节数组转换成 Class 实例，这个新定义的类的 Class 实例可以通过 Class.newInstance() 创建类的实例。
+
+一个类加载创建的对象的方法和构造器可能引用了其他类，为了确定引用的类，Java 虚拟机调用同一个类加载器的 loadClass 方法加载引用的类。例如，应用程序可以创建一个类加载器从服务器下载类的 class 文件，示例代码如下
+
+```java
+ClassLoader loader = new NetworkClassLoader(host, port);
+Object main = loader.loadClass("Main", true).newInstance();
+. . .
+```
+
+NetworkClassLoader 必须继承 ClassLoader，并重写 findClass 方法从网络下载 class 的字节数组，然后使用 defineClass 方法创建 Class 实例。
+
+```java
+class NetworkClassLoader extends ClassLoader {
+    String host;
+    int port;
+
+    @Override
+    public Class<?> findClass(String name) throws ClassNotFoundException {
+        byte[] b = loadClassData(name);
+        return defineClass(name, b, 0, b.length);
+    }
+
+    private byte[] loadClassData(String name) {
+        // load the class data from the connection
+        . . .
+    }
+}
+```
 
 
 #### AgentClassLoader
@@ -329,91 +407,6 @@ public class AgentClassLoader extends ClassLoader {
 }
 ```
 
-#### 类加载器
-
-类加载器对象负责加载类，ClassLoader 是一个抽象类，给定一个类的 binary name，类加载器尝试定位或生成构成类定义的数据。典型的场景是从文件系统读取类的 class 文件。
-每一个Class 对象包含一个指向定义它的类加载器的引用。
-
-数组类的 class 对象不是由类加载器创建的，而是根据 Java 运行时的需要自动创建的，通过 Class.getClassLoader() 返回的数组类的类加载器和它的元素类（element type）的类加载器相同，比如下面的示例代码 Foo[]数组的 class 对象的类加载器和 Foo 的 class 对象的类加载器相同，原生类型的数组没有类加载器。
-
-```java
-public class FooArrayTest {
-    public static void main(String[] args) {
-        Foo[] foos = new Foo[10];
-        foos[0] = new Foo();
-        System.out.println(foos.getClass().getClassLoader());
-        System.out.println(Foo.class.getClassLoader());
-    }
-}
-
-class Foo {
-}
-```
-
-输出
-
-```java
-sun.misc.Launcher$AppClassLoader@18b4aac2
-sun.misc.Launcher$AppClassLoader@18b4aac2
-```
-
-
-
-应用程序可以通过继承 ClassLoader 来扩展 Java 虚拟机动态加载类的方式。ClassLoader 采用委托模式查找类和资源，每一个 ClassLoader 实例都有一个相关联的父类加载器（parent class loader）。
-
-当请求查找一个类或资源的时候，ClassLoader 实例在它尝试自己查找类或资源之前会将查找委托给它的父类加载器。Java 虚拟机内置的类加载器叫作启动类加载器（bootstrap class loader），它没有父类加载#器，但是可以作为 ClassLoader 实例的父类加载器。
-
-#### 类加载器的并行能力
-支持并发加载类的类加载器被称为具有并行能力的类加载器，需要在类初始化的时候通过调用 ClassLoader.registerAsParallelCapable() 注册自己。注意，ClassLoader 类在默认情况下被注册为具有并行能力，而它的子类如果需要具有并行能力，需要注册它们自己。
-
-AgentClassLoader 类加载器就是通过静态代码块将自己注册为具有并行能力。
-
-```java
-public class AgentClassLoader extends ClassLoader {
-
-    static {
-        /*
-         * Try to solve the classloader dead lock. See https://github.com/apache/skywalking/pull/2016
-         * 支持并发的加载类，参见 ClassLoader 的 Javadoc
-         */
-        registerAsParallelCapable();
-    }
-    
-    // 省略部分代码....
-}
-```
-
-在委托模式不是严格分层的环境中，类加载器需要并行能力，否则类加载可能导致死锁，因为加载器锁在类加载过程一直被持有（参见 ClassLoader.loadClass方法）。
-
-通常，Java 虚拟机从本地文件系统加载类，比如从  CLASSPATH 环境变量定义的目录加载类，然而一些类可能不是以文件的形式存在，它们可能从其他形式产生，例如网络或由应用程序构造。defineClass 方法将类的字节数组转换成 Class 实例，这个新定义的类的 Class 实例可以通过 Class.newInstance() 创建类的实例。
-
-一个类加载创建的对象的方法和构造器可能引用了其他类，为了确定引用的类，Java 虚拟机调用同一个类加载器的 loadClass 方法加载引用的类。例如，应用程序可以创建一个类加载器从服务器下载类的 class 文件，示例代码如下
-
-```java
-ClassLoader loader = new NetworkClassLoader(host, port);
-Object main = loader.loadClass("Main", true).newInstance();
-. . .
-```
-
-NetworkClassLoader 必须继承 ClassLoader，并重写 findClass 方法从网络下载 class 的字节数组，然后使用 defineClass 方法创建 Class 实例。
-
-```java
-class NetworkClassLoader extends ClassLoader {
-    String host;
-    int port;
-
-    @Override
-    public Class<?> findClass(String name) throws ClassNotFoundException {
-        byte[] b = loadClassData(name);
-        return defineClass(name, b, 0, b.length);
-    }
-
-    private byte[] loadClassData(String name) {
-        // load the class data from the connection
-        . . .
-    }
-}
-```
 
 
 
