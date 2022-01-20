@@ -4,7 +4,7 @@ date: 2022-01-06 10:40:57
 tags:
 ---
 
-SkyWalking Java Agent 插件加载机制—自定义类加载器
+SkyWalking Java Agent 插件加载机制（上）
 
 ```java
 /**
@@ -210,14 +210,99 @@ class NetworkClassLoader extends ClassLoader {
 ```
 
 
-#### AgentClassLoader
-
-`AgentClassLoader.initDefaultLoader();` 
+#### AgentClassLoader 初始化默认类加载器
 
 初始化类加载器 AgentClassLoader，AgentClassLoader 是 SkyWalking Java Agent 自定义的类加载器，用于加载指定目录的 jar 插件（默认加载的插件目录 plugins 和 activations）。
 
-AgentClassLoader 继承 ClassLoader，重写 findClass 方法，
+AgentClassLoader 继承 ClassLoader，重写 findClass 方法。
 
+
+`AgentClassLoader.initDefaultLoader();` 初始化默认的 AgentClassLoader 类加载器，并赋值给成员变量 DEFAULT_LOADER。
+```java
+ /**
+ * Init the default class loader.
+ *
+ * @throws AgentPackageNotFoundException if agent package is not found.
+ */
+public static void initDefaultLoader() throws AgentPackageNotFoundException {
+    if (DEFAULT_LOADER == null) {
+        synchronized (AgentClassLoader.class) {
+            if (DEFAULT_LOADER == null) {
+                DEFAULT_LOADER = new AgentClassLoader(PluginBootstrap.class.getClassLoader());
+                LOGGER.info("DEFAULT_LOADER parent is " + DEFAULT_LOADER.getParent().getClass());
+            }
+        }
+    }
+}
+```
+首先判断 DEFAULT_LOADER 是否为空，如果为空，则进入 synchronized 同步代码块进行 double check，调用 AgentClassLoader 构造方法做一些变量的初始化, 设置 AgentClassLoader 的 classpath。
+AgentClassLoader 的构造方法传入父类加载器 AppClassLoader， 通过 `PluginBootstrap.class.getClassLoader()` 获取的类加载器，PluginBootstrap 类是由 AppClassLoader 加载的。
+
+```java
+public AgentClassLoader(ClassLoader parent) throws AgentPackageNotFoundException {
+    super(parent);
+    LOGGER.info("AgentClassLoader parent is " + parent.getClass());
+    // SkyWalking agent.jar 所在目录
+    File agentDictionary = AgentPackagePath.getPath();
+    classpath = new LinkedList<>();
+    // 设置插件的 classpath
+    Config.Plugin.MOUNT.forEach(mountFolder -> classpath.add(new File(agentDictionary, mountFolder)));
+}
+```
+通过 File agentDictionary = AgentPackagePath.getPath(); 获取SkyWalking agent.jar 所在目录，默认插件目录位于 SkyWalking agent.jar目录下的 plugins 和 activations目录。
+经过以上步骤 AgentClassLoader 的默认类加载器初始化完成了。
+
+
+#### findClass 方法实现过程
+接下来我们重点看下 findClass 方法是如何实现的，findClass 方法首先调用了 getAllJars 方法用于获取所有的 jar 插件（文件后缀是.jar），获取到的 jar 信息赋值给成员变量 List<Jar> allJars;
+
+```java
+private List<Jar> getAllJars() {
+    if (allJars == null) {
+        jarScanLock.lock();
+        try {
+            // 获取到锁之后，再检查一次
+            if (allJars == null) {
+                allJars = doGetJars();
+            }
+        } finally {
+            jarScanLock.unlock();
+        }
+    }
+
+    return allJars;
+}
+
+private LinkedList<Jar> doGetJars() {
+    LinkedList<Jar> jars = new LinkedList<>();
+    // 从 classpath 目录下查找
+    for (File path : classpath) {
+        if (path.exists() && path.isDirectory()) {
+            // 查找目录下所有的.jar文件
+            String[] jarFileNames = path.list((dir, name) -> name.endsWith(".jar"));
+            for (String fileName : jarFileNames) {
+                try {
+                    File file = new File(path, fileName);
+                    Jar jar = new Jar(new JarFile(file), file);
+                    jars.add(jar);
+                    LOGGER.info("{} loaded.", file.toString());
+                } catch (IOException e) {
+                    LOGGER.error(e, "{} jar file can't be resolved", fileName);
+                }
+            }
+        }
+    }
+    return jars;
+}
+```
+然后将目标类的全类名 name（比如com.xxx.Foo）转换成目录格式， 遍历 allJars 查找目标类是存在，如果存储读取目录表字节码内容到 byte[]，
+调用 父类 ClassLoader 的 defineClass 方法将目标类的字节数组转换成类的 Class 对象。
+
+
+那么我们重写的 findClass 方法什么时候会被调用呢？
+当我们使用反射 Class.forName(name, true, AgentClassLoader.getDefault()) 指定类加载器为 AgentClassLoader 的时候，会调用我们自定义的的 findClass 方法。
+
+AgentClassLoader 完整代码
 ```java
 /**
  * The <code>AgentClassLoader</code> represents a classloader, which is in charge of finding plugins and interceptors.
@@ -380,6 +465,7 @@ public class AgentClassLoader extends ClassLoader {
 
     private LinkedList<Jar> doGetJars() {
         LinkedList<Jar> jars = new LinkedList<>();
+        // 从 classpath 目录下查找
         for (File path : classpath) {
             if (path.exists() && path.isDirectory()) {
                 // 查找目录下所有的.jar文件
@@ -406,11 +492,6 @@ public class AgentClassLoader extends ClassLoader {
     }
 }
 ```
-
-
-
-
-
 
 
 
