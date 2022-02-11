@@ -8,12 +8,21 @@ tags:
 
 ##### 安装
 
+https://docs.docker.com/get-started/overview/
+
+CentOS安装Docker
+https://docs.docker.com/engine/install/centos/
+步骤如下：
 ```sh
-yum install -y yum-utils device-mapper-persistent-data lvm2
+yum install -y yum-utils
+
+yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+或者
 yum-config-manager --add-repo http://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo
 
 yum makecache fast
-yum -y install docker-ce
+
+yum install docker-ce docker-ce-cli containerd.io
 
 systemctl start docker
 systemctl enable docker
@@ -71,7 +80,8 @@ docker logs -f 容器id
 # 4.进入到容器内容
 docker exec -it 容器id bash
 
-# 从容器中退出 exit
+# 从容器中退出 
+exit
 
 # 5.删除容器（需要先停止容器）
 # 停止指定的容器

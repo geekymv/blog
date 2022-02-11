@@ -129,15 +129,16 @@ AbstractClassEnhancePluginDefine plugin = (AbstractClassEnhancePluginDefine) Cla
     .getDefault()).newInstance();
 ```
 
-关于插件加载机制的内容比较多，因此分为准备上下两篇来写，上篇我们要分析的是自定义类加载器 AgentClassLoader 部分
+关于插件加载机制的内容比较多，因此分为准备上下两篇来写，上篇我们要分析的是自定义类加载器 AgentClassLoader 部分。
 
 首先我们回顾下 Java 类加载器
 
 #### 类加载器
-类加载器对象负责加载类，ClassLoader 是一个抽象类，给定一个类的 binary name，类加载器尝试定位或生成构成类定义的数据，典型的场景是从文件系统读取类的 class 文件。对于任意一个类，都必须由加载它的类加载器和这个类本身共同决定了其在 Java 虚拟机中的唯一性。
-每一个Class 对象包含一个指向定义它的类加载器的引用。
+类加载器对象负责加载类，ClassLoader 是一个抽象类，给定一个类的 binary name，类加载器尝试定位或生成构成类定义的数据，典型的场景是从文件系统读取类的 class 文件。
 
-数组类的 class 对象不是由类加载器创建的，而是根据 Java 运行时的需要自动创建的，通过 Class.getClassLoader() 返回的数组类的类加载器和它的元素类（element type）的类加载器相同，比如下面的示例代码 Foo[]数组的 class 对象的类加载器和 Foo 的 class 对象的类加载器相同，原生类型的数组没有类加载器。
+对于任意一个类，都必须由加载它的类加载器和这个类本身共同决定了其在 Java 虚拟机中的唯一性。每一个Class 对象包含一个指向定义它的类加载器的引用。
+
+数组类的 class 对象不是由类加载器创建的，而是根据 Java 运行时的需要自动创建的，通过 `Class.getClassLoader()` 返回的数组类的类加载器和它的元素类（element type）的类加载器相同，比如下面的示例代码 Foo[]数组的 class 对象的类加载器和 Foo 的 class 对象的类加载器相同，原生类型的数组没有类加载器。
 
 ```java
 public class FooArrayTest {
@@ -247,6 +248,8 @@ public static void initDefaultLoader() throws AgentPackageNotFoundException {
 首先判断 DEFAULT_LOADER 是否为空，如果为空，则进入 synchronized 同步代码块进行 double check，调用 AgentClassLoader 构造方法做一些变量的初始化, 设置 AgentClassLoader 的 classpath。
 AgentClassLoader 的构造方法传入父类加载器 AppClassLoader， 通过 `PluginBootstrap.class.getClassLoader()` 获取的类加载器，PluginBootstrap 类是由 AppClassLoader 加载的。
 
+> Java中一般会在抽象类中定义属性，子类通过构造方法内调用super(xx)将属性赋值给父类。 
+
 ```java
 public AgentClassLoader(ClassLoader parent) throws AgentPackageNotFoundException {
     super(parent);
@@ -259,6 +262,7 @@ public AgentClassLoader(ClassLoader parent) throws AgentPackageNotFoundException
 }
 ```
 通过 File agentDictionary = AgentPackagePath.getPath(); 获取SkyWalking agent.jar 所在目录，默认插件目录位于 SkyWalking agent.jar目录下的 plugins 和 activations目录。
+
 经过以上步骤 AgentClassLoader 的默认类加载器初始化完成了。
 
 
@@ -304,14 +308,13 @@ private LinkedList<Jar> doGetJars() {
     return jars;
 }
 ```
-然后将目标类的全类名 name（比如com.xxx.Foo）转换成目录格式， 遍历 allJars 查找目标类是存在，如果存储读取目录表字节码内容到 byte[]，
-调用 父类 ClassLoader 的 defineClass 方法将目标类的字节数组转换成类的 Class 对象。
+然后将目标类的全类名 name（比如com.xxx.Foo）转换成目录格式， 遍历 allJars 查找目标类是存在，如果存储读取目录表字节码内容到 byte[]，调用 父类 ClassLoader 的 defineClass 方法将目标类的字节数组转换成类的 Class 对象。
 
+那么自定义的类加载器什么时候会使用呢？
+当我们使用反射 Class.forName(name, true, AgentClassLoader.getDefault()) 可以指定类加载器为 AgentClassLoader，这个时候就会调用我们自定义的的 findClass 方法。
 
-那么我们重写的 findClass 方法什么时候会被调用呢？
-当我们使用反射 Class.forName(name, true, AgentClassLoader.getDefault()) 指定类加载器为 AgentClassLoader 的时候，会调用我们自定义的的 findClass 方法。
+#### AgentClassLoader 完整代码
 
-AgentClassLoader 完整代码
 ```java
 /**
  * The <code>AgentClassLoader</code> represents a classloader, which is in charge of finding plugins and interceptors.
@@ -504,6 +507,6 @@ public class AgentClassLoader extends ClassLoader {
 
 
 
-抽象类定义属性，并为属性提供 Setter 和 Getter 方法，子类通过构造方法内调用super(xx)将属性赋值给父类。
+
 
 
